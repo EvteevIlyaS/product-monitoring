@@ -1,0 +1,67 @@
+package com.ilyaevteev.productmonitoring.rest;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.ilyaevteev.productmonitoring.dto.auth.AuthenticationRequestDto;
+import com.ilyaevteev.productmonitoring.dto.auth.RegistrationDto;
+import com.ilyaevteev.productmonitoring.model.auth.User;
+import com.ilyaevteev.productmonitoring.service.UserService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.nio.charset.StandardCharsets;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.Mockito.*;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+class AuthenticationRestControllerTest {
+    private final String END_POINT_PATH = "/api/v1/auth/";
+    private final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(),
+            MediaType.APPLICATION_JSON.getSubtype(), StandardCharsets.UTF_8);
+    private final ObjectWriter ow;
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private UserService userService;
+
+    AuthenticationRestControllerTest() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        this.ow = mapper.writer().withDefaultPrettyPrinter();
+    }
+
+    @Test
+    void registerTest() throws Exception {
+        RegistrationDto registrationDto = new RegistrationDto();
+        String requestJson = ow.writeValueAsString(registrationDto);
+        when(userService.register(any(), any(), anyString())).thenReturn(new User());
+
+        mockMvc.perform(post(END_POINT_PATH + "register")
+                        .contentType(APPLICATION_JSON_UTF8)
+                        .content(requestJson))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void loginTest() throws Exception {
+        AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto();
+        String requestJson = ow.writeValueAsString(authenticationRequestDto);
+        when(userService.login(anyString(), anyString(), any(), any())).thenReturn("token");
+
+        mockMvc.perform(get(END_POINT_PATH + "login")
+                        .contentType(APPLICATION_JSON_UTF8)
+                        .content(requestJson))
+                .andExpect(status().isOk());
+    }
+}
