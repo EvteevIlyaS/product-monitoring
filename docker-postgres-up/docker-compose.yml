@@ -1,9 +1,10 @@
+#поднять только postgres для сборки jar и запука приложения вне контейнера
 version: '3.5'
 
 services:
   postgres:
     image: 'postgres:bullseye'
-    container_name: 'java-postgres'
+    container_name: 'postgres'
     ports:
       - '5432:5432'
     environment:
