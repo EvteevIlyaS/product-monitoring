@@ -4,7 +4,7 @@ services:
   postgres:
     image: 'postgres:bullseye'
     container_name: 'java-postgres'
-#    скрыть при необходимости (открыл для мониторинга через dbeaver)
+#    скрыть при необходимости (открыл для мониторинга через dbeaver и доступа при запуске приложения через ide)
     ports:
       - '5432:5432'
     environment:
