@@ -1,4 +1,4 @@
-package com.ilyaevteev.productmonitoring.security.jwt;
+package com.ilyaevteev.productmonitoring.security.exception;
 
 import org.springframework.security.core.AuthenticationException;
 

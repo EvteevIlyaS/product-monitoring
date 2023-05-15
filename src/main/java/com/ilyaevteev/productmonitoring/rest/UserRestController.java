@@ -4,12 +4,15 @@ import com.ilyaevteev.productmonitoring.dto.CategoryDto;
 import com.ilyaevteev.productmonitoring.dto.ProductDto;
 import com.ilyaevteev.productmonitoring.dto.StoreDto;
 import com.ilyaevteev.productmonitoring.dto.StoreProductPriceDto;
+import com.ilyaevteev.productmonitoring.dto.auth.NewEmailDto;
+import com.ilyaevteev.productmonitoring.dto.auth.NewPasswordDto;
 import com.ilyaevteev.productmonitoring.util.EntityDtoMapper;
 import com.ilyaevteev.productmonitoring.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -26,38 +29,44 @@ public class UserRestController {
     private final UserService userService;
 
     private final EntityDtoMapper entityDtoMapper;
+    private final AuthenticationManager authenticationManager;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     public UserRestController(ProductService productService, StoreService storeService, CategoryService categoryService, StoreProductPriceService storeProductPriceService,
-                              UserService userService, EntityDtoMapper entityDtoMapper, BCryptPasswordEncoder passwordEncoder) {
+                              UserService userService, EntityDtoMapper entityDtoMapper, AuthenticationManager authenticationManager, BCryptPasswordEncoder passwordEncoder) {
         this.productService = productService;
         this.storeService = storeService;
         this.categoryService = categoryService;
         this.storeProductPriceService = storeProductPriceService;
         this.userService = userService;
         this.entityDtoMapper = entityDtoMapper;
+        this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
     }
 
     @PutMapping(value = "email")
     @Operation(summary = "Изменить почту текущего пользователя")
-    public ResponseEntity<Map<String, String>> changeEmail(@RequestParam(name = "new-email") String email, Authentication authentication) {
-        userService.changeUserEmail(authentication.getName(), email);
+    public ResponseEntity<Map<String, String>> changeEmail(@RequestBody NewEmailDto newEmailDto, Authentication authentication) {
+        String password = newEmailDto.getPassword();
+        String newEmail = newEmailDto.getNewEmail();
+        userService.changeUserEmail(authentication, authenticationManager, password, newEmail);
 
         Map<String, String> response = new HashMap<>();
-        response.put("new email", email);
+        response.put("new email", newEmail);
 
         return ResponseEntity.ok(response);
     }
 
     @PutMapping(value = "password")
     @Operation(summary = "Изменить пароль текущего пользователя")
-    public ResponseEntity<Map<String, String>> changePassword(@RequestParam(name = "new-password") String password, Authentication authentication) {
-        userService.changeUserPassword(authentication.getName(), password, passwordEncoder);
+    public ResponseEntity<Map<String, String>> changePassword(@RequestBody NewPasswordDto newPasswordDto, Authentication authentication) {
+        String oldPassword = newPasswordDto.getOldPassword();
+        String newPassword = newPasswordDto.getNewPassword();
+        userService.changeUserPassword(authentication, authenticationManager, oldPassword, newPassword, passwordEncoder);
 
         Map<String, String> response = new HashMap<>();
-        response.put("new password", password);
+        response.put("new password", newPassword);
 
         return ResponseEntity.ok(response);
     }

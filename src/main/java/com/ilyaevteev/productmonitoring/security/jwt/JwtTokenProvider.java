@@ -1,6 +1,7 @@
 package com.ilyaevteev.productmonitoring.security.jwt;
 
 import com.ilyaevteev.productmonitoring.model.auth.Role;
+import com.ilyaevteev.productmonitoring.security.exception.JwtAuthenticationException;
 import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;

@@ -4,6 +4,7 @@ import com.ilyaevteev.productmonitoring.model.auth.Role;
 import com.ilyaevteev.productmonitoring.model.auth.User;
 import com.ilyaevteev.productmonitoring.repository.auth.RoleRepository;
 import com.ilyaevteev.productmonitoring.repository.auth.UserRepository;
+import com.ilyaevteev.productmonitoring.security.exception.PasswordAuthenticationException;
 import com.ilyaevteev.productmonitoring.security.jwt.JwtTokenProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
@@ -135,43 +138,92 @@ class UserServiceImplTest {
 
     @Test
     void changeUserEmail_checkMethodInvocation() {
-        String username = "user";
+        String oldPassword = "321";
         String email = "user@gmail.com";
+        String username = "name";
+        AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
+        Authentication authentication = mock(Authentication.class);
+        when(authenticationManager.authenticate(any())).thenReturn(null);
+        when(authentication.getName()).thenReturn(username);
 
-        userService.changeUserEmail(username, email);
+        userService.changeUserEmail(authentication, authenticationManager, oldPassword, email);
 
-        verify(userRepository, times(1)).updateUserEmail(username, email);
+        verify(userRepository, times(1)).updateUserEmail(authentication.getName(), email);
     }
 
     @Test
-    void changeUserEmail_checkThrowException() {
-        String username = "user";
+    void changeUserEmail_checkFirstThrowException() {
+        String oldPassword = "321";
         String email = "user@gmail.com";
+        String username = "name";
+        AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+        doThrow(new PasswordAuthenticationException("Wrong password")).when(authenticationManager).authenticate(any());
+
+        assertThatThrownBy(() -> userService.changeUserEmail(authentication, authenticationManager, oldPassword, email))
+                .hasMessage("Wrong password input");
+    }
+
+    @Test
+    void changeUserEmail_checkSecondThrowException() {
+        String oldPassword = "321";
+        String email = "user@gmail.com";
+        String username = "name";
+        AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
+        Authentication authentication = mock(Authentication.class);
+        when(authenticationManager.authenticate(any())).thenReturn(null);
+        when(authentication.getName()).thenReturn(username);
         doThrow(new RuntimeException()).when(userRepository).updateUserEmail(username, email);
 
-        assertThatThrownBy(() -> userService.changeUserEmail(username, email))
+        assertThatThrownBy(() -> userService.changeUserEmail(authentication, authenticationManager, oldPassword, email))
                 .hasMessage("Wrong email input");
     }
 
     @Test
     void changeUserPassword_checkMethodInvocation() {
-        String username = "user";
-        String password = "123";
+        String oldPassword = "321";
+        String newPassword = "123";
+        String username = "name";
+        AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
+        Authentication authentication = mock(Authentication.class);
         BCryptPasswordEncoder passwordEncoder = mock(BCryptPasswordEncoder.class);
+        when(authenticationManager.authenticate(any())).thenReturn(null);
+        when(authentication.getName()).thenReturn(username);
 
-        userService.changeUserPassword(username, password, passwordEncoder);
+        userService.changeUserPassword(authentication, authenticationManager, oldPassword, newPassword, passwordEncoder);
 
-        verify(userRepository, times(1)).updateUserPassword(username, null);
+        verify(userRepository, times(1)).updateUserPassword(any(), any());
     }
 
     @Test
-    void changeUserPassword_checkThrowException() {
-        String username = "user";
-        String password = "123";
+    void changeUserPassword_checkFirstThrowException() {
+        String oldPassword = "321";
+        String newPassword = "123";
+        String username = "name";
+        AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
+        Authentication authentication = mock(Authentication.class);
         BCryptPasswordEncoder passwordEncoder = mock(BCryptPasswordEncoder.class);
-        doThrow(new RuntimeException()).when(userRepository).updateUserPassword(username, null);
+        when(authentication.getName()).thenReturn(username);
+        doThrow(new PasswordAuthenticationException("Wrong password")).when(authenticationManager).authenticate(any());
 
-        assertThatThrownBy(() -> userService.changeUserPassword(username, password, passwordEncoder))
-                .hasMessage("Wrong password input");
+        assertThatThrownBy(() -> userService.changeUserPassword(authentication, authenticationManager, oldPassword, newPassword, passwordEncoder))
+                .hasMessage("Wrong old password input");
+    }
+
+    @Test
+    void changeUserPassword_checkSecondThrowException() {
+        String oldPassword = "321";
+        String newPassword = "123";
+        String username = "name";
+        AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
+        Authentication authentication = mock(Authentication.class);
+        BCryptPasswordEncoder passwordEncoder = mock(BCryptPasswordEncoder.class);
+        when(authenticationManager.authenticate(any())).thenReturn(null);
+        when(authentication.getName()).thenReturn(username);
+        doThrow(new RuntimeException()).when(userRepository).updateUserPassword(username , oldPassword);
+
+        assertThatThrownBy(() -> userService.changeUserPassword(authentication, authenticationManager, oldPassword, newPassword, passwordEncoder))
+                .hasMessage("Wrong new password input");
     }
 }

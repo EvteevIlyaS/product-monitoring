@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -77,6 +78,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public String login(String username, String password, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
@@ -98,9 +100,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changeUserEmail(String username, String email) {
+    @Transactional
+    public void changeUserEmail(Authentication authentication, AuthenticationManager authenticationManager,
+                                String password, String newEmail) {
+        String username = authentication.getName();
         try {
-            userRepository.updateUserEmail(username, email);
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            userRepository.updateUserEmail(username, newEmail);
+        } catch (AuthenticationException e) {
+            String message = "Wrong password input";
+            log.error(message);
+            throw new RuntimeException(message);
         } catch (Exception e) {
             String message = "Wrong email input";
             log.error(message);
@@ -109,11 +119,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changeUserPassword(String username, String password, BCryptPasswordEncoder passwordEncoder) {
+    @Transactional
+    public void changeUserPassword(Authentication authentication, AuthenticationManager authenticationManager,
+                                   String oldPassword, String newPassword, BCryptPasswordEncoder passwordEncoder) {
+        String username = authentication.getName();
         try {
-            userRepository.updateUserPassword(username, passwordEncoder.encode(password));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, oldPassword));
+            userRepository.updateUserPassword(username, passwordEncoder.encode(newPassword));
+        } catch (AuthenticationException e) {
+            String message = "Wrong old password input";
+            log.error(message);
+            throw new RuntimeException(message);
         } catch (Exception e) {
-            String message = "Wrong password input";
+            String message = "Wrong new password input";
             log.error(message);
             throw new RuntimeException(message);
         }
