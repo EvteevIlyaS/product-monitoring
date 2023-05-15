@@ -24,14 +24,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Transactional
     public List<Category> getCategoriesDirectory(int offset, int pageSize) {
         Pageable page = PageRequest.of(offset, pageSize);
         return categoryRepository.findAll(page).getContent();
     }
 
     @Override
-    @Transactional
     public Category getCategoryById(Long id) {
         Optional<Category> category = categoryRepository.findById(id);
 

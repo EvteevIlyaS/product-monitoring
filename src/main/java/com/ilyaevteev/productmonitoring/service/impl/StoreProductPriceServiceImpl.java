@@ -35,7 +35,6 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
     }
 
     @Override
-    @Transactional
     public void addStoreProductPrice(StoreProductPrice storeProductPrice) {
         try {
             storeProductPricesRepository.save(storeProductPrice);
@@ -47,7 +46,6 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
     }
 
     @Override
-    @Transactional
     public List<StoreProductPrice> getProductPricesForPeriod(Long id, String dateStart, String dateEnd) {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         List<StoreProductPrice> storeProductPrices;
@@ -84,7 +82,6 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
     }
 
     @Override
-    @Transactional
     public Map<Long, Long> getAllStoresProductPrices(List<Long> storeIds, Long productId) {
         Map<Long, Long> storeProductPrice = new HashMap<>();
 
@@ -99,7 +96,6 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
     }
 
     @Override
-    @Transactional
     public Map<Date, Long> getProductPrices(Long id, int offset, int pageSize) {
         Pageable page = PageRequest.of(offset, pageSize);
         Map<Date, Long> productPrices = new TreeMap<>();
@@ -111,7 +107,6 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
     }
 
     @Override
-    @Transactional
     public Map<Date, Long> getProductPricesOneStore(Long productId, Long storeId, int offset, int pageSize) {
         Pageable page = PageRequest.of(offset, pageSize);
         Map<Date, Long> productPricesOneStore = new TreeMap<>();

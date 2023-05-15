@@ -24,14 +24,12 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    @Transactional
     public List<Store> getStoresDirectory(int offset, int pageSize) {
         Pageable page = PageRequest.of(offset, pageSize);
         return storeRepository.findAll(page).getContent();
     }
 
     @Override
-    @Transactional
     public Store getStoreById(Long id) {
         Optional<Store> store = storeRepository.findById(id);
 
@@ -45,7 +43,6 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    @Transactional
     public List<Long> getAllStoreIds() {
         return storeRepository.findAll().stream().map(Store::getId).toList();
     }

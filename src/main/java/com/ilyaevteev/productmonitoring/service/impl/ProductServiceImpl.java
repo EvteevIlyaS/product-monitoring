@@ -30,13 +30,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional
     public List<Product> getProductsByCategory(String name) {
         return productRepository.getProductsByCategoryName(name);
     }
 
     @Override
-    @Transactional
     public void addOrUpdateProduct(Product product) {
         try {
             productRepository.save(product);
@@ -48,13 +46,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
 
     @Override
-    @Transactional
     public Product getProductById(Long id) {
         Optional<Product> product = productRepository.findById(id);
 

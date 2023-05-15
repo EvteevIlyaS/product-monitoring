@@ -32,7 +32,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public User findByUsername(String username) {
         Optional<User> user = userRepository.findByUsername(username);
 
@@ -78,7 +77,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public String login(String username, String password, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
@@ -100,7 +98,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public void changeUserEmail(String username, String email) {
         try {
             userRepository.updateUserEmail(username, email);
@@ -112,7 +109,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public void changeUserPassword(String username, String password, BCryptPasswordEncoder passwordEncoder) {
         try {
             userRepository.updateUserPassword(username, passwordEncoder.encode(password));
