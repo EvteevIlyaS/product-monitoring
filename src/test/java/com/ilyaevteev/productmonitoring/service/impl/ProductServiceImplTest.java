@@ -42,19 +42,61 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void addOrUpdateProduct_checkMethodInvocation() {
+    void addProduct_checkMethodInvocation() {
         Product product = new Product();
-        productService.addOrUpdateProduct(product);
+
+        productService.addProduct(product);
 
         verify(productRepository, times(1)).save(product);
     }
 
     @Test
-    void addOrUpdateProduct_checkThrowException() {
+    void addProduct_checkThrowException() {
         Product product = new Product();
         when(productRepository.save(product)).thenThrow(new RuntimeException());
 
-        assertThatThrownBy(() -> productService.addOrUpdateProduct(product))
+        assertThatThrownBy(() -> productService.addProduct(product))
+                .hasMessage("Wrong product data");
+    }
+
+    @Test
+    void updateProduct_checkMethodInvocation() {
+        Product product = new Product();
+        product.setId(1L);
+        when(productRepository.findById(any())).thenReturn(Optional.of(new Product()));
+
+        productService.updateProduct(product);
+
+        verify(productRepository, times(1)).updateProductNameAndCategory(product.getName(),
+                product.getCategory(), product.getId());
+    }
+
+    @Test
+    void updateProduct_checkFirstThrowException() {
+        Product product = new Product();
+
+        assertThatThrownBy(() -> productService.updateProduct(product))
+                .hasMessage("Wrong product data");
+    }
+
+    @Test
+    void updateProduct_checkSecondThrowException() {
+        Product product = new Product();
+        product.setId(1L);
+        when(productRepository.findById(any())).thenThrow(new RuntimeException());
+
+        assertThatThrownBy(() -> productService.updateProduct(product))
+                .hasMessage("Wrong product data");
+    }
+
+    @Test
+    void updateProduct_checkThirdThrowException() {
+        Product product = new Product();
+        product.setId(1L);
+        when(productRepository.findById(any())).thenReturn(Optional.of(new Product()));
+        doThrow(new RuntimeException()).when(productRepository).updateProductNameAndCategory(any(), any(), any());
+
+        assertThatThrownBy(() -> productService.updateProduct(product))
                 .hasMessage("Wrong product data");
     }
 

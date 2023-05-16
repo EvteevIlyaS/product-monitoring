@@ -3,6 +3,7 @@ package com.ilyaevteev.productmonitoring.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.ilyaevteev.productmonitoring.dto.NoIdProductDto;
 import com.ilyaevteev.productmonitoring.dto.ProductDto;
 import com.ilyaevteev.productmonitoring.dto.StoreDto;
 import com.ilyaevteev.productmonitoring.dto.StoreProductPriceDto;
@@ -81,11 +82,23 @@ class AdminRestControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void createUpdateProductTest() throws Exception {
+    void createProductTest() throws Exception {
+        NoIdProductDto noIdProductDto = new NoIdProductDto();
+        String requestJson = ow.writeValueAsString(noIdProductDto);
+
+        mockMvc.perform(post(END_POINT_PATH + "products")
+                        .contentType(APPLICATION_JSON_UTF8)
+                        .content(requestJson))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void updateProductTest() throws Exception {
         ProductDto productDto = new ProductDto();
         String requestJson = ow.writeValueAsString(productDto);
 
-        mockMvc.perform(post(END_POINT_PATH + "products")
+        mockMvc.perform(put(END_POINT_PATH + "products")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isOk());

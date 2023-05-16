@@ -148,12 +148,21 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjgzODk4NzQ1LCJleHAiOjE2ODM5MDIzNDV9.x1IfIBx58Pepm8_odgwJl2mByZmCNjFfIof1-F5emcI",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXcgdXNlciIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2ODQxNjUzNDUsImV4cCI6MTY4NDE2ODk0NX0.tHpS3C6LWQa9imno5Osh8nlnFEJx7qcGwonM-bUoIgA",
 						"type": "default"
 					}
 				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"password\": \"123\",\n    \"newEmail\": \"someuser@gmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "localhost:8080/api/v1/user/email?new-email=newadminem@gmail.com",
+					"raw": "localhost:8080/api/v1/user/email",
 					"host": [
 						"localhost"
 					],
@@ -163,12 +172,6 @@
 						"v1",
 						"user",
 						"email"
-					],
-					"query": [
-						{
-							"key": "new-email",
-							"value": "newadminem@gmail.com"
-						}
 					]
 				}
 			},
@@ -181,12 +184,21 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjgzODk4NzQ1LCJleHAiOjE2ODM5MDIzNDV9.x1IfIBx58Pepm8_odgwJl2mByZmCNjFfIof1-F5emcI",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXcgdXNlciIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2ODQxNjUzOTUsImV4cCI6MTY4NDE2ODk5NX0.4mrI-Nud5BtAtRidOxWFzuaVkQU7-WbA0yBeJkzSYic",
 						"type": "default"
 					}
 				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"oldPassword\": \"321\",\n    \"newPassword\": \"123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "localhost:8080/api/v1/user/password?new-password=321",
+					"raw": "localhost:8080/api/v1/user/password",
 					"host": [
 						"localhost"
 					],
@@ -196,12 +208,6 @@
 						"v1",
 						"user",
 						"password"
-					],
-					"query": [
-						{
-							"key": "new-password",
-							"value": "321"
-						}
 					]
 				}
 			},
@@ -315,19 +321,55 @@
 			"response": []
 		},
 		{
-			"name": "Добавить/редактировать товар (admin)",
+			"name": "Добавить товар (admin)",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjgzODk4NzQ1LCJleHAiOjE2ODM5MDIzNDV9.x1IfIBx58Pepm8_odgwJl2mByZmCNjFfIof1-F5emcI",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0MjMzODkzLCJleHAiOjE2ODQyMzc0OTN9.N9Ez1bBWv9dB1WLjIYGNUOsFl_3XkNfBRiIZ38Ah3SU",
 						"type": "default"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n        \"id\": 100,\n        \"name\": \"veg\",\n        \"category\": {\"id\": 2}\n}",
+					"raw": "{\n        \"name\": \"veg\",\n        \"category\": {\"id\": 2}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/admin/products",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"admin",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Редактировать товар (admin)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0MjMzODkzLCJleHAiOjE2ODQyMzc0OTN9.N9Ez1bBWv9dB1WLjIYGNUOsFl_3XkNfBRiIZ38Ah3SU",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"id\": 1,\n        \"name\": \"veg\",\n        \"category\": {\"id\": 2}\n}",
 					"options": {
 						"raw": {
 							"language": "json"

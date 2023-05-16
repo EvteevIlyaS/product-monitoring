@@ -1,5 +1,6 @@
 package com.ilyaevteev.productmonitoring.rest;
 
+import com.ilyaevteev.productmonitoring.dto.NoIdProductDto;
 import com.ilyaevteev.productmonitoring.dto.ProductDto;
 import com.ilyaevteev.productmonitoring.dto.StoreProductPriceDto;
 import com.ilyaevteev.productmonitoring.dto.auth.RegistrationDto;
@@ -52,9 +53,20 @@ public class AdminRestController {
     }
 
     @PostMapping(value = "products")
-    @Operation(summary = "Добавить/редактировать товар")
-    public ResponseEntity<Map<String, String>> createUpdateProduct(@RequestBody ProductDto productDto) {
-        productService.addOrUpdateProduct(entityDtoMapper.toEntity(productDto, Product.class));
+    @Operation(summary = "Добавить товар")
+    public ResponseEntity<Map<String, String>> createProduct(@RequestBody NoIdProductDto noIdProductDto) {
+        productService.addProduct(entityDtoMapper.toEntity(noIdProductDto, Product.class));
+
+        Map<String, String> response = new HashMap<>();
+        response.put("product name", noIdProductDto.getName());
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping(value = "products")
+    @Operation(summary = "Редактировать товар")
+    public ResponseEntity<Map<String, String>> updateProduct(@RequestBody ProductDto productDto) {
+        productService.updateProduct(entityDtoMapper.toEntity(productDto, Product.class));
 
         Map<String, String> response = new HashMap<>();
         response.put("product name", productDto.getName());

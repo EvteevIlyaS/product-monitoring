@@ -35,9 +35,28 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void addOrUpdateProduct(Product product) {
+    public void addProduct(Product product) {
         try {
             productRepository.save(product);
+        } catch (Exception e) {
+            String message = "Wrong product data";
+            log.error(message);
+            throw new RuntimeException(message);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void updateProduct(Product product) {
+        Long id = product.getId();
+        try {
+            if (id == null) {
+                String message = "No id provided to update product";
+                log.error(message);
+                throw new RuntimeException(message);
+            }
+            getProductById(id);
+            productRepository.updateProductNameAndCategory(product.getName(), product.getCategory(), id);
         } catch (Exception e) {
             String message = "Wrong product data";
             log.error(message);
