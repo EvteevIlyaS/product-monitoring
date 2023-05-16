@@ -59,7 +59,7 @@ class AdminRestControllerTest {
     void registerTest_checkAuth() throws Exception {
         RegistrationDto registrationDto = new RegistrationDto();
         String requestJson = ow.writeValueAsString(registrationDto);
-        when(userService.register(any(), any(), anyString())).thenReturn(new User());
+        when(userService.register(any(), any(), anyString(), any())).thenReturn(new User());
 
         mockMvc.perform(post(END_POINT_PATH + "register")
                         .contentType(APPLICATION_JSON_UTF8)
@@ -72,7 +72,7 @@ class AdminRestControllerTest {
     void registerTest() throws Exception {
         RegistrationDto registrationDto = new RegistrationDto();
         String requestJson = ow.writeValueAsString(registrationDto);
-        when(userService.register(any(), any(), anyString())).thenReturn(new User());
+        when(userService.register(any(), any(), anyString(), any())).thenReturn(new User());
 
         mockMvc.perform(post(END_POINT_PATH + "register")
                         .contentType(APPLICATION_JSON_UTF8)

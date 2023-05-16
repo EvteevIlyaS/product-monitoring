@@ -14,7 +14,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.BindingResult;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -61,10 +63,12 @@ class UserServiceImplTest {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String roleName = "ROLE_USER";
         Role role = new Role();
+        BindingResult bindingResult = mock(BindingResult.class);
+        when(bindingResult.hasErrors()).thenReturn(false);
         when(roleRepository.findByName(roleName)).thenReturn(Optional.of(role));
         when(userRepository.save(user)).thenReturn(user);
 
-        User userRes = userService.register(user, passwordEncoder, roleName);
+        User userRes = userService.register(user, passwordEncoder, roleName, bindingResult);
 
         assertThat(userRes).isEqualTo(user);
     }
@@ -74,9 +78,11 @@ class UserServiceImplTest {
         User user = new User();
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String roleName = "ROLE_USER";
+        BindingResult bindingResult = mock(BindingResult.class);
+        when(bindingResult.hasErrors()).thenReturn(false);
         when(roleRepository.findByName(roleName)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> userService.register(user, passwordEncoder, roleName))
+        assertThatThrownBy(() -> userService.register(user, passwordEncoder, roleName, bindingResult))
                 .hasMessage("Role not found");
     }
 
@@ -88,11 +94,27 @@ class UserServiceImplTest {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String roleName = "ROLE_USER";
         Role role = new Role();
+        BindingResult bindingResult = mock(BindingResult.class);
+        when(bindingResult.hasErrors()).thenReturn(false);
         when(roleRepository.findByName(roleName)).thenReturn(Optional.of(role));
         when(userRepository.save(user)).thenThrow(new RuntimeException());
 
-        assertThatThrownBy(() -> userService.register(user, passwordEncoder, roleName))
+        assertThatThrownBy(() -> userService.register(user, passwordEncoder, roleName, bindingResult))
                 .hasMessage("Wrong registration data");
+    }
+
+    @Test
+    void register_checkThirdThrowException() {
+        User user = new User();
+        String password = "123";
+        user.setPassword(password);
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String roleName = "ROLE_USER";
+        BindingResult bindingResult = mock(BindingResult.class);
+        when(bindingResult.hasErrors()).thenReturn(true);
+
+        assertThatThrownBy(() -> userService.register(user, passwordEncoder, roleName, bindingResult))
+                .hasMessage("Wrong data format");
     }
 
     @Test
@@ -142,10 +164,12 @@ class UserServiceImplTest {
         String username = "name";
         AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
         Authentication authentication = mock(Authentication.class);
+        BindingResult bindingResult = mock(BindingResult.class);
+        when(bindingResult.hasErrors()).thenReturn(false);
         when(authenticationManager.authenticate(any())).thenReturn(null);
         when(authentication.getName()).thenReturn(username);
 
-        userService.changeUserEmail(authentication, authenticationManager, oldPassword, email);
+        userService.changeUserEmail(authentication, authenticationManager, oldPassword, email, bindingResult);
 
         verify(userRepository, times(1)).updateUserEmail(authentication.getName(), email);
     }
@@ -157,10 +181,12 @@ class UserServiceImplTest {
         String username = "name";
         AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
         Authentication authentication = mock(Authentication.class);
+        BindingResult bindingResult = mock(BindingResult.class);
+        when(bindingResult.hasErrors()).thenReturn(false);
         when(authentication.getName()).thenReturn(username);
         doThrow(new PasswordAuthenticationException("Wrong password")).when(authenticationManager).authenticate(any());
 
-        assertThatThrownBy(() -> userService.changeUserEmail(authentication, authenticationManager, oldPassword, email))
+        assertThatThrownBy(() -> userService.changeUserEmail(authentication, authenticationManager, oldPassword, email, bindingResult))
                 .hasMessage("Wrong password input");
     }
 
@@ -171,12 +197,27 @@ class UserServiceImplTest {
         String username = "name";
         AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
         Authentication authentication = mock(Authentication.class);
+        BindingResult bindingResult = mock(BindingResult.class);
+        when(bindingResult.hasErrors()).thenReturn(false);
         when(authenticationManager.authenticate(any())).thenReturn(null);
         when(authentication.getName()).thenReturn(username);
         doThrow(new RuntimeException()).when(userRepository).updateUserEmail(username, email);
 
-        assertThatThrownBy(() -> userService.changeUserEmail(authentication, authenticationManager, oldPassword, email))
+        assertThatThrownBy(() -> userService.changeUserEmail(authentication, authenticationManager, oldPassword, email, bindingResult))
                 .hasMessage("Wrong email input");
+    }
+
+    @Test
+    void changeUserEmail_checkThirdThrowException() {
+        String oldPassword = "321";
+        String email = "user@gmail.com";
+        AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
+        Authentication authentication = mock(Authentication.class);
+        BindingResult bindingResult = mock(BindingResult.class);
+        when(bindingResult.hasErrors()).thenReturn(true);
+
+        assertThatThrownBy(() -> userService.changeUserEmail(authentication, authenticationManager, oldPassword, email, bindingResult))
+                .hasMessage("Wrong data format");
     }
 
     @Test
@@ -187,10 +228,12 @@ class UserServiceImplTest {
         AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
         Authentication authentication = mock(Authentication.class);
         BCryptPasswordEncoder passwordEncoder = mock(BCryptPasswordEncoder.class);
+        BindingResult bindingResult = mock(BindingResult.class);
+        when(bindingResult.hasErrors()).thenReturn(false);
         when(authenticationManager.authenticate(any())).thenReturn(null);
         when(authentication.getName()).thenReturn(username);
 
-        userService.changeUserPassword(authentication, authenticationManager, oldPassword, newPassword, passwordEncoder);
+        userService.changeUserPassword(authentication, authenticationManager, oldPassword, newPassword, passwordEncoder, bindingResult);
 
         verify(userRepository, times(1)).updateUserPassword(any(), any());
     }
@@ -203,10 +246,13 @@ class UserServiceImplTest {
         AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
         Authentication authentication = mock(Authentication.class);
         BCryptPasswordEncoder passwordEncoder = mock(BCryptPasswordEncoder.class);
+        BindingResult bindingResult = mock(BindingResult.class);
+        when(bindingResult.hasErrors()).thenReturn(false);
         when(authentication.getName()).thenReturn(username);
         doThrow(new PasswordAuthenticationException("Wrong password")).when(authenticationManager).authenticate(any());
 
-        assertThatThrownBy(() -> userService.changeUserPassword(authentication, authenticationManager, oldPassword, newPassword, passwordEncoder))
+        assertThatThrownBy(() -> userService.changeUserPassword(authentication, authenticationManager, oldPassword,
+                newPassword, passwordEncoder, bindingResult))
                 .hasMessage("Wrong old password input");
     }
 
@@ -218,11 +264,29 @@ class UserServiceImplTest {
         AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
         Authentication authentication = mock(Authentication.class);
         BCryptPasswordEncoder passwordEncoder = mock(BCryptPasswordEncoder.class);
+        BindingResult bindingResult = mock(BindingResult.class);
+        when(bindingResult.hasErrors()).thenReturn(false);
         when(authenticationManager.authenticate(any())).thenReturn(null);
         when(authentication.getName()).thenReturn(username);
         doThrow(new RuntimeException()).when(userRepository).updateUserPassword(username , oldPassword);
 
-        assertThatThrownBy(() -> userService.changeUserPassword(authentication, authenticationManager, oldPassword, newPassword, passwordEncoder))
+        assertThatThrownBy(() -> userService.changeUserPassword(authentication, authenticationManager, oldPassword,
+                newPassword, passwordEncoder, bindingResult))
                 .hasMessage("Wrong new password input");
+    }
+
+    @Test
+    void changeUserPassword_checkThirdThrowException() {
+        String oldPassword = "321";
+        String newPassword = "123";
+        AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
+        Authentication authentication = mock(Authentication.class);
+        BCryptPasswordEncoder passwordEncoder = mock(BCryptPasswordEncoder.class);
+        BindingResult bindingResult = mock(BindingResult.class);
+        when(bindingResult.hasErrors()).thenReturn(true);
+
+        assertThatThrownBy(() -> userService.changeUserPassword(authentication, authenticationManager, oldPassword,
+                newPassword, passwordEncoder, bindingResult))
+                .hasMessage("Wrong data format");
     }
 }

@@ -12,9 +12,11 @@ import com.ilyaevteev.productmonitoring.service.ProductService;
 import com.ilyaevteev.productmonitoring.service.StoreProductPriceService;
 import com.ilyaevteev.productmonitoring.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,8 +45,8 @@ public class AdminRestController {
 
     @PostMapping("register")
     @Operation(summary = "Выполнить процедуру регистрации администратора")
-    public ResponseEntity<Map<String, String>> register(@RequestBody RegistrationDto requestDto) {
-        User user = userService.register(entityDtoMapper.toEntity(requestDto, User.class), passwordEncoder, "ROLE_ADMIN");
+    public ResponseEntity<Map<String, String>> register(@RequestBody @Valid RegistrationDto requestDto, BindingResult bindingResult) {
+        User user = userService.register(entityDtoMapper.toEntity(requestDto, User.class), passwordEncoder, "ROLE_ADMIN", bindingResult);
 
         Map<String, String> response = new HashMap<>();
         response.put("username", user.getUsername());

@@ -7,10 +7,12 @@ import com.ilyaevteev.productmonitoring.model.auth.User;
 import com.ilyaevteev.productmonitoring.security.jwt.JwtTokenProvider;
 import com.ilyaevteev.productmonitoring.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -38,8 +40,8 @@ public class AuthenticationRestController {
 
     @PostMapping("register")
     @Operation(summary = "Выполнить процедуру регистрации пользователя")
-    public ResponseEntity<Map<String, String>> register(@RequestBody RegistrationDto requestDto) {
-        User user = userService.register(entityDtoMapper.toEntity(requestDto, User.class), passwordEncoder, "ROLE_USER");
+    public ResponseEntity<Map<String, String>> register(@RequestBody @Valid RegistrationDto requestDto, BindingResult bindingResult) {
+        User user = userService.register(entityDtoMapper.toEntity(requestDto, User.class), passwordEncoder, "ROLE_USER", bindingResult);
 
         Map<String, String> response = new HashMap<>();
         response.put("username", user.getUsername());

@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User register(User user, BCryptPasswordEncoder passwordEncoder, String role) {
+    public User register(User user, BCryptPasswordEncoder passwordEncoder, String role, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String message = "Wrong data format";
+            log.error(message);
+            throw new RuntimeException(message);
+        }
+
         User registeredUser;
 
         Optional<Role> roleOptional = roleRepository.findByName(role);
@@ -102,8 +109,15 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void changeUserEmail(Authentication authentication, AuthenticationManager authenticationManager,
-                                String password, String newEmail) {
+                                String password, String newEmail, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String message = "Wrong data format";
+            log.error(message);
+            throw new RuntimeException(message);
+        }
+
         String username = authentication.getName();
+
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             userRepository.updateUserEmail(username, newEmail);
@@ -120,9 +134,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void changeUserPassword(Authentication authentication, AuthenticationManager authenticationManager,
-                                   String oldPassword, String newPassword, BCryptPasswordEncoder passwordEncoder) {
+    public void changeUserPassword(Authentication authentication, AuthenticationManager authenticationManager, String oldPassword,
+                                   String newPassword, BCryptPasswordEncoder passwordEncoder, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String message = "Wrong data format";
+            log.error(message);
+            throw new RuntimeException(message);
+        }
+
         String username = authentication.getName();
+
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, oldPassword));
             userRepository.updateUserPassword(username, passwordEncoder.encode(newPassword));

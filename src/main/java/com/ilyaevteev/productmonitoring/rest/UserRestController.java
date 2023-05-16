@@ -10,11 +10,13 @@ import com.ilyaevteev.productmonitoring.util.EntityDtoMapper;
 import com.ilyaevteev.productmonitoring.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -47,10 +49,11 @@ public class UserRestController {
 
     @PutMapping(value = "email")
     @Operation(summary = "Изменить почту текущего пользователя")
-    public ResponseEntity<Map<String, String>> changeEmail(@RequestBody NewEmailDto newEmailDto, Authentication authentication) {
+    public ResponseEntity<Map<String, String>> changeEmail(@RequestBody @Valid NewEmailDto newEmailDto,
+                                                           BindingResult bindingResult, Authentication authentication) {
         String password = newEmailDto.getPassword();
         String newEmail = newEmailDto.getNewEmail();
-        userService.changeUserEmail(authentication, authenticationManager, password, newEmail);
+        userService.changeUserEmail(authentication, authenticationManager, password, newEmail, bindingResult);
 
         Map<String, String> response = new HashMap<>();
         response.put("new email", newEmail);
@@ -60,10 +63,11 @@ public class UserRestController {
 
     @PutMapping(value = "password")
     @Operation(summary = "Изменить пароль текущего пользователя")
-    public ResponseEntity<Map<String, String>> changePassword(@RequestBody NewPasswordDto newPasswordDto, Authentication authentication) {
+    public ResponseEntity<Map<String, String>> changePassword(@RequestBody @Valid NewPasswordDto newPasswordDto,
+                                                              BindingResult bindingResult, Authentication authentication) {
         String oldPassword = newPasswordDto.getOldPassword();
         String newPassword = newPasswordDto.getNewPassword();
-        userService.changeUserPassword(authentication, authenticationManager, oldPassword, newPassword, passwordEncoder);
+        userService.changeUserPassword(authentication, authenticationManager, oldPassword, newPassword, passwordEncoder, bindingResult);
 
         Map<String, String> response = new HashMap<>();
         response.put("new password", newPassword);
