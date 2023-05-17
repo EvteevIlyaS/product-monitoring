@@ -49,30 +49,22 @@ public class UserRestController {
 
     @PutMapping(value = "email")
     @Operation(summary = "Изменить почту текущего пользователя")
-    public ResponseEntity<Map<String, String>> changeEmail(@RequestBody @Valid NewEmailDto newEmailDto,
+    public ResponseEntity<?> changeEmail(@RequestBody @Valid NewEmailDto newEmailDto,
                                                            BindingResult bindingResult, Authentication authentication) {
-        String password = newEmailDto.getPassword();
-        String newEmail = newEmailDto.getNewEmail();
-        userService.changeUserEmail(authentication, authenticationManager, password, newEmail, bindingResult);
+        userService.changeUserEmail(authentication, authenticationManager, newEmailDto.getPassword(),
+                newEmailDto.getNewEmail(), bindingResult);
 
-        Map<String, String> response = new HashMap<>();
-        response.put("new email", newEmail);
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping(value = "password")
     @Operation(summary = "Изменить пароль текущего пользователя")
-    public ResponseEntity<Map<String, String>> changePassword(@RequestBody @Valid NewPasswordDto newPasswordDto,
+    public ResponseEntity<?> changePassword(@RequestBody @Valid NewPasswordDto newPasswordDto,
                                                               BindingResult bindingResult, Authentication authentication) {
-        String oldPassword = newPasswordDto.getOldPassword();
-        String newPassword = newPasswordDto.getNewPassword();
-        userService.changeUserPassword(authentication, authenticationManager, oldPassword, newPassword, passwordEncoder, bindingResult);
+        userService.changeUserPassword(authentication, authenticationManager, newPasswordDto.getOldPassword(),
+                newPasswordDto.getNewPassword(), passwordEncoder, bindingResult);
 
-        Map<String, String> response = new HashMap<>();
-        response.put("new password", newPassword);
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "stores")

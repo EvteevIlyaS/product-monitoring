@@ -74,7 +74,7 @@ class UserRestControllerTest {
         mockMvc.perform(put(END_POINT_PATH + "email")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -86,7 +86,7 @@ class UserRestControllerTest {
         mockMvc.perform(put(END_POINT_PATH + "password")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @Test
