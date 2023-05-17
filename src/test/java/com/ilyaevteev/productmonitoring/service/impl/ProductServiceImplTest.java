@@ -3,7 +3,6 @@ package com.ilyaevteev.productmonitoring.service.impl;
 import com.ilyaevteev.productmonitoring.model.Product;
 import com.ilyaevteev.productmonitoring.repository.ProductRepository;
 import com.ilyaevteev.productmonitoring.service.CategoryService;
-import jakarta.activation.UnsupportedDataTypeException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
