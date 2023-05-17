@@ -3,6 +3,7 @@ package com.ilyaevteev.productmonitoring.service.impl;
 import com.ilyaevteev.productmonitoring.model.Product;
 import com.ilyaevteev.productmonitoring.repository.ProductRepository;
 import com.ilyaevteev.productmonitoring.service.CategoryService;
+import jakarta.activation.UnsupportedDataTypeException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -83,7 +84,7 @@ class ProductServiceImplTest {
     void updateProduct_checkSecondThrowException() {
         Product product = new Product();
         product.setId(1L);
-        when(productRepository.findById(any())).thenThrow(new RuntimeException());
+        when(productRepository.findById(any())).thenThrow(new RuntimeException("No products found by id"));
 
         assertThatThrownBy(() -> productService.updateProduct(product))
                 .hasMessage("Wrong product data");
@@ -94,7 +95,7 @@ class ProductServiceImplTest {
         Product product = new Product();
         product.setId(1L);
         when(productRepository.findById(any())).thenReturn(Optional.of(new Product()));
-        doThrow(new RuntimeException()).when(productRepository).updateProductNameAndCategory(any(), any(), any());
+        doThrow(new RuntimeException("")).when(productRepository).updateProductNameAndCategory(any(), any(), any());
 
         assertThatThrownBy(() -> productService.updateProduct(product))
                 .hasMessage("Wrong product data");
@@ -145,13 +146,38 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void uploadFileProduct_checkThrowException() {
+    void uploadFileProduct_checkFirstThrowException() {
         String dataLine = "name,categoryId\nbutter,3\npear,1\npumpkin,2";
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "products-data.csv",
                 "text/csv",
                 dataLine.getBytes());
-        when(productRepository.saveAll(anyIterable())).thenThrow(new RuntimeException());
+        when(productRepository.saveAll(anyIterable())).thenThrow(new RuntimeException(""));
+
+        assertThatThrownBy(() -> productService.uploadFileProduct(multipartFile))
+                .hasMessage("Fail to store csv data");
+    }
+
+    @Test
+    void uploadFileProduct_checkSecondThrowException() {
+        String dataLine = "name,categoryId\nbutter,3\npear,1\npumpkin,2";
+        MockMultipartFile multipartFile = new MockMultipartFile("file",
+                "products-data.csv",
+                "odt",
+                dataLine.getBytes());
+
+        assertThatThrownBy(() -> productService.uploadFileProduct(multipartFile))
+                .hasMessage("Wrong data format");
+    }
+
+    @Test
+    void uploadFileProduct_checkThirdThrowException() {
+        String dataLine = "name,categoryId\nbutter,3\npear,1\npumpkin,2";
+        MockMultipartFile multipartFile = new MockMultipartFile("file",
+                "products-data.csv",
+                "text/csv",
+                dataLine.getBytes());
+        when(categoryService.getCategoryById(anyLong())).thenThrow(new RuntimeException("No categories found by id"));
 
         assertThatThrownBy(() -> productService.uploadFileProduct(multipartFile))
                 .hasMessage("Fail to store csv data");

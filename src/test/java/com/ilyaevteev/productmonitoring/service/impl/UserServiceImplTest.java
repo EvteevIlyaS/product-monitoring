@@ -4,7 +4,7 @@ import com.ilyaevteev.productmonitoring.model.auth.Role;
 import com.ilyaevteev.productmonitoring.model.auth.User;
 import com.ilyaevteev.productmonitoring.repository.auth.RoleRepository;
 import com.ilyaevteev.productmonitoring.repository.auth.UserRepository;
-import com.ilyaevteev.productmonitoring.security.exception.PasswordAuthenticationException;
+import com.ilyaevteev.productmonitoring.exception.exceptionlist.PasswordAuthenticationException;
 import com.ilyaevteev.productmonitoring.security.jwt.JwtTokenProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -113,7 +113,7 @@ class UserServiceImplTest {
         when(bindingResult.hasErrors()).thenReturn(true);
 
         assertThatThrownBy(() -> userService.register(user, passwordEncoder, roleName, bindingResult))
-                .hasMessage("Wrong data format");
+                .hasMessage("Data structure violation");
     }
 
     @Test
@@ -216,7 +216,7 @@ class UserServiceImplTest {
         when(bindingResult.hasErrors()).thenReturn(true);
 
         assertThatThrownBy(() -> userService.changeUserEmail(authentication, authenticationManager, oldPassword, email, bindingResult))
-                .hasMessage("Wrong data format");
+                .hasMessage("Data structure violation");
     }
 
     @Test
@@ -286,6 +286,6 @@ class UserServiceImplTest {
 
         assertThatThrownBy(() -> userService.changeUserPassword(authentication, authenticationManager, oldPassword,
                 newPassword, passwordEncoder, bindingResult))
-                .hasMessage("Wrong data format");
+                .hasMessage("Data structure violation");
     }
 }

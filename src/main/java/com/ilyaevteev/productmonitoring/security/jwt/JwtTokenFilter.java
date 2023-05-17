@@ -1,6 +1,6 @@
 package com.ilyaevteev.productmonitoring.security.jwt;
 
-import com.ilyaevteev.productmonitoring.security.exception.JwtAuthenticationException;
+import com.ilyaevteev.productmonitoring.exception.exceptionlist.JwtAuthenticationException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;

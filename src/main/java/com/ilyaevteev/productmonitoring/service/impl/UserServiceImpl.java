@@ -1,5 +1,7 @@
 package com.ilyaevteev.productmonitoring.service.impl;
 
+import com.ilyaevteev.productmonitoring.exception.exceptionlist.BadRequestException;
+import com.ilyaevteev.productmonitoring.exception.exceptionlist.FailedDependencyException;
 import com.ilyaevteev.productmonitoring.model.auth.Role;
 import com.ilyaevteev.productmonitoring.model.auth.User;
 import com.ilyaevteev.productmonitoring.repository.auth.RoleRepository;
@@ -40,7 +42,7 @@ public class UserServiceImpl implements UserService {
         if (user.isEmpty()) {
             String message = "No users found by name: " + username;
             log.error(message);
-            throw new RuntimeException(message);
+            throw new BadRequestException(message);
         }
 
         return user.get();
@@ -50,9 +52,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User register(User user, BCryptPasswordEncoder passwordEncoder, String role, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            String message = "Wrong data format";
+            String message = "Data structure violation";
             log.error(message);
-            throw new RuntimeException(message);
+            throw new BadRequestException(message);
         }
 
         User registeredUser;
@@ -62,7 +64,7 @@ public class UserServiceImpl implements UserService {
         if (roleOptional.isEmpty()) {
             String message = "Role not found";
             log.error(message);
-            throw new RuntimeException(message);
+            throw new BadRequestException(message);
         }
 
         Role roleUser = roleOptional.get();
@@ -78,7 +80,7 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             String message = "Wrong registration data";
             log.error(message);
-            throw new RuntimeException(message);
+            throw new BadRequestException(message);
         }
 
         return registeredUser;
@@ -92,7 +94,7 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             String message = "Wrong authentication data";
             log.error(message);
-            throw new RuntimeException(message);
+            throw new BadRequestException(message);
         }
 
         Optional<User> user = userRepository.findByUsername(username);
@@ -100,7 +102,7 @@ public class UserServiceImpl implements UserService {
         if (user.isEmpty()) {
             String message = "No users found by name: " + username;
             log.error(message);
-            throw new RuntimeException(message);
+            throw new BadRequestException(message);
         }
 
         return jwtTokenProvider.createToken(username, user.get().getRoles());
@@ -111,9 +113,9 @@ public class UserServiceImpl implements UserService {
     public void changeUserEmail(Authentication authentication, AuthenticationManager authenticationManager,
                                 String password, String newEmail, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            String message = "Wrong data format";
+            String message = "Data structure violation";
             log.error(message);
-            throw new RuntimeException(message);
+            throw new BadRequestException(message);
         }
 
         String username = authentication.getName();
@@ -124,11 +126,11 @@ public class UserServiceImpl implements UserService {
         } catch (AuthenticationException e) {
             String message = "Wrong password input";
             log.error(message);
-            throw new RuntimeException(message);
+            throw new FailedDependencyException(message);
         } catch (Exception e) {
             String message = "Wrong email input";
             log.error(message);
-            throw new RuntimeException(message);
+            throw new BadRequestException(message);
         }
     }
 
@@ -137,9 +139,9 @@ public class UserServiceImpl implements UserService {
     public void changeUserPassword(Authentication authentication, AuthenticationManager authenticationManager, String oldPassword,
                                    String newPassword, BCryptPasswordEncoder passwordEncoder, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            String message = "Wrong data format";
+            String message = "Data structure violation";
             log.error(message);
-            throw new RuntimeException(message);
+            throw new BadRequestException(message);
         }
 
         String username = authentication.getName();
@@ -150,11 +152,11 @@ public class UserServiceImpl implements UserService {
         } catch (AuthenticationException e) {
             String message = "Wrong old password input";
             log.error(message);
-            throw new RuntimeException(message);
+            throw new FailedDependencyException(message);
         } catch (Exception e) {
             String message = "Wrong new password input";
             log.error(message);
-            throw new RuntimeException(message);
+            throw new BadRequestException(message);
         }
     }
 }

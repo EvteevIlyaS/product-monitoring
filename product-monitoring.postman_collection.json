@@ -15,7 +15,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"new user\",\n    \"password\": \"12345\"\n}",
+					"raw": "{\n    \"username\": \"new user\",\n    \"password\": \"54321\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -148,13 +148,13 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXcgdXNlciIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2ODQyNDQ5MzcsImV4cCI6MTY4NDI0ODUzN30.WuAGVdLkz0jdiD5aarPoh5QCIvbD4uq9jDI1nL1PJls",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXcgdXNlciIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2ODQzMTc4MDEsImV4cCI6MTY4NDMyMTQwMX0.1bGkqGQgVZk_OJcqK46eBv_V4iuQ792elug3o-L-ucw",
 						"type": "default"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"password\": \"12345\",\n    \"newEmail\": \"someuser@gmail.com\"\n}",
+					"raw": "{\n    \"password\": \"54321\",\n    \"newEmail\": \"someuser@gmail.com\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -184,13 +184,13 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXcgdXNlciIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2ODQyNDQ5MzcsImV4cCI6MTY4NDI0ODUzN30.WuAGVdLkz0jdiD5aarPoh5QCIvbD4uq9jDI1nL1PJls",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXcgdXNlciIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2ODQzMTc4MDEsImV4cCI6MTY4NDMyMTQwMX0.1bGkqGQgVZk_OJcqK46eBv_V4iuQ792elug3o-L-ucw",
 						"type": "default"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"oldPassword\": \"12345\",\n    \"newPassword\": \"54321\"\n}",
+					"raw": "{\n    \"oldPassword\": \"54321\",\n    \"newPassword\": \"54321\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -220,7 +220,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjgzODk4NzQ1LCJleHAiOjE2ODM5MDIzNDV9.x1IfIBx58Pepm8_odgwJl2mByZmCNjFfIof1-F5emcI",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXcgdXNlciIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2ODM5NjMyODYsImV4cCI6MTY4Mzk2Njg4Nn0.6VS-8BUXG7YFRE0HP8v5e6_lYqHI-h8KXxF6mo86keU",
 						"type": "default"
 					}
 				],
@@ -294,7 +294,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjgzODk4NzQ1LCJleHAiOjE2ODM5MDIzNDV9.x1IfIBx58Pepm8_odgwJl2mByZmCNjFfIof1-F5emcI",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjgzOTcwOTI1LCJleHAiOjE2ODM5NzQ1MjV9.1UWTiKoaQVWKpLfswQLWYhjFotI7LSR9KXeR_ZHPf3w",
 						"type": "default"
 					}
 				],
@@ -427,7 +427,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjgzODk4NzQ1LCJleHAiOjE2ODM5MDIzNDV9.x1IfIBx58Pepm8_odgwJl2mByZmCNjFfIof1-F5emcI",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXcgdXNlciIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2ODM5NjMyODYsImV4cCI6MTY4Mzk2Njg4Nn0.6VS-8BUXG7YFRE0HP8v5e6_lYqHI-h8KXxF6mo86keU",
 						"type": "default"
 					}
 				],
@@ -464,7 +464,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjgzODk4NzQ1LCJleHAiOjE2ODM5MDIzNDV9.x1IfIBx58Pepm8_odgwJl2mByZmCNjFfIof1-F5emcI",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXcgdXNlciIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2ODM5MDM0MzMsImV4cCI6MTY4MzkwNzAzM30.s_0CkwtUMoawo3fSoVdaWq6RgSmsUoVe9XCowE-WZFA",
 						"type": "default"
 					}
 				],
@@ -502,7 +502,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjgzODk4NzQ1LCJleHAiOjE2ODM5MDIzNDV9.x1IfIBx58Pepm8_odgwJl2mByZmCNjFfIof1-F5emcI",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjgzOTA5NzY5LCJleHAiOjE2ODM5MTMzNjl9.CRZcJlc6YGFq34JYtZtOuBJAdREFMx_bZn9XGmmKqKY",
 						"type": "default"
 					}
 				],
@@ -609,7 +609,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjgzODk4NzQ1LCJleHAiOjE2ODM5MDIzNDV9.x1IfIBx58Pepm8_odgwJl2mByZmCNjFfIof1-F5emcI",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0MTUyNTQxLCJleHAiOjE2ODQxNTYxNDF9.wkfwEA3bJXPv9ewl-A0ipqA_JrxemoN6IgSQTykb0Lo",
 						"type": "default"
 					}
 				],
@@ -652,7 +652,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjgzOTAwMjE2LCJleHAiOjE2ODM5MDM4MTZ9.BqHTcLk9tcNJMacXlWv4fgkAf-j4A9hYKqerWSGJXmA",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0MzM4Mzc4LCJleHAiOjE2ODQzNDE5Nzh9.Rc6jORVYH6WXZ95AxX4cRuphlmzaTcGyKs4vHz2kzCQ",
 						"type": "default"
 					}
 				],
@@ -691,7 +691,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjgzODk4NzQ1LCJleHAiOjE2ODM5MDIzNDV9.x1IfIBx58Pepm8_odgwJl2mByZmCNjFfIof1-F5emcI",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0MzM4Mzc4LCJleHAiOjE2ODQzNDE5Nzh9.Rc6jORVYH6WXZ95AxX4cRuphlmzaTcGyKs4vHz2kzCQ",
 						"type": "default"
 					}
 				],
@@ -729,7 +729,8 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/v3/api-docs",
+					"raw": "http://localhost:8080/v3/api-docs",
+					"protocol": "http",
 					"host": [
 						"localhost"
 					],
@@ -737,40 +738,6 @@
 					"path": [
 						"v3",
 						"api-docs"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Выполнить процедуру авторизации администратора (all) Copy",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/api/v1/auth/login",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"v1",
-						"auth",
-						"login"
 					]
 				}
 			},

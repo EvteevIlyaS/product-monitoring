@@ -1,5 +1,8 @@
 package com.ilyaevteev.productmonitoring.service.impl;
 
+import com.ilyaevteev.productmonitoring.exception.exceptionlist.BadRequestException;
+import com.ilyaevteev.productmonitoring.exception.exceptionlist.FailedDependencyException;
+import com.ilyaevteev.productmonitoring.exception.exceptionlist.UnsupportedMediaTypeException;
 import com.ilyaevteev.productmonitoring.util.CSVHelper;
 import com.ilyaevteev.productmonitoring.model.StoreProductPrice;
 import com.ilyaevteev.productmonitoring.repository.StoreProductPricesRepository;
@@ -15,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -41,7 +43,7 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
         } catch (Exception e) {
             String message = "Wrong store product price";
             log.error(message);
-            throw new RuntimeException(message);
+            throw new BadRequestException(message);
         }
     }
 
@@ -55,7 +57,7 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
         } catch (Exception e) {
             String message = "Wrong store product price";
             log.error(message);
-            throw new RuntimeException(message);
+            throw new BadRequestException(message);
         }
 
         return storeProductPrices;
@@ -72,7 +74,7 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
         if (currentFirstStoreProductPrice == null | currentSecondStoreProductPrice == null) {
             String message = "Products not found";
             log.error(message);
-            throw new RuntimeException(message);
+            throw new BadRequestException(message);
         }
 
         storeProductPrice.put(firstStoreId, currentFirstStoreProductPrice.getPrice());
@@ -140,9 +142,16 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
             } catch (Exception e) {
                 String message = "Fail to store csv data";
                 log.error(message);
-                throw new RuntimeException(message);
+                if (e.getMessage().contains("No products found by id") | e.getMessage().contains("No stores found by id")) {
+                    throw new FailedDependencyException(message);
+                }
+                throw new BadRequestException(message);
             }
 
+        } else {
+            String message = "Wrong data format";
+            log.error(message);
+            throw new UnsupportedMediaTypeException(message);
         }
     }
 

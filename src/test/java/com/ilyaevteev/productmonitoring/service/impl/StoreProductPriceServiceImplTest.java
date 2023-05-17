@@ -176,13 +176,39 @@ class StoreProductPriceServiceImplTest {
     }
 
     @Test
-    void uploadFilePrices_checkThrowException() {
+    void uploadFilePrices_checkFirstThrowException() {
         String dataLine = "storeId,productId,price\n1,3,100\n2,2,200\n3,1,300";
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "prices-data.csv",
                 "text/csv",
                 dataLine.getBytes());
-        when(storeProductPricesRepository.saveAll(anyIterable())).thenThrow(new RuntimeException());
+        when(storeProductPricesRepository.saveAll(anyIterable())).thenThrow(new RuntimeException(""));
+
+        assertThatThrownBy(() -> storeProductPriceService.uploadFilePrices(multipartFile))
+                .hasMessage("Fail to store csv data");
+    }
+
+    @Test
+    void uploadFilePrices_checkSecondThrowException() {
+        String dataLine = "storeId,productId,price\n1,3,100\n2,2,200\n3,1,300";
+        MockMultipartFile multipartFile = new MockMultipartFile("file",
+                "prices-data.csv",
+                "odt",
+                dataLine.getBytes());
+
+        assertThatThrownBy(() -> storeProductPriceService.uploadFilePrices(multipartFile))
+                .hasMessage("Wrong data format");
+
+    }
+
+    @Test
+    void uploadFilePrices_checkThirdThrowException() {
+        String dataLine = "storeId,productId,price\n1,3,100\n2,2,200\n3,1,300";
+        MockMultipartFile multipartFile = new MockMultipartFile("file",
+                "prices-data.csv",
+                "text/csv",
+                dataLine.getBytes());
+        when(storeService.getStoreById(anyLong())).thenThrow(new RuntimeException("No products found by id"));
 
         assertThatThrownBy(() -> storeProductPriceService.uploadFilePrices(multipartFile))
                 .hasMessage("Fail to store csv data");

@@ -1,9 +1,9 @@
 package com.ilyaevteev.productmonitoring.service.impl;
 
+import com.ilyaevteev.productmonitoring.exception.exceptionlist.BadRequestException;
 import com.ilyaevteev.productmonitoring.model.Category;
 import com.ilyaevteev.productmonitoring.repository.CategoryRepository;
 import com.ilyaevteev.productmonitoring.service.CategoryService;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -36,7 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (category.isEmpty()) {
             String message = "No categories found by id: " + id;
             log.error(message);
-            throw new RuntimeException(message);
+            throw new BadRequestException(message);
         }
 
         return category.get();

@@ -1,5 +1,8 @@
 package com.ilyaevteev.productmonitoring.service.impl;
 
+import com.ilyaevteev.productmonitoring.exception.exceptionlist.BadRequestException;
+import com.ilyaevteev.productmonitoring.exception.exceptionlist.FailedDependencyException;
+import com.ilyaevteev.productmonitoring.exception.exceptionlist.UnsupportedMediaTypeException;
 import com.ilyaevteev.productmonitoring.util.CSVHelper;
 import com.ilyaevteev.productmonitoring.model.Product;
 import com.ilyaevteev.productmonitoring.repository.ProductRepository;
@@ -41,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
         } catch (Exception e) {
             String message = "Wrong product data";
             log.error(message);
-            throw new RuntimeException(message);
+            throw new BadRequestException(message);
         }
     }
 
@@ -53,14 +56,17 @@ public class ProductServiceImpl implements ProductService {
             if (id == null) {
                 String message = "No id provided to update product";
                 log.error(message);
-                throw new RuntimeException(message);
+                throw new BadRequestException(message);
             }
             getProductById(id);
             productRepository.updateProductNameAndCategory(product.getName(), product.getCategory(), id);
         } catch (Exception e) {
             String message = "Wrong product data";
             log.error(message);
-            throw new RuntimeException(message);
+            if (e.getMessage().contains("No products found by id")) {
+                throw new FailedDependencyException(message);
+            }
+            throw new BadRequestException(message);
         }
     }
 
@@ -76,7 +82,7 @@ public class ProductServiceImpl implements ProductService {
         if (product.isEmpty()) {
             String message = "No products found by id: " + id;
             log.error(message);
-            throw new RuntimeException(message);
+            throw new BadRequestException(message);
         }
 
         return product.get();
@@ -103,9 +109,16 @@ public class ProductServiceImpl implements ProductService {
             } catch (Exception e) {
                 String message = "Fail to store csv data";
                 log.error(message);
-                throw new RuntimeException(message);
+                if (e.getMessage().contains("No categories found by id")) {
+                    throw new FailedDependencyException(message);
+                }
+                throw new BadRequestException(message);
             }
 
+        } else {
+            String message = "Wrong data format";
+            log.error(message);
+            throw new UnsupportedMediaTypeException(message);
         }
     }
 }

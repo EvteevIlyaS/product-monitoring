@@ -1,4 +1,4 @@
-package com.ilyaevteev.productmonitoring.security.exception;
+package com.ilyaevteev.productmonitoring.exception.exceptionlist;
 
 import org.springframework.security.core.AuthenticationException;
 

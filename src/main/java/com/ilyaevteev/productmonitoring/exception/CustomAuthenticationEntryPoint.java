@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -18,14 +19,11 @@ import java.util.Date;
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-        int status = HttpServletResponse.SC_UNAUTHORIZED;
+        int status = HttpStatus.UNAUTHORIZED.value();
         String message = "Authentication failed";
         log.error(message);
 
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setStatus(status);
-        errorResponse.setMessage(message);
-        errorResponse.setDate(new Date());
+        ErrorResponse errorResponse = new ErrorResponse(status, message, new Date());
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(status);
