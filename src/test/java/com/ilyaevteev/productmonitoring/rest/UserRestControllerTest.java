@@ -147,18 +147,10 @@ class UserRestControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     void getStoreProductPricesComparisonTest() throws Exception {
-        Long firstStoreId = 1L;
-        Long secondStoreId = 2L;
-        Map<Long, Long> storeIdPrices = new HashMap<>();
-        storeIdPrices.put(firstStoreId, 100L);
-        storeIdPrices.put(secondStoreId, 200L);
-        Store mall = new Store();
-        Store supermarket = new Store();
-        mall.setName("mall");
-        supermarket.setName("supermarket");
+        Map<String, Long> storeIdPrices = new HashMap<>();
+        storeIdPrices.put("mall", 100L);
+        storeIdPrices.put("supermarket", 200L);
         when(storeProductPriceService.getCurrentStoreProductPrices(anyLong(), anyLong(), anyLong())).thenReturn(storeIdPrices);
-        when(storeService.getStoreById(firstStoreId)).thenReturn(mall);
-        when(storeService.getStoreById(secondStoreId)).thenReturn(supermarket);
 
         mockMvc.perform(get(END_POINT_PATH + "store-product-prices/comparison/1")
                         .queryParam("first-store-id", "1")
@@ -169,16 +161,9 @@ class UserRestControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     void getStoreProductPricesComparisonAllStoresTest() throws Exception {
-        Long firstStoreId = 1L;
-        List<Long> storeIds = new ArrayList<>();
-        storeIds.add(firstStoreId);
-        Store mall = new Store();
-        mall.setName("mall");
-        Map<Long, Long> allStoresProductPrices = new HashMap<>();
-        allStoresProductPrices.put(firstStoreId, 100L);
-        when(storeService.getAllStoreIds()).thenReturn(storeIds);
-        when(storeProductPriceService.getAllStoresProductPrices(anyList(), anyLong())).thenReturn(allStoresProductPrices);
-        when(storeService.getStoreById(firstStoreId)).thenReturn(mall);
+        Map<String, Long> allStoresProductPrices = new HashMap<>();
+        allStoresProductPrices.put("mall", 100L);
+        when(storeProductPriceService.getAllStoresProductPrices(anyLong())).thenReturn(allStoresProductPrices);
 
         mockMvc.perform(get(END_POINT_PATH + "store-product-prices/comparison-all/1"))
                 .andExpect(status().isOk());

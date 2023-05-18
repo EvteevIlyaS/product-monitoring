@@ -9,7 +9,6 @@ import com.ilyaevteev.productmonitoring.dto.auth.NewPasswordDto;
 import com.ilyaevteev.productmonitoring.util.EntityDtoMapper;
 import com.ilyaevteev.productmonitoring.service.*;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -104,28 +103,19 @@ public class UserRestController {
     }
 
     @GetMapping(value = "store-product-prices/comparison/{product-id}")
-    @Transactional
     @Operation(summary = "Сравненить цены по позициям двух магазинов")
     public ResponseEntity<Map<String, Long>> getStoreProductPricesComparison(@PathVariable(name = "product-id") Long productId,
                                                                              @RequestParam(name = "first-store-id") Long firstStoreId,
                                                                              @RequestParam(name = "second-store-id") Long secondStoreId) {
-        Map<String, Long> currentStoreProductPricesByNames = new HashMap<>();
-        Map<Long, Long> currentStoreProductPrices = storeProductPriceService.getCurrentStoreProductPrices(productId, firstStoreId, secondStoreId);
-
-        currentStoreProductPrices.forEach((k, v) -> currentStoreProductPricesByNames.put(storeService.getStoreById(k).getName(), v));
-        return ResponseEntity.ok(currentStoreProductPricesByNames);
+        Map<String, Long> currentStoreProductPrices = storeProductPriceService.getCurrentStoreProductPrices(productId, firstStoreId, secondStoreId);
+        return ResponseEntity.ok(currentStoreProductPrices);
     }
 
     @GetMapping(value = "store-product-prices/comparison-all/{product-id}")
-    @Transactional
     @Operation(summary = "Сравненить цены по позициям всех магазинов")
     public ResponseEntity<Map<String, Long>> getStoreProductPricesComparisonAllStores(@PathVariable(name = "product-id") Long productId) {
-        Map<String, Long> allStoresProductPricesByNames = new HashMap<>();
-        List<Long> storeIds = storeService.getAllStoreIds();
-        Map<Long, Long> allStoresProductPrices = storeProductPriceService.getAllStoresProductPrices(storeIds, productId);
-
-        allStoresProductPrices.forEach((k, v) -> allStoresProductPricesByNames.put(storeService.getStoreById(k).getName(), v));
-        return ResponseEntity.ok(allStoresProductPricesByNames);
+        Map<String, Long> allStoresProductPrices = storeProductPriceService.getAllStoresProductPrices(productId);
+        return ResponseEntity.ok(allStoresProductPrices);
     }
 
     @GetMapping(value = "store-product-prices/dynamics/{product-id}")

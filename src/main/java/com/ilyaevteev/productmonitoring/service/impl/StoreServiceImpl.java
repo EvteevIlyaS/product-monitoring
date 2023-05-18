@@ -44,6 +44,6 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public List<Long> getAllStoreIds() {
-        return storeRepository.findAll().stream().map(Store::getId).toList();
+        return storeRepository.getAllStoreIds();
     }
 }

@@ -1,5 +1,6 @@
 package com.ilyaevteev.productmonitoring.service.impl;
 
+import com.ilyaevteev.productmonitoring.model.Store;
 import com.ilyaevteev.productmonitoring.model.StoreProductPrice;
 import com.ilyaevteev.productmonitoring.repository.StoreProductPricesRepository;
 import com.ilyaevteev.productmonitoring.service.ProductService;
@@ -76,16 +77,24 @@ class StoreProductPriceServiceImplTest {
 
     @Test
     void getCurrentStoreProductPrices_checkReturnedValue() {
-        Map<Long, Long> storeProductPrice = new HashMap<>();
+        Map<String, Long> storeProductPrice = new HashMap<>();
         Long productId = 1L;
         Long firstStoreId = 1L;
         Long secondStoreId = 2L;
-        storeProductPrice.put(firstStoreId, null);
-        storeProductPrice.put(secondStoreId, null);
+        Store firstStore = new Store();
+        Store secondStore = new Store();
+        String firstStoreName = "mall";
+        String secondStoreName = "supermarket";
+        firstStore.setName(firstStoreName);
+        secondStore.setName(secondStoreName);
+        storeProductPrice.put(firstStoreName, null);
+        storeProductPrice.put(secondStoreName, null);
+        when(storeService.getStoreById(firstStoreId)).thenReturn(firstStore);
+        when(storeService.getStoreById(secondStoreId)).thenReturn(secondStore);
         when(storeProductPricesRepository.getFirstByProductIdAndStoreIdOrderByDateDesc(anyLong(), anyLong()))
                 .thenReturn(new StoreProductPrice());
 
-        Map<Long, Long> storeProductPriceRes = storeProductPriceService
+        Map<String, Long> storeProductPriceRes = storeProductPriceService
                 .getCurrentStoreProductPrices(productId, firstStoreId, secondStoreId);
 
         assertThat(storeProductPriceRes).isEqualTo(storeProductPrice);
@@ -106,18 +115,21 @@ class StoreProductPriceServiceImplTest {
 
     @Test
     void getAllStoresProductPrices_checkReturnedValue() {
-        Map<Long, Long> storeProductPrice = new HashMap<>();
+        Map<String, Long> storeProductPrice = new HashMap<>();
+        Store store = new Store();
+        String storeName = "mall";
+        store.setName(storeName);
         Long productId = 1L;
-        Long firstStoreId = 1L;
-        Long secondStoreId = 2L;
-        Long thirdStoreId = 3L;
-        List<Long> storeIds = Arrays.asList(firstStoreId, secondStoreId, thirdStoreId);
-        storeIds.forEach(id -> storeProductPrice.put(id, null));
+        Long storeId = 1L;
+        List<Long> storeIds = List.of(storeId);
+        storeProductPrice.put(storeName, null);
+        when(storeService.getAllStoreIds()).thenReturn(storeIds);
+        when(storeService.getStoreById(anyLong())).thenReturn(store);
         when(storeProductPricesRepository.getFirstByProductIdAndStoreIdOrderByDateDesc(anyLong(), anyLong()))
                 .thenReturn(new StoreProductPrice());
 
-        Map<Long, Long> storeProductPriceRes = storeProductPriceService
-                .getAllStoresProductPrices(storeIds, productId);
+        Map<String, Long> storeProductPriceRes = storeProductPriceService
+                .getAllStoresProductPrices(productId);
 
         assertThat(storeProductPriceRes).isEqualTo(storeProductPrice);
     }

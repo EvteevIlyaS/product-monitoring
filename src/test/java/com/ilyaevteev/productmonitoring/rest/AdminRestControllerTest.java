@@ -56,12 +56,12 @@ class AdminRestControllerTest {
     }
 
     @Test
-    void registerTest_checkAuth() throws Exception {
+    void addAdminTest_checkAuth() throws Exception {
         RegistrationDto registrationDto = new RegistrationDto();
         String requestJson = ow.writeValueAsString(registrationDto);
         when(userService.register(any(), any(), anyString(), any())).thenReturn(new User());
 
-        mockMvc.perform(post(END_POINT_PATH + "register")
+        mockMvc.perform(post(END_POINT_PATH + "add-admin")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isUnauthorized());
@@ -69,12 +69,12 @@ class AdminRestControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void registerTest() throws Exception {
+    void addAdminTest() throws Exception {
         RegistrationDto registrationDto = new RegistrationDto();
         String requestJson = ow.writeValueAsString(registrationDto);
         when(userService.register(any(), any(), anyString(), any())).thenReturn(new User());
 
-        mockMvc.perform(post(END_POINT_PATH + "register")
+        mockMvc.perform(post(END_POINT_PATH + "add-admin")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isOk());

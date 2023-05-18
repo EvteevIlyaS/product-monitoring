@@ -22,6 +22,7 @@ class StoreProductPricesRepositoryTest {
     @Test
     void findAllByProductIdAndDateBetweenOrderByDate_checkReturnedValue() throws ParseException {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
         List<StoreProductPrice> storeProductPrices = storeProductPricesRepository.findAllByProductIdAndDateBetweenOrderByDate(
                 3L, format.parse("2023-03-20"), format.parse("2023-05-05 13:41:36.130"));
 
@@ -39,6 +40,7 @@ class StoreProductPricesRepositoryTest {
     @Test
     void findAllByProductIdOrderByDate_checkReturnedValue() {
         Pageable page = PageRequest.of(0, 5);
+
         List<StoreProductPrice> storeProductPrices = storeProductPricesRepository
                 .findAllByProductIdOrderByDate(1L, page);
 
@@ -48,6 +50,7 @@ class StoreProductPricesRepositoryTest {
     @Test
     void findAllByProductIdAndStoreIdOrderByDate_checkReturnedValue() {
         Pageable page = PageRequest.of(0, 6);
+
         List<StoreProductPrice> storeProductPrices = storeProductPricesRepository
                 .findAllByProductIdAndStoreIdOrderByDate(1L, 2L, page);
 

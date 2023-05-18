@@ -12,9 +12,9 @@ public interface StoreProductPriceService {
 
     List<StoreProductPrice> getProductPricesForPeriod(Long id, String dateStart, String dateEnd);
 
-    Map<Long, Long> getCurrentStoreProductPrices(Long productId, Long firstStoreId, Long secondStoreId);
+    Map<String, Long> getCurrentStoreProductPrices(Long productId, Long firstStoreId, Long secondStoreId);
 
-    Map<Long, Long> getAllStoresProductPrices(List<Long> storeIds, Long productId);
+    Map<String, Long> getAllStoresProductPrices(Long productId);
 
     Map<Date, Long> getProductPrices(Long id, int offset, int pageSize);
 

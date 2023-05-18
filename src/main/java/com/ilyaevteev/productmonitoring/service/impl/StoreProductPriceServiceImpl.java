@@ -65,8 +65,8 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
 
     @Override
     @Transactional
-    public Map<Long, Long> getCurrentStoreProductPrices(Long productId, Long firstStoreId, Long secondStoreId) {
-        Map<Long, Long> storeProductPrice = new HashMap<>();
+    public Map<String, Long> getCurrentStoreProductPrices(Long productId, Long firstStoreId, Long secondStoreId) {
+        Map<String, Long> storeProductPrice = new HashMap<>();
 
         StoreProductPrice currentFirstStoreProductPrice = storeProductPricesRepository.getFirstByProductIdAndStoreIdOrderByDateDesc(productId, firstStoreId);
         StoreProductPrice currentSecondStoreProductPrice = storeProductPricesRepository.getFirstByProductIdAndStoreIdOrderByDateDesc(productId, secondStoreId);
@@ -77,20 +77,22 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
             throw new BadRequestException(message);
         }
 
-        storeProductPrice.put(firstStoreId, currentFirstStoreProductPrice.getPrice());
-        storeProductPrice.put(secondStoreId, currentSecondStoreProductPrice.getPrice());
+        storeProductPrice.put(storeService.getStoreById(firstStoreId).getName(), currentFirstStoreProductPrice.getPrice());
+        storeProductPrice.put(storeService.getStoreById(secondStoreId).getName(), currentSecondStoreProductPrice.getPrice());
 
         return storeProductPrice;
     }
 
     @Override
-    public Map<Long, Long> getAllStoresProductPrices(List<Long> storeIds, Long productId) {
-        Map<Long, Long> storeProductPrice = new HashMap<>();
+    @Transactional
+    public Map<String, Long> getAllStoresProductPrices(Long productId) {
+        Map<String, Long> storeProductPrice = new HashMap<>();
+        List<Long> storeIds = storeService.getAllStoreIds();
 
         storeIds.forEach(storeId -> {
             StoreProductPrice currentStoreProductPrice = storeProductPricesRepository.getFirstByProductIdAndStoreIdOrderByDateDesc(productId, storeId);
             if (currentStoreProductPrice != null) {
-                storeProductPrice.put(storeId, currentStoreProductPrice.getPrice());
+                storeProductPrice.put(storeService.getStoreById(storeId).getName(), currentStoreProductPrice.getPrice());
             }
         });
 

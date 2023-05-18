@@ -67,23 +67,15 @@ class StoreServiceImplTest {
 
     @Test
     void getAllStoreIds() {
-        List<Store> stores = new ArrayList<>();
         List<Long> storeIds = new ArrayList<>();
-        Store firstStore = new Store();
-        Store secondStore = new Store();
         Long firstStoreId = 1L;
         Long secondStoreId = 2L;
-        firstStore.setId(firstStoreId);
-        secondStore.setId(secondStoreId);
         storeIds.add(firstStoreId);
         storeIds.add(secondStoreId);
-        stores.add(firstStore);
-        stores.add(secondStore);
-        when(storeRepository.findAll()).thenReturn(stores);
+        when(storeRepository.getAllStoreIds()).thenReturn(storeIds);
 
         List<Long> storeIdsRes = storeService.getAllStoreIds();
 
         assertThat(storeIdsRes).isEqualTo(storeIds);
-
     }
 }

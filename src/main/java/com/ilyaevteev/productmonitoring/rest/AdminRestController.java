@@ -43,7 +43,7 @@ public class AdminRestController {
         this.entityDtoMapper = entityDtoMapper;
     }
 
-    @PostMapping("register")
+    @PostMapping("add-admin")
     @Operation(summary = "Выполнить процедуру регистрации администратора")
     public ResponseEntity<Map<String, String>> register(@RequestBody @Valid RegistrationDto requestDto, BindingResult bindingResult) {
         User user = userService.register(entityDtoMapper.toEntity(requestDto, User.class), passwordEncoder, "ROLE_ADMIN", bindingResult);
