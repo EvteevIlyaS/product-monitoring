@@ -77,7 +77,7 @@ class AdminRestControllerTest {
         mockMvc.perform(post(END_POINT_PATH + "add-admin")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -89,7 +89,7 @@ class AdminRestControllerTest {
         mockMvc.perform(post(END_POINT_PATH + "products")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -122,7 +122,7 @@ class AdminRestControllerTest {
         mockMvc.perform(post(END_POINT_PATH + "store-product-prices")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -136,7 +136,7 @@ class AdminRestControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.multipart(END_POINT_PATH + "products/upload")
                         .file(multipartFile).characterEncoding("UTF-8"))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -150,6 +150,6 @@ class AdminRestControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.multipart(END_POINT_PATH + "store-product-prices/upload")
                         .file(multipartFile).characterEncoding("UTF-8"))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 }

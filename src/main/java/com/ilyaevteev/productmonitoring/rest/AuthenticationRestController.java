@@ -9,6 +9,7 @@ import com.ilyaevteev.productmonitoring.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -37,7 +38,7 @@ public class AuthenticationRestController {
         Map<String, String> response = new HashMap<>();
         response.put("username", user.getUsername());
 
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("login")
@@ -51,6 +52,6 @@ public class AuthenticationRestController {
         response.put("username", username);
         response.put("token", token);
 
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

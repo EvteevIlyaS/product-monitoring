@@ -50,7 +50,7 @@ class AuthenticationRestControllerTest {
         mockMvc.perform(post(END_POINT_PATH + "register")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test

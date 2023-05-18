@@ -14,6 +14,7 @@ import com.ilyaevteev.productmonitoring.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
@@ -43,7 +44,7 @@ public class AdminRestController {
         Map<String, String> response = new HashMap<>();
         response.put("username", user.getUsername());
 
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "products")
@@ -54,7 +55,7 @@ public class AdminRestController {
         Map<String, String> response = new HashMap<>();
         response.put("product name", noIdProductDto.getName());
 
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "products")
@@ -65,7 +66,7 @@ public class AdminRestController {
         Map<String, String> response = new HashMap<>();
         response.put("product name", productDto.getName());
 
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "products/{id}")
@@ -76,7 +77,7 @@ public class AdminRestController {
         Map<String, Long> response = new HashMap<>();
         response.put("deleted product id", id);
 
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping(value = "store-product-prices")
@@ -90,7 +91,7 @@ public class AdminRestController {
         response.put("product id", storeProductPriceDto.getProduct().getId());
         response.put("price", storeProductPriceDto.getPrice());
 
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "products/upload")
@@ -101,7 +102,7 @@ public class AdminRestController {
         Map<String, String> response = new HashMap<>();
         response.put("file name", file.getOriginalFilename());
 
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "store-product-prices/upload")
@@ -112,6 +113,6 @@ public class AdminRestController {
         Map<String, String> response = new HashMap<>();
         response.put("file name", file.getOriginalFilename());
 
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }

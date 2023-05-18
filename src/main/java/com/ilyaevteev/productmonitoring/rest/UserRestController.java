@@ -11,6 +11,7 @@ import com.ilyaevteev.productmonitoring.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -41,7 +42,7 @@ public class UserRestController {
         userService.changeUserEmail(authentication, authenticationManager, newEmailDto.getPassword(),
                 newEmailDto.getNewEmail(), bindingResult);
 
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping(value = "password")
@@ -51,7 +52,7 @@ public class UserRestController {
         userService.changeUserPassword(authentication, authenticationManager, newPasswordDto.getOldPassword(),
                 newPasswordDto.getNewPassword(), passwordEncoder, bindingResult);
 
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping(value = "stores")
@@ -60,7 +61,8 @@ public class UserRestController {
                                                              @RequestParam(name = "page-size") int pageSize) {
         List<StoreDto> storesDirectory = storeService.getStoresDirectory(offset, pageSize).stream()
                 .map(el -> entityDtoMapper.toDto(el, StoreDto.class)).toList();
-        return ResponseEntity.ok(storesDirectory);
+
+        return new ResponseEntity<>(storesDirectory, HttpStatus.OK);
     }
 
     @GetMapping(value = "categories")
@@ -69,7 +71,8 @@ public class UserRestController {
                                                                     @RequestParam(name = "page-size") int pageSize) {
         List<CategoryDto> categoriesDirectory = categoryService.getCategoriesDirectory(offset, pageSize).stream()
                 .map(el -> entityDtoMapper.toDto(el, CategoryDto.class)).toList();
-        return ResponseEntity.ok(categoriesDirectory);
+
+        return new ResponseEntity<>(categoriesDirectory, HttpStatus.OK);
     }
 
     @GetMapping(value = "products")
@@ -77,7 +80,8 @@ public class UserRestController {
     public ResponseEntity<List<ProductDto>> getProductsByCategory(@RequestParam String category) {
         List<ProductDto> products = productService.getProductsByCategory(category).stream()
                 .map(el -> entityDtoMapper.toDto(el, ProductDto.class)).toList();
-        return ResponseEntity.ok(products);
+
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @GetMapping(value = "store-product-prices/{product-id}")
@@ -87,7 +91,8 @@ public class UserRestController {
                                                                         @RequestParam(name = "date-end") String dateEnd) {
         List<StoreProductPriceDto> productPrices = storeProductPriceService.getProductPricesForPeriod(id, dateStart, dateEnd).stream()
                 .map(el -> entityDtoMapper.toDto(el, StoreProductPriceDto.class)).toList();
-        return ResponseEntity.ok(productPrices);
+
+        return new ResponseEntity<>(productPrices, HttpStatus.OK);
     }
 
     @GetMapping(value = "store-product-prices/comparison/{product-id}")
@@ -95,15 +100,18 @@ public class UserRestController {
     public ResponseEntity<Map<String, Long>> getStoreProductPricesComparison(@PathVariable(name = "product-id") Long productId,
                                                                              @RequestParam(name = "first-store-id") Long firstStoreId,
                                                                              @RequestParam(name = "second-store-id") Long secondStoreId) {
-        Map<String, Long> currentStoreProductPrices = storeProductPriceService.getCurrentStoreProductPrices(productId, firstStoreId, secondStoreId);
-        return ResponseEntity.ok(currentStoreProductPrices);
+        Map<String, Long> currentStoreProductPrices = storeProductPriceService.getCurrentStoreProductPrices(productId,
+                firstStoreId, secondStoreId);
+
+        return new ResponseEntity<>(currentStoreProductPrices, HttpStatus.OK);
     }
 
     @GetMapping(value = "store-product-prices/comparison-all/{product-id}")
     @Operation(summary = "Сравненить цены по позициям всех магазинов")
     public ResponseEntity<Map<String, Long>> getStoreProductPricesComparisonAllStores(@PathVariable(name = "product-id") Long productId) {
         Map<String, Long> allStoresProductPrices = storeProductPriceService.getAllStoresProductPrices(productId);
-        return ResponseEntity.ok(allStoresProductPrices);
+
+        return new ResponseEntity<>(allStoresProductPrices, HttpStatus.OK);
     }
 
     @GetMapping(value = "store-product-prices/dynamics/{product-id}")
@@ -113,7 +121,8 @@ public class UserRestController {
                                                                         @RequestParam int offset,
                                                                         @RequestParam(name = "page-size") int pageSize) {
         Map<Date, Long> productPricesOneStore = storeProductPriceService.getProductPricesOneStore(productId, storeId, offset, pageSize);
-        return ResponseEntity.ok(productPricesOneStore);
+
+        return new ResponseEntity<>(productPricesOneStore, HttpStatus.OK);
     }
 
     @GetMapping(value = "store-product-prices/dynamics-all/{product-id}")
@@ -122,6 +131,7 @@ public class UserRestController {
                                                                 @RequestParam int offset,
                                                                 @RequestParam(name = "page-size") int pageSize) {
         Map<Date, Long> productPrices = storeProductPriceService.getProductPrices(productId, offset, pageSize);
-        return ResponseEntity.ok(productPrices);
+
+        return new ResponseEntity<>(productPrices, HttpStatus.OK);
     }
 }
