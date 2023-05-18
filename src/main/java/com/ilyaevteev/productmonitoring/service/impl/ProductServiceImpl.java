@@ -9,8 +9,8 @@ import com.ilyaevteev.productmonitoring.repository.ProductRepository;
 import com.ilyaevteev.productmonitoring.service.CategoryService;
 import com.ilyaevteev.productmonitoring.service.ProductService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,16 +20,11 @@ import java.util.Map;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     private final CategoryService categoryService;
-
-    @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, CategoryService categoryService) {
-        this.productRepository = productRepository;
-        this.categoryService = categoryService;
-    }
 
     @Override
     public List<Product> getProductsByCategory(String name) {

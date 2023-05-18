@@ -1,19 +1,15 @@
 package com.ilyaevteev.productmonitoring.util;
 
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
 @Component
+@RequiredArgsConstructor
 public class EntityDtoMapper {
     private final ModelMapper modelMapper;
-
-    @Autowired
-    public EntityDtoMapper(ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
-    }
 
     public <Entity, Dto> Dto toDto(Entity category, Class<Dto> dtoClass) {
         return Objects.isNull(category) ? null : modelMapper.map(category, dtoClass);

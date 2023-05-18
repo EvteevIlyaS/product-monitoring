@@ -8,7 +8,7 @@ import com.ilyaevteev.productmonitoring.security.jwt.JwtTokenProvider;
 import com.ilyaevteev.productmonitoring.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,6 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/v1/auth/")
+@RequiredArgsConstructor
 public class AuthenticationRestController {
     private final UserService userService;
 
@@ -27,16 +28,6 @@ public class AuthenticationRestController {
     private final BCryptPasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
-
-    @Autowired
-    public AuthenticationRestController(UserService userService, EntityDtoMapper entityDtoMapper, BCryptPasswordEncoder passwordEncoder,
-                                        AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
-        this.userService = userService;
-        this.entityDtoMapper = entityDtoMapper;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
 
     @PostMapping("register")
     @Operation(summary = "Выполнить процедуру регистрации пользователя")

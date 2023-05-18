@@ -10,7 +10,7 @@ import com.ilyaevteev.productmonitoring.util.EntityDtoMapper;
 import com.ilyaevteev.productmonitoring.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -22,6 +22,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping(value = "/api/v1/user/")
+@RequiredArgsConstructor
 public class UserRestController {
     private final ProductService productService;
     private final StoreService storeService;
@@ -32,19 +33,6 @@ public class UserRestController {
     private final EntityDtoMapper entityDtoMapper;
     private final AuthenticationManager authenticationManager;
     private final BCryptPasswordEncoder passwordEncoder;
-
-    @Autowired
-    public UserRestController(ProductService productService, StoreService storeService, CategoryService categoryService, StoreProductPriceService storeProductPriceService,
-                              UserService userService, EntityDtoMapper entityDtoMapper, AuthenticationManager authenticationManager, BCryptPasswordEncoder passwordEncoder) {
-        this.productService = productService;
-        this.storeService = storeService;
-        this.categoryService = categoryService;
-        this.storeProductPriceService = storeProductPriceService;
-        this.userService = userService;
-        this.entityDtoMapper = entityDtoMapper;
-        this.authenticationManager = authenticationManager;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @PutMapping(value = "email")
     @Operation(summary = "Изменить почту текущего пользователя")

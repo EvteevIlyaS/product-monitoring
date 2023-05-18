@@ -1,25 +1,16 @@
 package com.ilyaevteev.productmonitoring.security.jwt;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+@RequiredArgsConstructor
 public class JwtUser implements UserDetails {
-
     private final String username;
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
-
-    public JwtUser(
-            String username,
-            String password,
-            Collection<? extends GrantedAuthority> authorities
-    ) {
-        this.username = username;
-        this.password = password;
-        this.authorities = authorities;
-    }
 
     @Override
     public String getUsername() {

@@ -4,8 +4,8 @@ import com.ilyaevteev.productmonitoring.exception.exceptionlist.BadRequestExcept
 import com.ilyaevteev.productmonitoring.model.Category;
 import com.ilyaevteev.productmonitoring.repository.CategoryRepository;
 import com.ilyaevteev.productmonitoring.service.CategoryService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,13 +14,9 @@ import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
-
-    @Autowired
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
 
     @Override
     public List<Category> getCategoriesDirectory(int offset, int pageSize) {

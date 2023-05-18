@@ -10,8 +10,8 @@ import com.ilyaevteev.productmonitoring.service.ProductService;
 import com.ilyaevteev.productmonitoring.service.StoreProductPriceService;
 import com.ilyaevteev.productmonitoring.service.StoreService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,18 +23,12 @@ import java.util.*;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class StoreProductPriceServiceImpl implements StoreProductPriceService {
     private final StoreProductPricesRepository storeProductPricesRepository;
 
     private final StoreService storeService;
     private final ProductService productService;
-
-    @Autowired
-    public StoreProductPriceServiceImpl(StoreProductPricesRepository storeProductPricesRepository, StoreService storeService, ProductService productService) {
-        this.storeProductPricesRepository = storeProductPricesRepository;
-        this.storeService = storeService;
-        this.productService = productService;
-    }
 
     @Override
     public void addStoreProductPrice(StoreProductPrice storeProductPrice) {

@@ -13,7 +13,7 @@ import com.ilyaevteev.productmonitoring.service.StoreProductPriceService;
 import com.ilyaevteev.productmonitoring.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
@@ -26,6 +26,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/v1/admin/")
+@RequiredArgsConstructor
 public class AdminRestController {
     private final ProductService productService;
     private final StoreProductPriceService storeProductPriceService;
@@ -33,15 +34,6 @@ public class AdminRestController {
 
     private final BCryptPasswordEncoder passwordEncoder;
     private final EntityDtoMapper entityDtoMapper;
-
-    @Autowired
-    public AdminRestController(ProductService productService, StoreProductPriceService storeProductPriceService, UserService userService, BCryptPasswordEncoder passwordEncoder, EntityDtoMapper entityDtoMapper) {
-        this.productService = productService;
-        this.storeProductPriceService = storeProductPriceService;
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
-        this.entityDtoMapper = entityDtoMapper;
-    }
 
     @PostMapping("add-admin")
     @Operation(summary = "Выполнить процедуру регистрации администратора")
