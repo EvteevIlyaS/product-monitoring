@@ -92,9 +92,7 @@ class UserRestControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     void getStoresDirectoryTest() throws Exception {
-        List<Store> stores = new ArrayList<>();
-        Store store = new Store();
-        stores.add(store);
+        List<Store> stores = List.of(new Store());
         when(storeService.getStoresDirectory(anyInt(), anyInt())).thenReturn(stores);
 
         mockMvc.perform(get(END_POINT_PATH + "stores")
@@ -106,9 +104,7 @@ class UserRestControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     void getCategoriesDirectoryTest() throws Exception {
-        List<Category> categories = new ArrayList<>();
-        Category category = new Category();
-        categories.add(category);
+        List<Category> categories = List.of(new Category());
         when(categoryService.getCategoriesDirectory(anyInt(), anyInt())).thenReturn(categories);
 
         mockMvc.perform(get(END_POINT_PATH + "categories")
@@ -120,9 +116,7 @@ class UserRestControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     void getProductsByCategoryTest() throws Exception {
-        List<Product> products = new ArrayList<>();
-        Product product = new Product();
-        products.add(product);
+        List<Product> products = List.of(new Product());
         when(productService.getProductsByCategory(anyString())).thenReturn(products);
 
         mockMvc.perform(get(END_POINT_PATH + "products")
@@ -133,9 +127,7 @@ class UserRestControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     void getPricesDynamicsTest() throws Exception {
-        List<StoreProductPrice> storeProductPrices = new ArrayList<>();
-        StoreProductPrice storeProductPrice = new StoreProductPrice();
-        storeProductPrices.add(storeProductPrice);
+        List<StoreProductPrice> storeProductPrices = List.of(new StoreProductPrice());
         when(storeProductPriceService.getProductPricesForPeriod(anyLong(), any(), any())).thenReturn(storeProductPrices);
 
         mockMvc.perform(get(END_POINT_PATH + "store-product-prices/1")

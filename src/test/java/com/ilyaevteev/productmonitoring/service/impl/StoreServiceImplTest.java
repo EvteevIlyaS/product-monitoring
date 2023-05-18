@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,11 +29,7 @@ class StoreServiceImplTest {
 
     @Test
     void getStoresDirectory_checkReturnedValue() {
-        Store mall = new Store();
-        Store supermarket = new Store();
-        List<Store> stores = new ArrayList<>();
-        stores.add(mall);
-        stores.add(supermarket);
+        List<Store> stores = Arrays.asList(new Store(), new Store());
         int offset = 0;
         int pageSize = 2;
         Page<Store> page = new PageImpl<>(stores);
@@ -67,11 +64,7 @@ class StoreServiceImplTest {
 
     @Test
     void getAllStoreIds() {
-        List<Long> storeIds = new ArrayList<>();
-        Long firstStoreId = 1L;
-        Long secondStoreId = 2L;
-        storeIds.add(firstStoreId);
-        storeIds.add(secondStoreId);
+        List<Long> storeIds = Arrays.asList(1L, 2L);
         when(storeRepository.getAllStoreIds()).thenReturn(storeIds);
 
         List<Long> storeIdsRes = storeService.getAllStoreIds();

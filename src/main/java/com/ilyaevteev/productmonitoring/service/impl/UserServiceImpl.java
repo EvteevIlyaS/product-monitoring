@@ -69,8 +69,7 @@ public class UserServiceImpl implements UserService {
 
         Role roleUser = roleOptional.get();
 
-        List<Role> userRoles = new ArrayList<>();
-        userRoles.add(roleUser);
+        List<Role> userRoles = List.of(roleUser);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(userRoles);

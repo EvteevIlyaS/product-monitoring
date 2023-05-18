@@ -144,8 +144,7 @@ class StoreProductPriceServiceImplTest {
         StoreProductPrice storeProductPrice = new StoreProductPrice();
         storeProductPrice.setDate(new Date());
         storeProductPrice.setPrice(100L);
-        List<StoreProductPrice> storeProductPrices = new ArrayList<>();
-        storeProductPrices.add(storeProductPrice);
+        List<StoreProductPrice> storeProductPrices = List.of(storeProductPrice);
         productPrices.put(storeProductPrice.getDate(), storeProductPrice.getPrice());
         when(storeProductPricesRepository.findAllByProductIdOrderByDate(id, page)).thenReturn(storeProductPrices);
 
@@ -165,8 +164,7 @@ class StoreProductPriceServiceImplTest {
         StoreProductPrice storeProductPrice = new StoreProductPrice();
         storeProductPrice.setDate(new Date());
         storeProductPrice.setPrice(100L);
-        List<StoreProductPrice> storeProductPrices = new ArrayList<>();
-        storeProductPrices.add(storeProductPrice);
+        List<StoreProductPrice> storeProductPrices = List.of(storeProductPrice);
         productPrices.put(storeProductPrice.getDate(), storeProductPrice.getPrice());
         when(storeProductPricesRepository.findAllByProductIdAndStoreIdOrderByDate(productId, storeId, page)).thenReturn(storeProductPrices);
 

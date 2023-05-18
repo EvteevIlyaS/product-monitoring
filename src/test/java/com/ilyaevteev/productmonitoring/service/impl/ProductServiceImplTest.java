@@ -31,9 +31,7 @@ class ProductServiceImplTest {
     @Test
     void getProductsByCategory_checkReturnedValue() {
         String category = "fruits";
-        List<Product> products = new ArrayList<>();
-        Product apple = new Product();
-        products.add(apple);
+        List<Product> products = List.of(new Product());
         when(productRepository.getProductsByCategoryName(category)).thenReturn(products);
 
         List<Product> productsRes = productService.getProductsByCategory(category);

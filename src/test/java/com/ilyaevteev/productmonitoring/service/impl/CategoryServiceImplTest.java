@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,11 +29,7 @@ class CategoryServiceImplTest {
 
     @Test
     void getCategoriesDirectory_checkReturnedValue() {
-        Category fruits = new Category();
-        Category vegetables = new Category();
-        List<Category> categories = new ArrayList<>();
-        categories.add(fruits);
-        categories.add(vegetables);
+        List<Category> categories = Arrays.asList(new Category(), new Category());
         int offset = 0;
         int pageSize = 2;
         Page<Category> page = new PageImpl<>(categories);

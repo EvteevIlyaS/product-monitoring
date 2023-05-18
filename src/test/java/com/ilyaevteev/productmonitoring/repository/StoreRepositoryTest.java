@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -18,10 +19,7 @@ class StoreRepositoryTest {
     @Test
     void getAllStoreId() {
         Comparator<Long> comparator = Long::compareTo;
-        List<Long> storeIds = new ArrayList<>();
-        storeIds.add(1L);
-        storeIds.add(2L);
-        storeIds.add(3L);
+        List<Long> storeIds = Arrays.asList(1L, 2L, 3L);
 
         List<Long> storeIdsRes = storeRepository.getAllStoreIds();
         storeIdsRes.sort(comparator);
