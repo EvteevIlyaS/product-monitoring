@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -36,15 +35,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByUsername(String username) {
-        Optional<User> user = userRepository.findByUsername(username);
-
-        if (user.isEmpty()) {
+        return userRepository.findByUsername(username).orElseGet(() -> {
             String message = "No users found by name: " + username;
             log.error(message);
             throw new BadRequestException(message);
-        }
-
-        return user.get();
+        });
     }
 
     @Override
@@ -58,15 +53,11 @@ public class UserServiceImpl implements UserService {
 
         User registeredUser;
 
-        Optional<Role> roleOptional = roleRepository.findByName(role);
-
-        if (roleOptional.isEmpty()) {
+        Role roleUser = roleRepository.findByName(role).orElseGet(() -> {
             String message = "Role not found";
             log.error(message);
             throw new BadRequestException(message);
-        }
-
-        Role roleUser = roleOptional.get();
+        });
 
         List<Role> userRoles = List.of(roleUser);
 
@@ -95,15 +86,13 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException(message);
         }
 
-        Optional<User> user = userRepository.findByUsername(username);
-
-        if (user.isEmpty()) {
+        User user = userRepository.findByUsername(username).orElseGet(() -> {
             String message = "No users found by name: " + username;
             log.error(message);
             throw new BadRequestException(message);
-        }
+        });
 
-        return jwtTokenProvider.createToken(username, user.get().getRoles());
+        return jwtTokenProvider.createToken(username, user.getRoles());
     }
 
     @Override

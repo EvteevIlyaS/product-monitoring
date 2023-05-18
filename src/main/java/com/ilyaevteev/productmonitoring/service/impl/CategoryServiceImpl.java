@@ -11,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -31,14 +30,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category getCategoryById(Long id) {
-        Optional<Category> category = categoryRepository.findById(id);
-
-        if (category.isEmpty()) {
+        return categoryRepository.findById(id).orElseGet(() -> {
             String message = "No categories found by id: " + id;
             log.error(message);
             throw new BadRequestException(message);
-        }
-
-        return category.get();
+        });
     }
 }

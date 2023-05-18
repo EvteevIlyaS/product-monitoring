@@ -11,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -31,15 +30,11 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public Store getStoreById(Long id) {
-        Optional<Store> store = storeRepository.findById(id);
-
-        if (store.isEmpty()) {
+        return storeRepository.findById(id).orElseGet(() -> {
             String message = "No stores found by id: " + id;
             log.error(message);
             throw new BadRequestException(message);
-        }
-
-        return store.get();
+        });
     }
 
     @Override

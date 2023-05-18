@@ -15,7 +15,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"new user\",\n    \"password\": \"54321\"\n}",
+					"raw": "{\n    \"username\": \"new user\",\n    \"password\": \"12345\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -74,13 +74,13 @@
 			"response": []
 		},
 		{
-			"name": "Выполнить процедуру регистрации администратора (admin)",
+			"name": "Добавить администратора (admin)",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0MjQyNTYwLCJleHAiOjE2ODQyNDYxNjB9.GCWwTRcHf0Hv2MWg69N2bxdP7abWRly_m1tLalRRqtA",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0NDAzMjIwLCJleHAiOjE2ODQ0MDY4MjB9.Ur1Gdc2D182wEYFMfuXpO3i5srYh3hcUQI5ydxIbkvs",
 						"type": "default"
 					}
 				],
@@ -94,7 +94,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/admin/register",
+					"raw": "http://localhost:8080/api/v1/admin/add-admin",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -104,7 +104,7 @@
 						"api",
 						"v1",
 						"admin",
-						"register"
+						"add-admin"
 					]
 				}
 			},
@@ -257,7 +257,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjgzODk4NzQ1LCJleHAiOjE2ODM5MDIzNDV9.x1IfIBx58Pepm8_odgwJl2mByZmCNjFfIof1-F5emcI",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXcgdXNlciIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2ODQ0MDg4NTksImV4cCI6MTY4NDQxMjQ1OX0.vTwfr99rkQYSuIYCP8uBShLFW7Z75spKaDskuz8SicE",
 						"type": "default"
 					}
 				],
@@ -294,7 +294,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjgzOTcwOTI1LCJleHAiOjE2ODM5NzQ1MjV9.1UWTiKoaQVWKpLfswQLWYhjFotI7LSR9KXeR_ZHPf3w",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXcgdXNlciIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2ODQzMzg3ODYsImV4cCI6MTY4NDM0MjM4Nn0.cqeQCjDQ-o4KXm1k9zS4tape_xkTb7pxIqciqNA9tqs",
 						"type": "default"
 					}
 				],
@@ -502,7 +502,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjgzOTA5NzY5LCJleHAiOjE2ODM5MTMzNjl9.CRZcJlc6YGFq34JYtZtOuBJAdREFMx_bZn9XGmmKqKY",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0NDA0Mjc2LCJleHAiOjE2ODQ0MDc4NzZ9.hcJC8EoOfq3mLSNx6jcHdx31Y-ksJkbYUee5yS-jcfE",
 						"type": "default"
 					}
 				],
@@ -541,7 +541,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjgzODk4NzQ1LCJleHAiOjE2ODM5MDIzNDV9.x1IfIBx58Pepm8_odgwJl2mByZmCNjFfIof1-F5emcI",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0NDA0Mjc2LCJleHAiOjE2ODQ0MDc4NzZ9.hcJC8EoOfq3mLSNx6jcHdx31Y-ksJkbYUee5yS-jcfE",
 						"type": "default"
 					}
 				],
@@ -691,7 +691,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0MzM4Mzc4LCJleHAiOjE2ODQzNDE5Nzh9.Rc6jORVYH6WXZ95AxX4cRuphlmzaTcGyKs4vHz2kzCQ",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0NDA4ODUzLCJleHAiOjE2ODQ0MTI0NTN9.o65sCKcnMfvGSBqmpNYKboCHg5Cn6UJHJs9yeZclRhw",
 						"type": "default"
 					}
 				],

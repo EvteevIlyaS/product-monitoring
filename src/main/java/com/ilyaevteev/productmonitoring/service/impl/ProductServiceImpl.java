@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -77,15 +76,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProductById(Long id) {
-        Optional<Product> product = productRepository.findById(id);
-
-        if (product.isEmpty()) {
+        return productRepository.findById(id).orElseGet(() -> {
             String message = "No products found by id: " + id;
             log.error(message);
             throw new BadRequestException(message);
-        }
-
-        return product.get();
+        });
     }
 
     @Override
