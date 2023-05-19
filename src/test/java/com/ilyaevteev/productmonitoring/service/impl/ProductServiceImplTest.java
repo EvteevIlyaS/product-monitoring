@@ -135,7 +135,7 @@ class ProductServiceImplTest {
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "products-data.csv",
                 "text/csv",
-                new ClassPathResource("upload-data-testing/products-data.csv").getInputStream());
+                new ClassPathResource("upload-data/products-data.csv").getInputStream());
 
         productService.uploadFileProduct(multipartFile);
 
@@ -147,7 +147,7 @@ class ProductServiceImplTest {
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "products-data.xlsx",
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                new ClassPathResource("upload-data-testing/products-data.xlsx").getInputStream());
+                new ClassPathResource("upload-data/products-data.xlsx").getInputStream());
 
         productService.uploadFileProduct(multipartFile);
 
@@ -159,7 +159,7 @@ class ProductServiceImplTest {
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "products-data.csv",
                 "text/csv",
-                new ClassPathResource("upload-data-testing/products-data.csv").getInputStream());
+                new ClassPathResource("upload-data/products-data.csv").getInputStream());
         when(productRepository.saveAll(anyIterable())).thenThrow(new RuntimeException(""));
 
         assertThatThrownBy(() -> productService.uploadFileProduct(multipartFile))
@@ -171,7 +171,7 @@ class ProductServiceImplTest {
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "products-data.csv",
                 "odt",
-                new ClassPathResource("upload-data-testing/products-data.csv").getInputStream());
+                new ClassPathResource("upload-data/products-data.csv").getInputStream());
 
         assertThatThrownBy(() -> productService.uploadFileProduct(multipartFile))
                 .hasMessage("Wrong data format");
@@ -182,7 +182,7 @@ class ProductServiceImplTest {
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "products-data.csv",
                 "text/csv",
-                new ClassPathResource("upload-data-testing/products-data.csv").getInputStream());
+                new ClassPathResource("upload-data/products-data.csv").getInputStream());
         when(categoryService.getCategoryById(anyLong())).thenThrow(new RuntimeException("No categories found by id"));
 
         assertThatThrownBy(() -> productService.uploadFileProduct(multipartFile))

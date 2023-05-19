@@ -132,7 +132,7 @@ class AdminRestControllerTest {
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "products-data.csv",
                 "text/csv",
-                new ClassPathResource("upload-data-testing/products-data.csv").getInputStream());
+                new ClassPathResource("upload-data/products-data.csv").getInputStream());
 
         mockMvc.perform(MockMvcRequestBuilders.multipart(END_POINT_PATH + "products/upload")
                         .file(multipartFile).characterEncoding("UTF-8"))
@@ -145,7 +145,7 @@ class AdminRestControllerTest {
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "products-data.csv",
                 "text/csv",
-                new ClassPathResource("upload-data-testing/prices-data.csv").getInputStream());
+                new ClassPathResource("upload-data/prices-data.csv").getInputStream());
 
         mockMvc.perform(MockMvcRequestBuilders.multipart(END_POINT_PATH + "store-product-prices/upload")
                         .file(multipartFile).characterEncoding("UTF-8"))

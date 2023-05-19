@@ -180,7 +180,7 @@ class StoreProductPriceServiceImplTest {
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "prices-data.csv",
                 "text/csv",
-                new ClassPathResource("upload-data-testing/prices-data.csv").getInputStream());
+                new ClassPathResource("upload-data/prices-data.csv").getInputStream());
         storeProductPriceService.uploadFilePrices(multipartFile);
 
         verify(storeProductPricesRepository, times(1)).saveAll(anyIterable());
@@ -191,7 +191,7 @@ class StoreProductPriceServiceImplTest {
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "prices-data.xlsx",
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                new ClassPathResource("upload-data-testing/prices-data.xlsx").getInputStream());
+                new ClassPathResource("upload-data/prices-data.xlsx").getInputStream());
         storeProductPriceService.uploadFilePrices(multipartFile);
 
         verify(storeProductPricesRepository, times(1)).saveAll(anyIterable());
@@ -202,7 +202,7 @@ class StoreProductPriceServiceImplTest {
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "prices-data.csv",
                 "text/csv",
-                new ClassPathResource("upload-data-testing/prices-data.csv").getInputStream());
+                new ClassPathResource("upload-data/prices-data.csv").getInputStream());
         when(storeProductPricesRepository.saveAll(anyIterable())).thenThrow(new RuntimeException(""));
 
         assertThatThrownBy(() -> storeProductPriceService.uploadFilePrices(multipartFile))
@@ -214,7 +214,7 @@ class StoreProductPriceServiceImplTest {
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "prices-data.csv",
                 "odt",
-                new ClassPathResource("upload-data-testing/prices-data.csv").getInputStream());
+                new ClassPathResource("upload-data/prices-data.csv").getInputStream());
 
         assertThatThrownBy(() -> storeProductPriceService.uploadFilePrices(multipartFile))
                 .hasMessage("Wrong data format");
@@ -226,7 +226,7 @@ class StoreProductPriceServiceImplTest {
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "prices-data.csv",
                 "text/csv",
-                new ClassPathResource("upload-data-testing/prices-data.csv").getInputStream());
+                new ClassPathResource("upload-data/prices-data.csv").getInputStream());
         when(storeService.getStoreById(anyLong())).thenThrow(new RuntimeException("No products found by id"));
 
         assertThatThrownBy(() -> storeProductPriceService.uploadFilePrices(multipartFile))
