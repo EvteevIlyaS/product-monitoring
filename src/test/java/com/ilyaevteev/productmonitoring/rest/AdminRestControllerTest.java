@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -128,11 +129,10 @@ class AdminRestControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void uploadProductsTest() throws Exception {
-        String dataLine = "name,categoryId\nbutter,3\npear,1\npumpkin,2";
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "products-data.csv",
                 "text/csv",
-                dataLine.getBytes());
+                new ClassPathResource("upload-data-testing/products-data.csv").getInputStream());
 
         mockMvc.perform(MockMvcRequestBuilders.multipart(END_POINT_PATH + "products/upload")
                         .file(multipartFile).characterEncoding("UTF-8"))
@@ -142,11 +142,10 @@ class AdminRestControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void uploadPricesTest() throws Exception {
-        String dataLine = "storeId,productId,price\n1,3,100\n2,2,200\n3,1,300";
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "products-data.csv",
                 "text/csv",
-                dataLine.getBytes());
+                new ClassPathResource("upload-data-testing/prices-data.csv").getInputStream());
 
         mockMvc.perform(MockMvcRequestBuilders.multipart(END_POINT_PATH + "store-product-prices/upload")
                         .file(multipartFile).characterEncoding("UTF-8"))

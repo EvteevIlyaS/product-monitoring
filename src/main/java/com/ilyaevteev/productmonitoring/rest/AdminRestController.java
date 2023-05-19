@@ -95,7 +95,7 @@ public class AdminRestController {
     }
 
     @PostMapping(value = "products/upload")
-    @Operation(summary = "Выгрузить информации о продуктах в формате csv")
+    @Operation(summary = "Выгрузить информации о продуктах в формате csv/xlsx")
     public ResponseEntity<Map<String, String>> uploadProducts(@RequestBody MultipartFile file) {
         productService.uploadFileProduct(file);
 
@@ -106,7 +106,7 @@ public class AdminRestController {
     }
 
     @PostMapping(value = "store-product-prices/upload")
-    @Operation(summary = "Выгрузить информации о ценах в формате csv")
+    @Operation(summary = "Выгрузить информации о ценах в формате csv/xlsx")
     public ResponseEntity<Map<String, String>> uploadPrices(@RequestBody MultipartFile file) {
         storeProductPriceService.uploadFilePrices(file);
 

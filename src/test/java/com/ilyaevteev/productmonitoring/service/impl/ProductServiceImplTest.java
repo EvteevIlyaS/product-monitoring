@@ -8,8 +8,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockMultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -129,12 +131,11 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void uploadFileProduct_checkMethodInvocation() {
-        String dataLine = "name,categoryId\nbutter,3\npear,1\npumpkin,2";
+    void uploadFileProduct_checkMethodInvocationCSV() throws IOException {
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "products-data.csv",
                 "text/csv",
-                dataLine.getBytes());
+                new ClassPathResource("upload-data-testing/products-data.csv").getInputStream());
 
         productService.uploadFileProduct(multipartFile);
 
@@ -142,40 +143,49 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void uploadFileProduct_checkFirstThrowException() {
-        String dataLine = "name,categoryId\nbutter,3\npear,1\npumpkin,2";
+    void uploadFileProduct_checkMethodInvocationXLSX() throws IOException {
         MockMultipartFile multipartFile = new MockMultipartFile("file",
-                "products-data.csv",
-                "text/csv",
-                dataLine.getBytes());
-        when(productRepository.saveAll(anyIterable())).thenThrow(new RuntimeException(""));
+                "products-data.xlsx",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                new ClassPathResource("upload-data-testing/products-data.xlsx").getInputStream());
 
-        assertThatThrownBy(() -> productService.uploadFileProduct(multipartFile))
-                .hasMessage("Fail to store csv data");
+        productService.uploadFileProduct(multipartFile);
+
+        verify(productRepository, times(1)).saveAll(anyIterable());
     }
 
     @Test
-    void uploadFileProduct_checkSecondThrowException() {
-        String dataLine = "name,categoryId\nbutter,3\npear,1\npumpkin,2";
+    void uploadFileProduct_checkFirstThrowException() throws IOException {
+        MockMultipartFile multipartFile = new MockMultipartFile("file",
+                "products-data.csv",
+                "text/csv",
+                new ClassPathResource("upload-data-testing/products-data.csv").getInputStream());
+        when(productRepository.saveAll(anyIterable())).thenThrow(new RuntimeException(""));
+
+        assertThatThrownBy(() -> productService.uploadFileProduct(multipartFile))
+                .hasMessage("Fail to store data");
+    }
+
+    @Test
+    void uploadFileProduct_checkSecondThrowException() throws IOException {
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "products-data.csv",
                 "odt",
-                dataLine.getBytes());
+                new ClassPathResource("upload-data-testing/products-data.csv").getInputStream());
 
         assertThatThrownBy(() -> productService.uploadFileProduct(multipartFile))
                 .hasMessage("Wrong data format");
     }
 
     @Test
-    void uploadFileProduct_checkThirdThrowException() {
-        String dataLine = "name,categoryId\nbutter,3\npear,1\npumpkin,2";
+    void uploadFileProduct_checkThirdThrowException() throws IOException {
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "products-data.csv",
                 "text/csv",
-                dataLine.getBytes());
+                new ClassPathResource("upload-data-testing/products-data.csv").getInputStream());
         when(categoryService.getCategoryById(anyLong())).thenThrow(new RuntimeException("No categories found by id"));
 
         assertThatThrownBy(() -> productService.uploadFileProduct(multipartFile))
-                .hasMessage("Fail to store csv data");
+                .hasMessage("Fail to store data");
     }
 }

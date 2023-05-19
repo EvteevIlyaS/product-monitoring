@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Map;
 
 public class CSVHelper {
-    public static final String TYPE = "text/csv";
     public static final String[] PRODUCT_HEADERS = {"name", "categoryId"};
     public static final String[] PRODUCT_PRICE_HEADERS = {"storeId", "productId", "price"};
+    private static final String TYPE = "text/csv";
 
     public static boolean hasCSVFormat(MultipartFile file) {
         return TYPE.equals(file.getContentType());
@@ -32,11 +32,11 @@ public class CSVHelper {
             Iterable<CSVRecord> csvRecords = csvParser.getRecords();
 
             csvRecords.forEach(csvRecord -> {
-                Map<String, String> product = new HashMap<>();
+                Map<String, String> entity = new HashMap<>();
                 for (String field: fields) {
-                    product.put(field, csvRecord.get(field));
+                    entity.put(field, csvRecord.get(field));
                 }
-                entities.add(product);
+                entities.add(entity);
             });
 
             return entities;

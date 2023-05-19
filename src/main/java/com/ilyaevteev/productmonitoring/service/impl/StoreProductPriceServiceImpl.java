@@ -9,6 +9,7 @@ import com.ilyaevteev.productmonitoring.repository.StoreProductPricesRepository;
 import com.ilyaevteev.productmonitoring.service.ProductService;
 import com.ilyaevteev.productmonitoring.service.StoreProductPriceService;
 import com.ilyaevteev.productmonitoring.service.StoreService;
+import com.ilyaevteev.productmonitoring.util.ExcelHelper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -120,10 +121,12 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
     public void uploadFilePrices(MultipartFile file) {
         List<StoreProductPrice> prices;
 
-        if (CSVHelper.hasCSVFormat(file)) {
+        if (CSVHelper.hasCSVFormat(file) | ExcelHelper.hasExcelFormat(file)) {
             prices = new ArrayList<>();
             try {
-                List<Map<String, String>> rawPricesData = CSVHelper.csvToEntities(file.getInputStream(), CSVHelper.PRODUCT_PRICE_HEADERS);
+                List<Map<String, String>> rawPricesData = CSVHelper.hasCSVFormat(file) ?
+                        CSVHelper.csvToEntities(file.getInputStream(), CSVHelper.PRODUCT_PRICE_HEADERS) :
+                        ExcelHelper.excelToEntities(file.getInputStream(), ExcelHelper.PRODUCT_PRICE_HEADERS);
                 rawPricesData.forEach(p -> {
                     StoreProductPrice price = new StoreProductPrice();
                     price.setStore(storeService.getStoreById(Long.parseLong(p.get("storeId"))));
@@ -136,7 +139,7 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
                 storeProductPricesRepository.saveAll(prices);
 
             } catch (Exception e) {
-                String message = "Fail to store csv data";
+                String message = "Fail to store data";
                 log.error(message);
                 if (e.getMessage().contains("No products found by id") | e.getMessage().contains("No stores found by id")) {
                     throw new FailedDependencyException(message);

@@ -8,6 +8,7 @@ import com.ilyaevteev.productmonitoring.model.Product;
 import com.ilyaevteev.productmonitoring.repository.ProductRepository;
 import com.ilyaevteev.productmonitoring.service.CategoryService;
 import com.ilyaevteev.productmonitoring.service.ProductService;
+import com.ilyaevteev.productmonitoring.util.ExcelHelper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,10 +84,12 @@ public class ProductServiceImpl implements ProductService {
     public void uploadFileProduct(MultipartFile file) {
         List<Product> products;
 
-        if (CSVHelper.hasCSVFormat(file)) {
+        if (CSVHelper.hasCSVFormat(file) | ExcelHelper.hasExcelFormat(file)) {
             products = new ArrayList<>();
             try {
-                List<Map<String, String>> rawProductsData = CSVHelper.csvToEntities(file.getInputStream(), CSVHelper.PRODUCT_HEADERS);
+                List<Map<String, String>> rawProductsData = CSVHelper.hasCSVFormat(file) ?
+                        CSVHelper.csvToEntities(file.getInputStream(), CSVHelper.PRODUCT_HEADERS) :
+                        ExcelHelper.excelToEntities(file.getInputStream(), ExcelHelper.PRODUCT_HEADERS);
                 rawProductsData.forEach(p -> {
                     Product product = new Product();
                     product.setName(p.get("name"));
@@ -97,7 +100,7 @@ public class ProductServiceImpl implements ProductService {
                 productRepository.saveAll(products);
 
             } catch (Exception e) {
-                String message = "Fail to store csv data";
+                String message = "Fail to store data";
                 log.error(message);
                 if (e.getMessage().contains("No categories found by id")) {
                     throw new FailedDependencyException(message);

@@ -10,10 +10,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 import static org.mockito.Mockito.*;
@@ -174,37 +176,45 @@ class StoreProductPriceServiceImplTest {
     }
 
     @Test
-    void uploadFilePrices_checkMethodInvocation() {
-        String dataLine = "storeId,productId,price\n1,3,100\n2,2,200\n3,1,300";
+    void uploadFilePrices_checkMethodInvocationCSV() throws IOException {
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "prices-data.csv",
                 "text/csv",
-                dataLine.getBytes());
+                new ClassPathResource("upload-data-testing/prices-data.csv").getInputStream());
         storeProductPriceService.uploadFilePrices(multipartFile);
 
         verify(storeProductPricesRepository, times(1)).saveAll(anyIterable());
     }
 
     @Test
-    void uploadFilePrices_checkFirstThrowException() {
-        String dataLine = "storeId,productId,price\n1,3,100\n2,2,200\n3,1,300";
+    void uploadFilePrices_checkMethodInvocationXLSX() throws IOException {
         MockMultipartFile multipartFile = new MockMultipartFile("file",
-                "prices-data.csv",
-                "text/csv",
-                dataLine.getBytes());
-        when(storeProductPricesRepository.saveAll(anyIterable())).thenThrow(new RuntimeException(""));
+                "prices-data.xlsx",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                new ClassPathResource("upload-data-testing/prices-data.xlsx").getInputStream());
+        storeProductPriceService.uploadFilePrices(multipartFile);
 
-        assertThatThrownBy(() -> storeProductPriceService.uploadFilePrices(multipartFile))
-                .hasMessage("Fail to store csv data");
+        verify(storeProductPricesRepository, times(1)).saveAll(anyIterable());
     }
 
     @Test
-    void uploadFilePrices_checkSecondThrowException() {
-        String dataLine = "storeId,productId,price\n1,3,100\n2,2,200\n3,1,300";
+    void uploadFilePrices_checkFirstThrowException() throws IOException {
+        MockMultipartFile multipartFile = new MockMultipartFile("file",
+                "prices-data.csv",
+                "text/csv",
+                new ClassPathResource("upload-data-testing/prices-data.csv").getInputStream());
+        when(storeProductPricesRepository.saveAll(anyIterable())).thenThrow(new RuntimeException(""));
+
+        assertThatThrownBy(() -> storeProductPriceService.uploadFilePrices(multipartFile))
+                .hasMessage("Fail to store data");
+    }
+
+    @Test
+    void uploadFilePrices_checkSecondThrowException() throws IOException {
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "prices-data.csv",
                 "odt",
-                dataLine.getBytes());
+                new ClassPathResource("upload-data-testing/prices-data.csv").getInputStream());
 
         assertThatThrownBy(() -> storeProductPriceService.uploadFilePrices(multipartFile))
                 .hasMessage("Wrong data format");
@@ -212,15 +222,14 @@ class StoreProductPriceServiceImplTest {
     }
 
     @Test
-    void uploadFilePrices_checkThirdThrowException() {
-        String dataLine = "storeId,productId,price\n1,3,100\n2,2,200\n3,1,300";
+    void uploadFilePrices_checkThirdThrowException() throws IOException {
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "prices-data.csv",
                 "text/csv",
-                dataLine.getBytes());
+                new ClassPathResource("upload-data-testing/prices-data.csv").getInputStream());
         when(storeService.getStoreById(anyLong())).thenThrow(new RuntimeException("No products found by id"));
 
         assertThatThrownBy(() -> storeProductPriceService.uploadFilePrices(multipartFile))
-                .hasMessage("Fail to store csv data");
+                .hasMessage("Fail to store data");
     }
 }
