@@ -120,11 +120,13 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
     @Transactional
     public void uploadFilePrices(MultipartFile file) {
         List<StoreProductPrice> prices;
+        Boolean isCSV = CSVHelper.hasCSVFormat(file);
+        Boolean isExcel = ExcelHelper.hasExcelFormat(file);
 
-        if (CSVHelper.hasCSVFormat(file) | ExcelHelper.hasExcelFormat(file)) {
+        if (isCSV | isExcel) {
             prices = new ArrayList<>();
             try {
-                List<Map<String, String>> rawPricesData = CSVHelper.hasCSVFormat(file) ?
+                List<Map<String, String>> rawPricesData = isCSV ?
                         CSVHelper.csvToEntities(file.getInputStream(), CSVHelper.PRODUCT_PRICE_HEADERS) :
                         ExcelHelper.excelToEntities(file.getInputStream(), ExcelHelper.PRODUCT_PRICE_HEADERS);
                 rawPricesData.forEach(p -> {

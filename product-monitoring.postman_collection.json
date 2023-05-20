@@ -652,7 +652,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0NTI0ODI3LCJleHAiOjE2ODQ1Mjg0Mjd9.197Pmp9Uru6qIkNHVgcDM5REMAoZaxl-GsarevPZ9MI",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0NTI2ODk4LCJleHAiOjE2ODQ1MzA0OTh9.58U_6Maq_rtOXhHM4McWVHU5ImOK184LL3rDnnH1OEo",
 						"type": "default"
 					}
 				],
@@ -662,7 +662,7 @@
 						{
 							"key": "file",
 							"type": "file",
-							"src": "/home/ilya/JavaProjects/Senla/product-monitoring/upload-data/products-data.xlsx"
+							"src": "/home/ilya/JavaProjects/Senla/product-monitoring/src/test/resources/upload-data/products-data.xlsx"
 						}
 					]
 				},
@@ -691,7 +691,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0NTI0ODI3LCJleHAiOjE2ODQ1Mjg0Mjd9.197Pmp9Uru6qIkNHVgcDM5REMAoZaxl-GsarevPZ9MI",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0NTI2ODk4LCJleHAiOjE2ODQ1MzA0OTh9.58U_6Maq_rtOXhHM4McWVHU5ImOK184LL3rDnnH1OEo",
 						"type": "default"
 					}
 				],
@@ -701,7 +701,7 @@
 						{
 							"key": "file",
 							"type": "file",
-							"src": "/home/ilya/JavaProjects/Senla/product-monitoring/upload-data/prices-data.csv"
+							"src": "/home/ilya/JavaProjects/Senla/product-monitoring/src/test/resources/upload-data/prices-data.csv"
 						}
 					]
 				},

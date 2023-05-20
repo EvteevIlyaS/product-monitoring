@@ -83,11 +83,13 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public void uploadFileProduct(MultipartFile file) {
         List<Product> products;
+        Boolean isCSV = CSVHelper.hasCSVFormat(file);
+        Boolean isExcel = ExcelHelper.hasExcelFormat(file);
 
-        if (CSVHelper.hasCSVFormat(file) | ExcelHelper.hasExcelFormat(file)) {
+        if (isCSV | isExcel) {
             products = new ArrayList<>();
             try {
-                List<Map<String, String>> rawProductsData = CSVHelper.hasCSVFormat(file) ?
+                List<Map<String, String>> rawProductsData = isCSV ?
                         CSVHelper.csvToEntities(file.getInputStream(), CSVHelper.PRODUCT_HEADERS) :
                         ExcelHelper.excelToEntities(file.getInputStream(), ExcelHelper.PRODUCT_HEADERS);
                 rawProductsData.forEach(p -> {
