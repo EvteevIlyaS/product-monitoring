@@ -37,11 +37,17 @@ class StoreProductPriceServiceImplTest {
 
     @Test
     void addStoreProductPrice_checkMethodInvocation() {
+        Long id = 1L;
+        Long price = 100L;
         StoreProductPrice storeProductPrice = new StoreProductPrice();
+        storeProductPrice.setId(id);
+        storeProductPrice.setPrice(price);
+        Map<String, String> productPrice = Map.of("id", id.toString(), "price", price.toString());
 
-        storeProductPriceService.addStoreProductPrice(storeProductPrice);
+        Map<String, String> productPriceRes = storeProductPriceService.addStoreProductPrice(storeProductPrice);
 
         verify(storeProductPricesRepository, times(1)).save(storeProductPrice);
+        assertThat(productPriceRes).isEqualTo(productPrice);
     }
 
     @Test
@@ -79,7 +85,7 @@ class StoreProductPriceServiceImplTest {
 
     @Test
     void getCurrentStoreProductPrices_checkReturnedValue() {
-        Map<String, Long> storeProductPrice = new HashMap<>();
+        List<Map<String, String>> storeProductPrices;
         Long productId = 1L;
         Long firstStoreId = 1L;
         Long secondStoreId = 2L;
@@ -89,17 +95,19 @@ class StoreProductPriceServiceImplTest {
         String secondStoreName = "supermarket";
         firstStore.setName(firstStoreName);
         secondStore.setName(secondStoreName);
-        storeProductPrice.put(firstStoreName, null);
-        storeProductPrice.put(secondStoreName, null);
+        StoreProductPrice storeProductPrice = new StoreProductPrice();
+        storeProductPrice.setPrice(100L);
+        storeProductPrices = Arrays.asList(Map.of("store", firstStoreName, "price", "100"),
+                Map.of( "store", secondStoreName, "price", "100"));
         when(storeService.getStoreById(firstStoreId)).thenReturn(firstStore);
         when(storeService.getStoreById(secondStoreId)).thenReturn(secondStore);
         when(storeProductPricesRepository.getFirstByProductIdAndStoreIdOrderByDateDesc(anyLong(), anyLong()))
-                .thenReturn(new StoreProductPrice());
+                .thenReturn(storeProductPrice);
 
-        Map<String, Long> storeProductPriceRes = storeProductPriceService
+        List<Map<String, String>> storeProductPriceRes = storeProductPriceService
                 .getCurrentStoreProductPrices(productId, firstStoreId, secondStoreId);
 
-        assertThat(storeProductPriceRes).isEqualTo(storeProductPrice);
+        assertThat(storeProductPriceRes).isEqualTo(storeProductPrices);
     }
 
     @Test
@@ -117,28 +125,30 @@ class StoreProductPriceServiceImplTest {
 
     @Test
     void getAllStoresProductPrices_checkReturnedValue() {
-        Map<String, Long> storeProductPrice = new HashMap<>();
+        List<Map<String, String>> storeProductPrices;
         Store store = new Store();
         String storeName = "mall";
         store.setName(storeName);
         Long productId = 1L;
         Long storeId = 1L;
+        StoreProductPrice storeProductPrice = new StoreProductPrice();
+        storeProductPrice.setPrice(100L);
         List<Long> storeIds = List.of(storeId);
-        storeProductPrice.put(storeName, null);
+        storeProductPrices = List.of(Map.of("store", storeName, "price", "100"));
         when(storeService.getAllStoreIds()).thenReturn(storeIds);
         when(storeService.getStoreById(anyLong())).thenReturn(store);
         when(storeProductPricesRepository.getFirstByProductIdAndStoreIdOrderByDateDesc(anyLong(), anyLong()))
-                .thenReturn(new StoreProductPrice());
+                .thenReturn(storeProductPrice);
 
-        Map<String, Long> storeProductPriceRes = storeProductPriceService
+        List<Map<String, String>> storeProductPriceRes = storeProductPriceService
                 .getAllStoresProductPrices(productId);
 
-        assertThat(storeProductPriceRes).isEqualTo(storeProductPrice);
+        assertThat(storeProductPriceRes).isEqualTo(storeProductPrices);
     }
 
     @Test
     void getProductPrices_checkReturnedValue() {
-        Map<Date, Long> productPrices = new TreeMap<>();
+        List<Map<String, String>> productPrices;
         Long id = 1L;
         int offset = 0;
         int pageSize = 2;
@@ -147,17 +157,18 @@ class StoreProductPriceServiceImplTest {
         storeProductPrice.setDate(new Date());
         storeProductPrice.setPrice(100L);
         List<StoreProductPrice> storeProductPrices = List.of(storeProductPrice);
-        productPrices.put(storeProductPrice.getDate(), storeProductPrice.getPrice());
+        productPrices = List.of(Map.of("date", storeProductPrice.getDate().toString(),
+                "price", storeProductPrice.getPrice().toString()));
         when(storeProductPricesRepository.findAllByProductIdOrderByDate(id, page)).thenReturn(storeProductPrices);
 
-        Map<Date, Long> productPricesRes = storeProductPriceService.getProductPrices(id, offset, pageSize);
+        List<Map<String, String>> productPricesRes = storeProductPriceService.getProductPrices(id, offset, pageSize);
 
         assertThat(productPricesRes).isEqualTo(productPrices);
     }
 
     @Test
     void getProductPricesOneStore_checkReturnedValue() {
-        Map<Date, Long> productPrices = new TreeMap<>();
+        List<Map<String, String>> productPrices;
         Long productId = 1L;
         Long storeId = 1L;
         int offset = 0;
@@ -167,10 +178,11 @@ class StoreProductPriceServiceImplTest {
         storeProductPrice.setDate(new Date());
         storeProductPrice.setPrice(100L);
         List<StoreProductPrice> storeProductPrices = List.of(storeProductPrice);
-        productPrices.put(storeProductPrice.getDate(), storeProductPrice.getPrice());
+        productPrices = List.of(Map.of("date", storeProductPrice.getDate().toString(),
+                "price", storeProductPrice.getPrice().toString()));
         when(storeProductPricesRepository.findAllByProductIdAndStoreIdOrderByDate(productId, storeId, page)).thenReturn(storeProductPrices);
 
-        Map<Date, Long> productPricesRes = storeProductPriceService.getProductPricesOneStore(productId, storeId, offset, pageSize);
+        List<Map<String, String>> productPricesRes = storeProductPriceService.getProductPricesOneStore(productId, storeId, offset, pageSize);
 
         assertThat(productPricesRes).isEqualTo(productPrices);
     }

@@ -1,9 +1,9 @@
-package com.ilyaevteev.productmonitoring.dto;
+package com.ilyaevteev.productmonitoring.dto.response;
 
 import lombok.Data;
 
 @Data
-public class ProductDto {
+public class ProductResponseDto {
     private Long id;
 
     private String name;

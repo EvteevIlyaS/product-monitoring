@@ -1,9 +1,10 @@
 package com.ilyaevteev.productmonitoring.rest;
 
-import com.ilyaevteev.productmonitoring.dto.NoIdProductDto;
-import com.ilyaevteev.productmonitoring.dto.ProductDto;
-import com.ilyaevteev.productmonitoring.dto.StoreProductPriceDto;
-import com.ilyaevteev.productmonitoring.dto.auth.RegistrationDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ilyaevteev.productmonitoring.dto.request.ProductRequestDto;
+import com.ilyaevteev.productmonitoring.dto.request.StoreProductPriceRequestDto;
+import com.ilyaevteev.productmonitoring.dto.request.RegistrationRequestDto;
+import com.ilyaevteev.productmonitoring.dto.response.*;
 import com.ilyaevteev.productmonitoring.util.EntityDtoMapper;
 import com.ilyaevteev.productmonitoring.model.Product;
 import com.ilyaevteev.productmonitoring.model.StoreProductPrice;
@@ -21,10 +22,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 @RestController
 @RequestMapping(value = "/api/v1/admin/")
 @RequiredArgsConstructor
@@ -35,84 +32,66 @@ public class AdminRestController {
 
     private final BCryptPasswordEncoder passwordEncoder;
     private final EntityDtoMapper entityDtoMapper;
+    private final ObjectMapper objectMapper;
 
     @PostMapping("add-admin")
     @Operation(summary = "Выполнить процедуру регистрации администратора")
-    public ResponseEntity<Map<String, String>> register(@RequestBody @Valid RegistrationDto requestDto, BindingResult bindingResult) {
-        User user = userService.register(entityDtoMapper.toEntity(requestDto, User.class), passwordEncoder, "ROLE_ADMIN", bindingResult);
+    public ResponseEntity<RegistrationResponseDto> register(@RequestBody @Valid RegistrationRequestDto requestDto, BindingResult bindingResult) {
+        RegistrationResponseDto user = objectMapper.convertValue(userService.register(entityDtoMapper.toEntity(requestDto, User.class),
+                passwordEncoder, "ROLE_ADMIN", bindingResult), RegistrationResponseDto.class);
 
-        Map<String, String> response = new HashMap<>();
-        response.put("username", user.getUsername());
-
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "products")
     @Operation(summary = "Добавить товар")
-    public ResponseEntity<Map<String, String>> createProduct(@RequestBody NoIdProductDto noIdProductDto) {
-        productService.addProduct(entityDtoMapper.toEntity(noIdProductDto, Product.class));
+    public ResponseEntity<ProductFormattingDto> createProduct(@RequestBody ProductRequestDto productRequestDto) {
+        ProductFormattingDto product = objectMapper.convertValue(productService.addProduct(entityDtoMapper.toEntity(productRequestDto, Product.class)),
+                ProductFormattingDto.class);
 
-        Map<String, String> response = new HashMap<>();
-        response.put("product name", noIdProductDto.getName());
-
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "products")
     @Operation(summary = "Редактировать товар")
-    public ResponseEntity<Map<String, String>> updateProduct(@RequestBody ProductDto productDto) {
-        productService.updateProduct(entityDtoMapper.toEntity(productDto, Product.class));
+    public ResponseEntity<ProductFormattingDto> updateProduct(@RequestBody ProductResponseDto productResponseDto) {
+        ProductFormattingDto product = objectMapper.convertValue(productService.updateProduct(entityDtoMapper.toEntity(productResponseDto, Product.class)),
+                ProductFormattingDto.class);
 
-        Map<String, String> response = new HashMap<>();
-        response.put("product name", productDto.getName());
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "products/{id}")
     @Operation(summary = "Удалить товар")
-    public ResponseEntity<Map<String, Long>> deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id);
+    public ResponseEntity<ProductDeletionDto> deleteProduct(@PathVariable Long id) {
+        ProductDeletionDto product = objectMapper.convertValue(productService.deleteProduct(id),
+                ProductDeletionDto.class);
 
-        Map<String, Long> response = new HashMap<>();
-        response.put("deleted product id", id);
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @PostMapping(value = "store-product-prices")
     @Operation(summary = "Привязать цену к товару в конкретном магазине на текущий момент")
-    public ResponseEntity<Map<String, Long>> createStoreProductPrice(@RequestBody StoreProductPriceDto storeProductPriceDto) {
-        storeProductPriceDto.setDate(new Date());
-        storeProductPriceService.addStoreProductPrice(entityDtoMapper.toEntity(storeProductPriceDto, StoreProductPrice.class));
+    public ResponseEntity<StoreProductPriceResponseDto> createStoreProductPrice(@RequestBody StoreProductPriceRequestDto storeProductPriceRequestDto) {
+        StoreProductPriceResponseDto storeProductPrice = objectMapper.convertValue(storeProductPriceService.addStoreProductPrice(
+                entityDtoMapper.toEntity(storeProductPriceRequestDto, StoreProductPrice.class)), StoreProductPriceResponseDto.class);
 
-        Map<String, Long> response = new HashMap<>();
-        response.put("store id", storeProductPriceDto.getStore().getId());
-        response.put("product id", storeProductPriceDto.getProduct().getId());
-        response.put("price", storeProductPriceDto.getPrice());
-
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(storeProductPrice, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "products/upload")
     @Operation(summary = "Выгрузить информации о продуктах в формате csv/xlsx")
-    public ResponseEntity<Map<String, String>> uploadProducts(@RequestBody MultipartFile file) {
-        productService.uploadFileProduct(file);
+    public ResponseEntity<UploadDataDto> uploadProducts(@RequestBody MultipartFile file) {
+        UploadDataDto uploadData = objectMapper.convertValue(productService.uploadFileProduct(file), UploadDataDto.class);
 
-        Map<String, String> response = new HashMap<>();
-        response.put("file name", file.getOriginalFilename());
-
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(uploadData, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "store-product-prices/upload")
     @Operation(summary = "Выгрузить информации о ценах в формате csv/xlsx")
-    public ResponseEntity<Map<String, String>> uploadPrices(@RequestBody MultipartFile file) {
-        storeProductPriceService.uploadFilePrices(file);
+    public ResponseEntity<UploadDataDto> uploadPrices(@RequestBody MultipartFile file) {
+        UploadDataDto uploadData = objectMapper.convertValue(storeProductPriceService.uploadFilePrices(file), UploadDataDto.class);
 
-        Map<String, String> response = new HashMap<>();
-        response.put("file name", file.getOriginalFilename());
-
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(uploadData, HttpStatus.CREATED);
     }
 }

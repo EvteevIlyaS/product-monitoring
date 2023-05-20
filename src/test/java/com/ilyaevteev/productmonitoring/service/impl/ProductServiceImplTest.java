@@ -13,6 +13,7 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -42,11 +43,18 @@ class ProductServiceImplTest {
 
     @Test
     void addProduct_checkMethodInvocation() {
+        Long id = 1L;
+        String name = "name";
         Product product = new Product();
+        product.setId(id);
+        product.setName(name);
+        Map<String, String> productMap = Map.of("id", id.toString(), "name", name);
+        when(productRepository.save(any())).thenReturn(product);
 
-        productService.addProduct(product);
+        Map<String, String> productMapRes = productService.addProduct(product);
 
         verify(productRepository, times(1)).save(product);
+        assertThat(productMapRes).isEqualTo(productMap);
     }
 
     @Test
@@ -60,14 +68,19 @@ class ProductServiceImplTest {
 
     @Test
     void updateProduct_checkMethodInvocation() {
+        Long id = 1L;
+        String name = "name";
         Product product = new Product();
-        product.setId(1L);
+        product.setId(id);
+        product.setName(name);
+        Map<String, String> productMap = Map.of("id", id.toString(), "name", name);
         when(productRepository.findById(any())).thenReturn(Optional.of(new Product()));
 
-        productService.updateProduct(product);
+        Map<String, String> productMapRes = productService.updateProduct(product);
 
         verify(productRepository, times(1)).updateProductNameAndCategory(product.getName(),
                 product.getCategory(), product.getId());
+        assertThat(productMapRes).isEqualTo(productMap);
     }
 
     @Test

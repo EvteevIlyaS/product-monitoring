@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -33,9 +34,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void addProduct(Product product) {
+    public Map<String, String> addProduct(Product product) {
         try {
-            productRepository.save(product);
+            Product savedProduct = productRepository.save(product);
+            return Map.of("id", savedProduct.getId().toString(),
+                    "name", savedProduct.getName());
         } catch (Exception e) {
             String message = "Wrong product data";
             log.error(message);
@@ -45,16 +48,19 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void updateProduct(Product product) {
-        Long id = product.getId();
+    public Map<String, String> updateProduct(Product product) {
         try {
+            Long id = product.getId();
+            String name = product.getName();
             if (id == null) {
                 String message = "No id provided to update product";
                 log.error(message);
                 throw new BadRequestException(message);
             }
             getProductById(id);
-            productRepository.updateProductNameAndCategory(product.getName(), product.getCategory(), id);
+            productRepository.updateProductNameAndCategory(name, product.getCategory(), id);
+            return Map.of("id", id.toString(),
+                    "name", name);
         } catch (Exception e) {
             String message = "Wrong product data";
             log.error(message);
@@ -66,8 +72,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProduct(Long id) {
+    public Map<String, String> deleteProduct(Long id) {
         productRepository.deleteById(id);
+        return Map.of("id", id.toString());
     }
 
     @Override
@@ -81,13 +88,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void uploadFileProduct(MultipartFile file) {
-        List<Product> products;
+    public Map<String, String> uploadFileProduct(MultipartFile file) {
         Boolean isCSV = CSVHelper.hasCSVFormat(file);
         Boolean isExcel = ExcelHelper.hasExcelFormat(file);
 
         if (isCSV | isExcel) {
-            products = new ArrayList<>();
+            List<Product> products = new ArrayList<>();
             try {
                 List<Map<String, String>> rawProductsData = isCSV ?
                         CSVHelper.csvToEntities(file.getInputStream(), CSVHelper.PRODUCT_HEADERS) :
@@ -100,6 +106,7 @@ public class ProductServiceImpl implements ProductService {
                 });
 
                 productRepository.saveAll(products);
+                return Map.of("file", Objects.requireNonNull(file.getOriginalFilename()));
 
             } catch (Exception e) {
                 String message = "Fail to store data";

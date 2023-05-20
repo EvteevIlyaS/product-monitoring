@@ -1,4 +1,4 @@
-package com.ilyaevteev.productmonitoring.dto.auth;
+package com.ilyaevteev.productmonitoring.dto.request;
 
 import jakarta.validation.constraints.Email;
 import lombok.Data;

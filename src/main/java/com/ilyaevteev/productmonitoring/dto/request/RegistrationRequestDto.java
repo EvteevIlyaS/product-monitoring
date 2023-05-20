@@ -1,10 +1,10 @@
-package com.ilyaevteev.productmonitoring.dto.auth;
+package com.ilyaevteev.productmonitoring.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
-public class RegistrationDto {
+public class RegistrationRequestDto {
     @Size(min = 5)
     private String username;
 

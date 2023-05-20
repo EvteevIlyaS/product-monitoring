@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 
+import java.util.Map;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -57,6 +58,9 @@ class UserServiceImplTest {
     @Test
     void register_checkReturnedValue() {
         User user = new User();
+        String username = "user";
+        user.setUsername(username);
+        Map<String, String> userMap = Map.of("username", username);
         String password = "123";
         user.setPassword(password);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -67,9 +71,9 @@ class UserServiceImplTest {
         when(roleRepository.findByName(roleName)).thenReturn(Optional.of(role));
         when(userRepository.save(user)).thenReturn(user);
 
-        User userRes = userService.register(user, passwordEncoder, roleName, bindingResult);
+        Map<String, String> userRes = userService.register(user, passwordEncoder, roleName, bindingResult);
 
-        assertThat(userRes).isEqualTo(user);
+        assertThat(userRes).isEqualTo(userMap);
     }
 
     @Test
@@ -125,6 +129,7 @@ class UserServiceImplTest {
         User user = new User();
         when(authenticationManager.authenticate(any())).thenReturn(null);
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        when(jwtTokenProvider.createToken(anyString(), any())).thenReturn("token");
 
         userService.login(username, password, authenticationManager, jwtTokenProvider);
 

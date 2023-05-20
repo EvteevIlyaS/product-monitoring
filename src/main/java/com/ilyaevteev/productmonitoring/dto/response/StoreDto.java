@@ -1,4 +1,4 @@
-package com.ilyaevteev.productmonitoring.dto;
+package com.ilyaevteev.productmonitoring.dto.response;
 
 import lombok.Data;
 

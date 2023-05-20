@@ -5,18 +5,19 @@ import com.ilyaevteev.productmonitoring.model.Product;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProductService {
     List<Product> getProductsByCategory(String name);
 
-    void addProduct(Product product);
+    Map<String, String> addProduct(Product product);
 
-    void updateProduct(Product product);
+    Map<String, String> updateProduct(Product product);
 
-    void deleteProduct(Long id);
+    Map<String, String> deleteProduct(Long id);
 
     Product getProductById(Long id);
 
-    void uploadFileProduct(MultipartFile file);
+    Map<String, String> uploadFileProduct(MultipartFile file);
 
 }

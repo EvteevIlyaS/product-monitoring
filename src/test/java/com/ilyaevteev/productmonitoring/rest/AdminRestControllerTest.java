@@ -3,12 +3,11 @@ package com.ilyaevteev.productmonitoring.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.ilyaevteev.productmonitoring.dto.NoIdProductDto;
-import com.ilyaevteev.productmonitoring.dto.ProductDto;
-import com.ilyaevteev.productmonitoring.dto.StoreDto;
-import com.ilyaevteev.productmonitoring.dto.StoreProductPriceDto;
-import com.ilyaevteev.productmonitoring.dto.auth.RegistrationDto;
-import com.ilyaevteev.productmonitoring.model.auth.User;
+import com.ilyaevteev.productmonitoring.dto.request.ProductRequestDto;
+import com.ilyaevteev.productmonitoring.dto.response.ProductResponseDto;
+import com.ilyaevteev.productmonitoring.dto.response.StoreDto;
+import com.ilyaevteev.productmonitoring.dto.request.StoreProductPriceRequestDto;
+import com.ilyaevteev.productmonitoring.dto.request.RegistrationRequestDto;
 import com.ilyaevteev.productmonitoring.service.ProductService;
 import com.ilyaevteev.productmonitoring.service.StoreProductPriceService;
 import com.ilyaevteev.productmonitoring.service.UserService;
@@ -25,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -58,9 +58,9 @@ class AdminRestControllerTest {
 
     @Test
     void addAdminTest_checkAuth() throws Exception {
-        RegistrationDto registrationDto = new RegistrationDto();
-        String requestJson = ow.writeValueAsString(registrationDto);
-        when(userService.register(any(), any(), anyString(), any())).thenReturn(new User());
+        RegistrationRequestDto registrationRequestDto = new RegistrationRequestDto();
+        String requestJson = ow.writeValueAsString(registrationRequestDto);
+        when(userService.register(any(), any(), anyString(), any())).thenReturn(new HashMap<>());
 
         mockMvc.perform(post(END_POINT_PATH + "add-admin")
                         .contentType(APPLICATION_JSON_UTF8)
@@ -71,9 +71,9 @@ class AdminRestControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void addAdminTest() throws Exception {
-        RegistrationDto registrationDto = new RegistrationDto();
-        String requestJson = ow.writeValueAsString(registrationDto);
-        when(userService.register(any(), any(), anyString(), any())).thenReturn(new User());
+        RegistrationRequestDto registrationRequestDto = new RegistrationRequestDto();
+        String requestJson = ow.writeValueAsString(registrationRequestDto);
+        when(userService.register(any(), any(), anyString(), any())).thenReturn(new HashMap<>());
 
         mockMvc.perform(post(END_POINT_PATH + "add-admin")
                         .contentType(APPLICATION_JSON_UTF8)
@@ -84,8 +84,8 @@ class AdminRestControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void createProductTest() throws Exception {
-        NoIdProductDto noIdProductDto = new NoIdProductDto();
-        String requestJson = ow.writeValueAsString(noIdProductDto);
+        ProductRequestDto productRequestDto = new ProductRequestDto();
+        String requestJson = ow.writeValueAsString(productRequestDto);
 
         mockMvc.perform(post(END_POINT_PATH + "products")
                         .contentType(APPLICATION_JSON_UTF8)
@@ -96,8 +96,8 @@ class AdminRestControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void updateProductTest() throws Exception {
-        ProductDto productDto = new ProductDto();
-        String requestJson = ow.writeValueAsString(productDto);
+        ProductResponseDto productResponseDto = new ProductResponseDto();
+        String requestJson = ow.writeValueAsString(productResponseDto);
 
         mockMvc.perform(put(END_POINT_PATH + "products")
                         .contentType(APPLICATION_JSON_UTF8)
@@ -115,10 +115,10 @@ class AdminRestControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void createStoreProductPriceTest() throws Exception {
-        StoreProductPriceDto storeProductPriceDto = new StoreProductPriceDto();
-        storeProductPriceDto.setStore(new StoreDto());
-        storeProductPriceDto.setProduct(new ProductDto());
-        String requestJson = ow.writeValueAsString(storeProductPriceDto);
+        StoreProductPriceRequestDto storeProductPriceRequestDto = new StoreProductPriceRequestDto();
+        storeProductPriceRequestDto.setStore(new StoreDto());
+        storeProductPriceRequestDto.setProduct(new ProductResponseDto());
+        String requestJson = ow.writeValueAsString(storeProductPriceRequestDto);
 
         mockMvc.perform(post(END_POINT_PATH + "store-product-prices")
                         .contentType(APPLICATION_JSON_UTF8)

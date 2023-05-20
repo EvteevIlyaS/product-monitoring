@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -39,14 +40,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User register(User user, BCryptPasswordEncoder passwordEncoder, String role, BindingResult bindingResult) {
+    public Map<String, String> register(User user, BCryptPasswordEncoder passwordEncoder, String role, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String message = "Data structure violation";
             log.error(message);
             throw new BadRequestException(message);
         }
-
-        User registeredUser;
 
         Role roleUser = roleRepository.findByName(role).orElseGet(() -> {
             String message = "Role not found";
@@ -60,19 +59,19 @@ public class UserServiceImpl implements UserService {
         user.setRoles(userRoles);
 
         try {
-            registeredUser = userRepository.save(user);
+            User registeredUser = userRepository.save(user);
+            return Map.of("username", registeredUser.getUsername());
+
         } catch (Exception e) {
             String message = "Wrong registration data";
             log.error(message);
             throw new BadRequestException(message);
         }
-
-        return registeredUser;
     }
 
     @Override
     @Transactional
-    public String login(String username, String password, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
+    public Map<String, String> login(String username, String password, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (Exception e) {
@@ -87,7 +86,7 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException(message);
         });
 
-        return jwtTokenProvider.createToken(username, user.getRoles());
+        return Map.of("username", username, "token", jwtTokenProvider.createToken(username, user.getRoles()));
     }
 
     @Override

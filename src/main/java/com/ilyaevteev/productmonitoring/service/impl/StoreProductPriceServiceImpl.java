@@ -32,9 +32,12 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
     private final ProductService productService;
 
     @Override
-    public void addStoreProductPrice(StoreProductPrice storeProductPrice) {
+    public Map<String, String> addStoreProductPrice(StoreProductPrice storeProductPrice) {
         try {
+            storeProductPrice.setDate(new Date());
             storeProductPricesRepository.save(storeProductPrice);
+            return Map.of("id", storeProductPrice.getId().toString(),
+                    "price", storeProductPrice.getPrice().toString());
         } catch (Exception e) {
             String message = "Wrong store product price";
             log.error(message);
@@ -44,24 +47,21 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
 
     @Override
     public List<StoreProductPrice> getProductPricesForPeriod(Long id, String dateStart, String dateEnd) {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-        List<StoreProductPrice> storeProductPrices;
-
         try {
-            storeProductPrices = storeProductPricesRepository.findAllByProductIdAndDateBetweenOrderByDate(id, format.parse(dateStart), format.parse(dateEnd));
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+            return storeProductPricesRepository.findAllByProductIdAndDateBetweenOrderByDate(id, format.parse(dateStart), format.parse(dateEnd));
         } catch (Exception e) {
             String message = "Wrong store product price";
             log.error(message);
             throw new BadRequestException(message);
         }
 
-        return storeProductPrices;
     }
 
     @Override
     @Transactional
-    public Map<String, Long> getCurrentStoreProductPrices(Long productId, Long firstStoreId, Long secondStoreId) {
-        Map<String, Long> storeProductPrice = new HashMap<>();
+    public List<Map<String, String>> getCurrentStoreProductPrices(Long productId, Long firstStoreId, Long secondStoreId) {
+        List<Map<String, String>> storeProductPrice;
 
         StoreProductPrice currentFirstStoreProductPrice = storeProductPricesRepository.getFirstByProductIdAndStoreIdOrderByDateDesc(productId, firstStoreId);
         StoreProductPrice currentSecondStoreProductPrice = storeProductPricesRepository.getFirstByProductIdAndStoreIdOrderByDateDesc(productId, secondStoreId);
@@ -72,22 +72,26 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
             throw new BadRequestException(message);
         }
 
-        storeProductPrice.put(storeService.getStoreById(firstStoreId).getName(), currentFirstStoreProductPrice.getPrice());
-        storeProductPrice.put(storeService.getStoreById(secondStoreId).getName(), currentSecondStoreProductPrice.getPrice());
+        storeProductPrice = Arrays.asList(
+                Map.of("store", storeService.getStoreById(firstStoreId).getName(),
+                        "price", currentFirstStoreProductPrice.getPrice().toString()),
+                Map.of("store", storeService.getStoreById(secondStoreId).getName(),
+                        "price", currentSecondStoreProductPrice.getPrice().toString())
+        );
 
         return storeProductPrice;
     }
 
     @Override
     @Transactional
-    public Map<String, Long> getAllStoresProductPrices(Long productId) {
-        Map<String, Long> storeProductPrice = new HashMap<>();
+    public List<Map<String, String>> getAllStoresProductPrices(Long productId) {
+        List<Map<String, String>> storeProductPrice = new ArrayList<>();
         List<Long> storeIds = storeService.getAllStoreIds();
 
         storeIds.forEach(storeId -> {
             StoreProductPrice currentStoreProductPrice = storeProductPricesRepository.getFirstByProductIdAndStoreIdOrderByDateDesc(productId, storeId);
             if (currentStoreProductPrice != null) {
-                storeProductPrice.put(storeService.getStoreById(storeId).getName(), currentStoreProductPrice.getPrice());
+                storeProductPrice.add(Map.of("store", storeService.getStoreById(storeId).getName(), "price", currentStoreProductPrice.getPrice().toString()));
             }
         });
 
@@ -95,36 +99,35 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
     }
 
     @Override
-    public Map<Date, Long> getProductPrices(Long id, int offset, int pageSize) {
+    public List<Map<String, String>> getProductPrices(Long id, int offset, int pageSize) {
         Pageable page = PageRequest.of(offset, pageSize);
-        Map<Date, Long> productPrices = new TreeMap<>();
+        List<Map<String, String>> productPrices = new ArrayList<>();
 
         List<StoreProductPrice> storeProductPrices = storeProductPricesRepository.findAllByProductIdOrderByDate(id, page);
-        storeProductPrices.forEach(el -> productPrices.put(el.getDate(), el.getPrice()));
+        storeProductPrices.forEach(el -> productPrices.add(Map.of("date", el.getDate().toString(), "price", el.getPrice().toString())));
 
         return productPrices;
     }
 
     @Override
-    public Map<Date, Long> getProductPricesOneStore(Long productId, Long storeId, int offset, int pageSize) {
+    public List<Map<String, String>> getProductPricesOneStore(Long productId, Long storeId, int offset, int pageSize) {
         Pageable page = PageRequest.of(offset, pageSize);
-        Map<Date, Long> productPricesOneStore = new TreeMap<>();
+        List<Map<String, String>> productPricesOneStore = new ArrayList<>();
 
         List<StoreProductPrice> storeProductPrices = storeProductPricesRepository.findAllByProductIdAndStoreIdOrderByDate(productId, storeId, page);
-        storeProductPrices.forEach(el -> productPricesOneStore.put(el.getDate(), el.getPrice()));
+        storeProductPrices.forEach(el -> productPricesOneStore.add(Map.of("date", el.getDate().toString(), "price", el.getPrice().toString())));
 
         return productPricesOneStore;
     }
 
     @Override
     @Transactional
-    public void uploadFilePrices(MultipartFile file) {
-        List<StoreProductPrice> prices;
+    public Map<String, String> uploadFilePrices(MultipartFile file) {
         Boolean isCSV = CSVHelper.hasCSVFormat(file);
         Boolean isExcel = ExcelHelper.hasExcelFormat(file);
 
         if (isCSV | isExcel) {
-            prices = new ArrayList<>();
+            List<StoreProductPrice> prices = new ArrayList<>();
             try {
                 List<Map<String, String>> rawPricesData = isCSV ?
                         CSVHelper.csvToEntities(file.getInputStream(), CSVHelper.PRODUCT_PRICE_HEADERS) :
@@ -139,6 +142,7 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
                 });
 
                 storeProductPricesRepository.saveAll(prices);
+                return Map.of("file", Objects.requireNonNull(file.getOriginalFilename()));
 
             } catch (Exception e) {
                 String message = "Fail to store data";

@@ -3,8 +3,8 @@ package com.ilyaevteev.productmonitoring.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.ilyaevteev.productmonitoring.dto.auth.NewEmailDto;
-import com.ilyaevteev.productmonitoring.dto.auth.NewPasswordDto;
+import com.ilyaevteev.productmonitoring.dto.request.NewEmailDto;
+import com.ilyaevteev.productmonitoring.dto.request.NewPasswordDto;
 import com.ilyaevteev.productmonitoring.model.Category;
 import com.ilyaevteev.productmonitoring.model.Product;
 import com.ilyaevteev.productmonitoring.model.Store;
@@ -139,9 +139,12 @@ class UserRestControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     void getStoreProductPricesComparisonTest() throws Exception {
-        Map<String, Long> storeIdPrices = new HashMap<>();
-        storeIdPrices.put("mall", 100L);
-        storeIdPrices.put("supermarket", 200L);
+        List<Map<String, String>> storeIdPrices = Arrays.asList(
+                Map.of("store", "mall",
+                        "price", "100"),
+                Map.of("store", "supermarket",
+                        "price", "200")
+        );
         when(storeProductPriceService.getCurrentStoreProductPrices(anyLong(), anyLong(), anyLong())).thenReturn(storeIdPrices);
 
         mockMvc.perform(get(END_POINT_PATH + "store-product-prices/comparison/1")
@@ -153,8 +156,12 @@ class UserRestControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     void getStoreProductPricesComparisonAllStoresTest() throws Exception {
-        Map<String, Long> allStoresProductPrices = new HashMap<>();
-        allStoresProductPrices.put("mall", 100L);
+        List<Map<String, String>> allStoresProductPrices = Arrays.asList(
+                Map.of("store", "mall",
+                        "price", "100"),
+                Map.of("store", "supermarket",
+                        "price", "200")
+        );
         when(storeProductPriceService.getAllStoresProductPrices(anyLong())).thenReturn(allStoresProductPrices);
 
         mockMvc.perform(get(END_POINT_PATH + "store-product-prices/comparison-all/1"))
