@@ -2,7 +2,7 @@ package com.ilyaevteev.productmonitoring.config;
 
 import com.ilyaevteev.productmonitoring.security.jwt.JwtConfigurer;
 import com.ilyaevteev.productmonitoring.security.jwt.JwtTokenProvider;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
     private final AuthenticationEntryPoint authEntryPoint;
     private final JwtTokenProvider jwtTokenProvider;
@@ -27,12 +28,6 @@ public class SecurityConfig {
     private static final String SWAGGER_UI_ENDPOINT = "/swagger-ui/**";
     // http://localhost:8080/v3/api-docs
     private static final String SWAGGER_JSON_ENDPOINT = "/v3/api-docs/**";
-
-    @Autowired
-    public SecurityConfig(JwtTokenProvider jwtTokenProvider, AuthenticationEntryPoint authEntryPoint) {
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.authEntryPoint = authEntryPoint;
-    }
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {

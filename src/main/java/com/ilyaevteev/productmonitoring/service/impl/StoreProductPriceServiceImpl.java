@@ -13,6 +13,7 @@ import com.ilyaevteev.productmonitoring.util.ExcelHelper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import one.util.streamex.StreamEx;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -101,9 +102,11 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
     @Override
     public List<Map<String, String>> getProductPrices(Long id, int offset, int pageSize) {
         Pageable page = PageRequest.of(offset, pageSize);
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         List<Map<String, String>> productPrices = new ArrayList<>();
 
-        List<StoreProductPrice> storeProductPrices = storeProductPricesRepository.findAllByProductIdOrderByDate(id, page);
+        List<StoreProductPrice> storeProductPrices = StreamEx.of(storeProductPricesRepository.findAllByProductIdOrderByDate(id, page))
+                .distinct(el -> format.format(el.getDate())).toList();
         storeProductPrices.forEach(el -> productPrices.add(Map.of("date", el.getDate().toString(), "price", el.getPrice().toString())));
 
         return productPrices;
@@ -112,9 +115,11 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
     @Override
     public List<Map<String, String>> getProductPricesOneStore(Long productId, Long storeId, int offset, int pageSize) {
         Pageable page = PageRequest.of(offset, pageSize);
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         List<Map<String, String>> productPricesOneStore = new ArrayList<>();
 
-        List<StoreProductPrice> storeProductPrices = storeProductPricesRepository.findAllByProductIdAndStoreIdOrderByDate(productId, storeId, page);
+        List<StoreProductPrice> storeProductPrices = StreamEx.of(storeProductPricesRepository.findAllByProductIdAndStoreIdOrderByDate(productId, storeId, page))
+                .distinct(el -> format.format(el.getDate())).toList();
         storeProductPrices.forEach(el -> productPricesOneStore.add(Map.of("date", el.getDate().toString(), "price", el.getPrice().toString())));
 
         return productPricesOneStore;
