@@ -5,7 +5,6 @@ import com.ilyaevteev.productmonitoring.dto.request.StoreProductPriceRequestDto;
 import com.ilyaevteev.productmonitoring.dto.response.DeletionStoreProductPriceResponseDto;
 import com.ilyaevteev.productmonitoring.dto.response.StoreProductPriceResponseDto;
 import com.ilyaevteev.productmonitoring.dto.response.UploadDataDto;
-import com.ilyaevteev.productmonitoring.model.StoreProductPrice;
 import com.ilyaevteev.productmonitoring.service.StoreProductPriceService;
 import com.ilyaevteev.productmonitoring.util.EntityDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;

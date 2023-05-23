@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.ilyaevteev.productmonitoring.dto.request.ProductRequestDto;
 import com.ilyaevteev.productmonitoring.dto.response.ProductInfoDto;
-import com.ilyaevteev.productmonitoring.dto.response.StoreDto;
 import com.ilyaevteev.productmonitoring.dto.request.StoreProductPriceRequestDto;
 import com.ilyaevteev.productmonitoring.dto.request.RegistrationRequestDto;
 import com.ilyaevteev.productmonitoring.service.ProductService;
