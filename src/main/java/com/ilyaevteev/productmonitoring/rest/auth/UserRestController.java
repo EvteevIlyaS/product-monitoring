@@ -1,14 +1,14 @@
-package com.ilyaevteev.productmonitoring.rest;
+package com.ilyaevteev.productmonitoring.rest.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ilyaevteev.productmonitoring.dto.request.AuthenticationDto;
 import com.ilyaevteev.productmonitoring.dto.request.RegistrationRequestDto;
 import com.ilyaevteev.productmonitoring.dto.response.RegistrationResponseDto;
 import com.ilyaevteev.productmonitoring.dto.response.TokenDto;
-import com.ilyaevteev.productmonitoring.util.EntityDtoMapper;
 import com.ilyaevteev.productmonitoring.model.auth.User;
 import com.ilyaevteev.productmonitoring.security.jwt.JwtTokenProvider;
 import com.ilyaevteev.productmonitoring.service.UserService;
+import com.ilyaevteev.productmonitoring.util.EntityDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +19,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping(value = "/api/v1/auth/")
+@RestController(value = "userRestControllerAuth")
+@RequestMapping(value = "/api/v1/auth")
 @RequiredArgsConstructor
-public class AuthenticationRestController {
+public class UserRestController {
     private final UserService userService;
 
     private final EntityDtoMapper entityDtoMapper;
@@ -31,7 +31,7 @@ public class AuthenticationRestController {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @PostMapping("register")
+    @PostMapping("/register")
     @Operation(summary = "Выполнить процедуру регистрации пользователя")
     public ResponseEntity<RegistrationResponseDto> register(@RequestBody @Valid RegistrationRequestDto requestDto, BindingResult bindingResult) {
         RegistrationResponseDto user = objectMapper.convertValue(userService.register(entityDtoMapper.toEntity(requestDto, User.class),
@@ -40,7 +40,7 @@ public class AuthenticationRestController {
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
-    @GetMapping("login")
+    @GetMapping("/login")
     @Operation(summary = "Выполнить процедуру авторизации пользователя")
     public ResponseEntity<TokenDto> login(@RequestBody AuthenticationDto authenticationDto) {
         TokenDto token = objectMapper.convertValue(userService.login(authenticationDto.getUsername(), authenticationDto.getPassword(),
