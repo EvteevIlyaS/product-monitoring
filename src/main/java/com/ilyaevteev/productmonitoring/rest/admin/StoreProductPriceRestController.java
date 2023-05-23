@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class StoreProductPriceRestController {
     private final StoreProductPriceService storeProductPriceService;
 
-    private final EntityDtoMapper entityDtoMapper;
     private final ObjectMapper objectMapper;
 
     @PostMapping
