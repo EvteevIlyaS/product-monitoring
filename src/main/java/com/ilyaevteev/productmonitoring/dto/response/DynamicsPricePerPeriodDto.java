@@ -12,5 +12,5 @@ public class DynamicsPricePerPeriodDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date date;
 
-    private StoreDto store;
+    private String storeName;
 }
