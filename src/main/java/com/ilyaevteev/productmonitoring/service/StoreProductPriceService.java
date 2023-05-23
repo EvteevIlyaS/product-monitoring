@@ -9,6 +9,8 @@ import java.util.Map;
 public interface StoreProductPriceService {
     Map<String, String> addStoreProductPrice(StoreProductPrice storeProductPrice);
 
+    Map<String, String> deleteProductPriceStore(Long id);
+
     List<StoreProductPrice> getProductPricesForPeriod(Long id, String dateStart, String dateEnd);
 
     List<Map<String, String>> getCurrentStoreProductPrices(Long productId, Long firstStoreId, Long secondStoreId);

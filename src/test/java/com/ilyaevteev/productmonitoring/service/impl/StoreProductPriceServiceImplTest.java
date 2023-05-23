@@ -36,7 +36,7 @@ class StoreProductPriceServiceImplTest {
     private StoreProductPriceServiceImpl storeProductPriceService;
 
     @Test
-    void addStoreProductPrice_checkMethodInvocation() {
+    void addStoreProductPrice_checkReturnedValue() {
         Long id = 1L;
         Long price = 100L;
         StoreProductPrice storeProductPrice = new StoreProductPrice();
@@ -57,6 +57,15 @@ class StoreProductPriceServiceImplTest {
 
         assertThatThrownBy(() -> storeProductPriceService.addStoreProductPrice(storeProductPrice))
                 .hasMessage("Wrong store product price");
+    }
+
+    @Test
+    void deleteProductPriceStore_checkMethodInvocation() {
+        Long id = 1L;
+
+        storeProductPriceService.deleteProductPriceStore(id);
+
+        verify(storeProductPricesRepository, times(1)).deleteById(id);
     }
 
     @Test

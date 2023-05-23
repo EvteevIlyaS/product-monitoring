@@ -128,6 +128,13 @@ class AdminRestControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
+    void deleteStoreProductPriceTest() throws Exception {
+        mockMvc.perform(delete(END_POINT_PATH + "store-product-prices/1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
     void uploadProductsTest() throws Exception {
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "products-data.csv",

@@ -47,6 +47,12 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
     }
 
     @Override
+    public Map<String, String> deleteProductPriceStore(Long id) {
+        storeProductPricesRepository.deleteById(id);
+        return Map.of("id", id.toString());
+    }
+
+    @Override
     public List<StoreProductPrice> getProductPricesForPeriod(Long id, String dateStart, String dateEnd) {
         try {
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);

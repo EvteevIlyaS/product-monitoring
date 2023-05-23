@@ -79,6 +79,15 @@ public class AdminRestController {
         return new ResponseEntity<>(storeProductPrice, HttpStatus.CREATED);
     }
 
+    @DeleteMapping (value = "store-product-prices/{id}")
+    @Operation(summary = "Удалить цену к товару в конкретном магазине")
+    public ResponseEntity<DeletionStoreProductPriceResponseDto> deleteStoreProductPrice(@PathVariable Long id) {
+        DeletionStoreProductPriceResponseDto storeProductPrice = objectMapper.convertValue(storeProductPriceService.deleteProductPriceStore(id),
+                DeletionStoreProductPriceResponseDto.class);
+
+        return new ResponseEntity<>(storeProductPrice, HttpStatus.OK);
+    }
+
     @PostMapping(value = "products/upload")
     @Operation(summary = "Выгрузить информации о продуктах в формате csv/xlsx")
     public ResponseEntity<UploadDataDto> uploadProducts(@RequestBody MultipartFile file) {
