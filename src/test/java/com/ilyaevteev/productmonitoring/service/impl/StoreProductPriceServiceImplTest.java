@@ -39,23 +39,29 @@ class StoreProductPriceServiceImplTest {
     void addStoreProductPrice_checkReturnedValue() {
         Long id = 1L;
         Long price = 100L;
+        Long productId = 1L;
+        Long storeId = 1L;
         StoreProductPrice storeProductPrice = new StoreProductPrice();
         storeProductPrice.setId(id);
         storeProductPrice.setPrice(price);
         Map<String, String> productPrice = Map.of("id", id.toString(), "price", price.toString());
+        when(storeProductPricesRepository.save(any())).thenReturn(storeProductPrice);
 
-        Map<String, String> productPriceRes = storeProductPriceService.addStoreProductPrice(storeProductPrice);
+        Map<String, String> productPriceRes = storeProductPriceService.addStoreProductPrice(price, productId, storeId);
 
-        verify(storeProductPricesRepository, times(1)).save(storeProductPrice);
+        verify(storeProductPricesRepository, times(1)).save(any());
         assertThat(productPriceRes).isEqualTo(productPrice);
     }
 
     @Test
     void addStoreProductPrice_checkThrowException() {
-        StoreProductPrice storeProductPrice = new StoreProductPrice();
-        when(storeProductPricesRepository.save(storeProductPrice)).thenThrow(new RuntimeException());
+        Long price = 100L;
+        Long productId = 1L;
+        Long storeId = 1L;
 
-        assertThatThrownBy(() -> storeProductPriceService.addStoreProductPrice(storeProductPrice))
+        when(storeProductPricesRepository.save(any())).thenThrow(new RuntimeException());
+
+        assertThatThrownBy(() -> storeProductPriceService.addStoreProductPrice(price, storeId, productId))
                 .hasMessage("Wrong store product price");
     }
 

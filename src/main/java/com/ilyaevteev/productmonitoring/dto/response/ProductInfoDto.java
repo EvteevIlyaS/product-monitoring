@@ -3,10 +3,8 @@ package com.ilyaevteev.productmonitoring.dto.response;
 import lombok.Data;
 
 @Data
-public class ProductResponseDto {
+public class ProductInfoDto {
     private Long id;
 
     private String name;
-
-    private CategoryDto category;
 }

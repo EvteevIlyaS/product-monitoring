@@ -33,10 +33,15 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
     private final ProductService productService;
 
     @Override
-    public Map<String, String> addStoreProductPrice(StoreProductPrice storeProductPrice) {
+    @Transactional
+    public Map<String, String> addStoreProductPrice(Long price, Long storeId, Long productId) {
         try {
+            StoreProductPrice storeProductPrice = new StoreProductPrice();
+            storeProductPrice.setPrice(price);
             storeProductPrice.setDate(new Date());
-            storeProductPricesRepository.save(storeProductPrice);
+            storeProductPrice.setProduct(productService.getProductById(productId));
+            storeProductPrice.setStore(storeService.getStoreById(storeId));
+            storeProductPrice = storeProductPricesRepository.save(storeProductPrice);
             return Map.of("id", storeProductPrice.getId().toString(),
                     "price", storeProductPrice.getPrice().toString());
         } catch (Exception e) {

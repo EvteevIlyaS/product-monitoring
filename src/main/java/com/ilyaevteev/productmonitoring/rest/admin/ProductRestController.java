@@ -1,10 +1,10 @@
 package com.ilyaevteev.productmonitoring.rest.admin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ilyaevteev.productmonitoring.dto.request.EditionProductDto;
 import com.ilyaevteev.productmonitoring.dto.request.ProductRequestDto;
 import com.ilyaevteev.productmonitoring.dto.response.ProductDeletionDto;
 import com.ilyaevteev.productmonitoring.dto.response.ProductFormattingDto;
-import com.ilyaevteev.productmonitoring.dto.response.ProductResponseDto;
 import com.ilyaevteev.productmonitoring.dto.response.UploadDataDto;
 import com.ilyaevteev.productmonitoring.model.Product;
 import com.ilyaevteev.productmonitoring.service.ProductService;
@@ -36,8 +36,8 @@ public class ProductRestController {
 
     @PutMapping
     @Operation(summary = "Редактировать товар")
-    public ResponseEntity<ProductFormattingDto> updateProduct(@RequestBody ProductResponseDto productResponseDto) {
-        ProductFormattingDto product = objectMapper.convertValue(productService.updateProduct(entityDtoMapper.toEntity(productResponseDto, Product.class)),
+    public ResponseEntity<ProductFormattingDto> updateProduct(@RequestBody EditionProductDto editionProductDto) {
+        ProductFormattingDto product = objectMapper.convertValue(productService.updateProduct(entityDtoMapper.toEntity(editionProductDto, Product.class)),
                 ProductFormattingDto.class);
 
         return new ResponseEntity<>(product, HttpStatus.OK);

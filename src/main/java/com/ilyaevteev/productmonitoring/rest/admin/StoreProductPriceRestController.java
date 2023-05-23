@@ -27,8 +27,8 @@ public class StoreProductPriceRestController {
     @PostMapping
     @Operation(summary = "Привязать цену к товару в конкретном магазине на текущий момент")
     public ResponseEntity<StoreProductPriceResponseDto> createStoreProductPrice(@RequestBody StoreProductPriceRequestDto storeProductPriceRequestDto) {
-        StoreProductPriceResponseDto storeProductPrice = objectMapper.convertValue(storeProductPriceService.addStoreProductPrice(
-                entityDtoMapper.toEntity(storeProductPriceRequestDto, StoreProductPrice.class)), StoreProductPriceResponseDto.class);
+        StoreProductPriceResponseDto storeProductPrice = objectMapper.convertValue(storeProductPriceService.addStoreProductPrice(storeProductPriceRequestDto.getPrice(),
+                storeProductPriceRequestDto.getProductId(), storeProductPriceRequestDto.getStoreId()), StoreProductPriceResponseDto.class);
 
         return new ResponseEntity<>(storeProductPrice, HttpStatus.CREATED);
     }

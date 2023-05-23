@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.ilyaevteev.productmonitoring.dto.request.ProductRequestDto;
-import com.ilyaevteev.productmonitoring.dto.response.ProductResponseDto;
+import com.ilyaevteev.productmonitoring.dto.response.ProductInfoDto;
 import com.ilyaevteev.productmonitoring.dto.response.StoreDto;
 import com.ilyaevteev.productmonitoring.dto.request.StoreProductPriceRequestDto;
 import com.ilyaevteev.productmonitoring.dto.request.RegistrationRequestDto;
@@ -96,8 +96,8 @@ class AdminRestControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void updateProductTest() throws Exception {
-        ProductResponseDto productResponseDto = new ProductResponseDto();
-        String requestJson = ow.writeValueAsString(productResponseDto);
+        ProductInfoDto productInfoDto = new ProductInfoDto();
+        String requestJson = ow.writeValueAsString(productInfoDto);
 
         mockMvc.perform(put(END_POINT_PATH + "products")
                         .contentType(APPLICATION_JSON_UTF8)
@@ -116,8 +116,8 @@ class AdminRestControllerTest {
     @WithMockUser(roles = "ADMIN")
     void createStoreProductPriceTest() throws Exception {
         StoreProductPriceRequestDto storeProductPriceRequestDto = new StoreProductPriceRequestDto();
-        storeProductPriceRequestDto.setStore(new StoreDto());
-        storeProductPriceRequestDto.setProduct(new ProductResponseDto());
+        storeProductPriceRequestDto.setStoreId(1L);
+        storeProductPriceRequestDto.setProductId(1L);
         String requestJson = ow.writeValueAsString(storeProductPriceRequestDto);
 
         mockMvc.perform(post(END_POINT_PATH + "store-product-prices")

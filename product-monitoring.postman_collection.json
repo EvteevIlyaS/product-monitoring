@@ -327,13 +327,13 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0MjMzODkzLCJleHAiOjE2ODQyMzc0OTN9.N9Ez1bBWv9dB1WLjIYGNUOsFl_3XkNfBRiIZ38Ah3SU",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0ODU1MzkwLCJleHAiOjE2ODQ4NTg5OTB9.eiRHPkY_oVrxyR380bEkokVrdxWfmMcabanJ9MnYe34",
 						"type": "default"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n        \"name\": \"veg\",\n        \"category\": {\"id\": 2}\n}",
+					"raw": "{\n        \"name\": \"veg\",\n        \"categoryId\": 2\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -391,13 +391,13 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0MjMzODkzLCJleHAiOjE2ODQyMzc0OTN9.N9Ez1bBWv9dB1WLjIYGNUOsFl_3XkNfBRiIZ38Ah3SU",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0ODU1MzkwLCJleHAiOjE2ODQ4NTg5OTB9.eiRHPkY_oVrxyR380bEkokVrdxWfmMcabanJ9MnYe34",
 						"type": "default"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n        \"id\": 1,\n        \"name\": \"veg\",\n        \"category\": {\"id\": 2}\n}",
+					"raw": "{\n        \"id\": 1,\n        \"name\": \"veggggg\",\n        \"categoryId\": 2\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -455,13 +455,13 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXcgdXNlciIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2ODM5NjMyODYsImV4cCI6MTY4Mzk2Njg4Nn0.6VS-8BUXG7YFRE0HP8v5e6_lYqHI-h8KXxF6mo86keU",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0ODU4MjY2LCJleHAiOjE2ODQ4NjE4NjZ9.vgD_SqL5aDEmQBo5xMPreTdEHTmr4mwwgtUITCZAIX0",
 						"type": "default"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"price\": 700,\n    \"store\": {\"id\": 1},\n    \"product\": {\"id\": 1}\n}",
+					"raw": "{\n    \"price\": 700,\n    \"storeId\": 1,\n    \"productId\": 1\n}",
 					"options": {
 						"raw": {
 							"language": "json"

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface StoreProductPriceService {
-    Map<String, String> addStoreProductPrice(StoreProductPrice storeProductPrice);
+    Map<String, String> addStoreProductPrice(Long price, Long storeId, Long productId);
 
     Map<String, String> deleteProductPriceStore(Long id);
 

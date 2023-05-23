@@ -1,6 +1,6 @@
 package com.ilyaevteev.productmonitoring.rest.user;
 
-import com.ilyaevteev.productmonitoring.dto.response.ProductResponseDto;
+import com.ilyaevteev.productmonitoring.dto.response.ProductInfoDto;
 import com.ilyaevteev.productmonitoring.service.*;
 import com.ilyaevteev.productmonitoring.util.EntityDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,9 +24,9 @@ public class ProductRestController {
 
     @GetMapping
     @Operation(summary = "Просмотреть список товаров по категориям")
-    public ResponseEntity<List<ProductResponseDto>> getProductsByCategory(@RequestParam String category) {
-        List<ProductResponseDto> products = productService.getProductsByCategory(category).stream()
-                .map(el -> entityDtoMapper.toDto(el, ProductResponseDto.class)).toList();
+    public ResponseEntity<List<ProductInfoDto>> getProductsByCategory(@RequestParam String category) {
+        List<ProductInfoDto> products = productService.getProductsByCategory(category).stream()
+                .map(el -> entityDtoMapper.toDto(el, ProductInfoDto.class)).toList();
 
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
