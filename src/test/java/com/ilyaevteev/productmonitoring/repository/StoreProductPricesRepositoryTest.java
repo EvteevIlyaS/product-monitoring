@@ -4,6 +4,7 @@ import com.ilyaevteev.productmonitoring.model.StoreProductPrice;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -22,11 +23,12 @@ class StoreProductPricesRepositoryTest {
     @Test
     void findAllByProductIdAndDateBetweenOrderByDate_checkReturnedValue() throws ParseException {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        Pageable pageable = PageRequest.of(0, 3);
 
-        List<StoreProductPrice> storeProductPrices = storeProductPricesRepository.findAllByProductIdAndDateBetweenOrderByDate(
-                3L, format.parse("2023-03-20"), format.parse("2023-05-05 13:41:36.130"));
+        Page<StoreProductPrice> storeProductPrices = storeProductPricesRepository.findAllByProductIdAndDateBetweenOrderByDate(
+                3L, format.parse("2023-03-20"), format.parse("2023-05-05 13:41:36.130"), pageable);
 
-        assertThat(storeProductPrices.size()).isEqualTo(3);
+        assertThat(storeProductPrices.getContent().size()).isEqualTo(3);
     }
 
     @Test

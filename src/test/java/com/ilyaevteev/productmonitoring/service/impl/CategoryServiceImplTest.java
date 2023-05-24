@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Arrays;
@@ -29,14 +30,13 @@ class CategoryServiceImplTest {
     @Test
     void getCategoriesDirectory_checkReturnedValue() {
         List<Category> categories = Arrays.asList(new Category(), new Category());
-        int offset = 0;
-        int pageSize = 2;
+        Pageable pageable = PageRequest.of(0, 2);
         Page<Category> page = new PageImpl<>(categories);
         when(categoryRepository.findAll((Pageable) any())).thenReturn(page);
 
-        List<Category> categoriesRes = categoryService.getCategoriesDirectory(offset, pageSize);
+        Page<Category> categoriesRes = categoryService.getCategoriesDirectory(pageable);
 
-        assertThat(categoriesRes).isEqualTo(page.getContent());
+        assertThat(categoriesRes).isEqualTo(page);
     }
 
     @Test

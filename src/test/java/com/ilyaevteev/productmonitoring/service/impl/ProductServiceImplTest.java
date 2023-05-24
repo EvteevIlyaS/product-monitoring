@@ -9,6 +9,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.IOException;
@@ -34,11 +38,13 @@ class ProductServiceImplTest {
     void getProductsByCategory_checkReturnedValue() {
         String category = "fruits";
         List<Product> products = List.of(new Product());
-        when(productRepository.getProductsByCategoryName(category)).thenReturn(products);
+        Page<Product> page = new PageImpl<>(products);
+        Pageable pageable = PageRequest.of(0, 2);
+        when(productRepository.getProductsByCategoryName(category, pageable)).thenReturn(page);
 
-        List<Product> productsRes = productService.getProductsByCategory(category);
+        Page<Product> productsRes = productService.getProductsByCategory(category, pageable);
 
-        assertThat(productsRes).isEqualTo(products);
+        assertThat(productsRes).isEqualTo(page);
     }
 
     @Test

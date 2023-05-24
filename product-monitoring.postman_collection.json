@@ -216,7 +216,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXcgdXNlciIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2ODM5NjMyODYsImV4cCI6MTY4Mzk2Njg4Nn0.6VS-8BUXG7YFRE0HP8v5e6_lYqHI-h8KXxF6mo86keU",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0OTUyMDUyLCJleHAiOjE2ODQ5NTU2NTJ9.9EG9X46KDvBeGUrLiWNyeJFLZWIn1VyZKX7Bh7gtJiI",
 						"type": "default"
 					}
 				],
@@ -253,12 +253,12 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXcgdXNlciIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2ODQ0MDg4NTksImV4cCI6MTY4NDQxMjQ1OX0.vTwfr99rkQYSuIYCP8uBShLFW7Z75spKaDskuz8SicE",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0OTUyMDUyLCJleHAiOjE2ODQ5NTU2NTJ9.9EG9X46KDvBeGUrLiWNyeJFLZWIn1VyZKX7Bh7gtJiI",
 						"type": "default"
 					}
 				],
 				"url": {
-					"raw": "localhost:8080/api/v1/user/categories?offset=0&page-size=3",
+					"raw": "localhost:8080/api/v1/user/categories?page=0&size=3",
 					"host": [
 						"localhost"
 					],
@@ -271,11 +271,11 @@
 					],
 					"query": [
 						{
-							"key": "offset",
+							"key": "page",
 							"value": "0"
 						},
 						{
-							"key": "page-size",
+							"key": "size",
 							"value": "3"
 						}
 					]
@@ -290,12 +290,12 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXcgdXNlciIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2ODQzMzg3ODYsImV4cCI6MTY4NDM0MjM4Nn0.cqeQCjDQ-o4KXm1k9zS4tape_xkTb7pxIqciqNA9tqs",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0OTUyMDUyLCJleHAiOjE2ODQ5NTU2NTJ9.9EG9X46KDvBeGUrLiWNyeJFLZWIn1VyZKX7Bh7gtJiI",
 						"type": "default"
 					}
 				],
 				"url": {
-					"raw": "localhost:8080/api/v1/user/products?category=vegetables",
+					"raw": "localhost:8080/api/v1/user/products?category=vegetables&page=0&size=2",
 					"host": [
 						"localhost"
 					],
@@ -310,6 +310,14 @@
 						{
 							"key": "category",
 							"value": "vegetables"
+						},
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "2"
 						}
 					]
 				}
@@ -488,12 +496,12 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXcgdXNlciIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2ODM5MDM0MzMsImV4cCI6MTY4MzkwNzAzM30.s_0CkwtUMoawo3fSoVdaWq6RgSmsUoVe9XCowE-WZFA",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0OTUyMDUyLCJleHAiOjE2ODQ5NTU2NTJ9.9EG9X46KDvBeGUrLiWNyeJFLZWIn1VyZKX7Bh7gtJiI",
 						"type": "default"
 					}
 				],
 				"url": {
-					"raw": "localhost:8080/api/v1/user/store-product-prices/3?date-start=2023-03-20&date-end=2023-05-05 13:41:36.130",
+					"raw": "localhost:8080/api/v1/user/store-product-prices/3?date-start=2023-03-20&date-end=2023-05-05&page=0&size=3",
 					"host": [
 						"localhost"
 					],
@@ -512,7 +520,15 @@
 						},
 						{
 							"key": "date-end",
-							"value": "2023-05-05 13:41:36.130"
+							"value": "2023-05-05"
+						},
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "3"
 						}
 					]
 				}
@@ -526,7 +542,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0NDA0Mjc2LCJleHAiOjE2ODQ0MDc4NzZ9.hcJC8EoOfq3mLSNx6jcHdx31Y-ksJkbYUee5yS-jcfE",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0OTUyMDUyLCJleHAiOjE2ODQ5NTU2NTJ9.9EG9X46KDvBeGUrLiWNyeJFLZWIn1VyZKX7Bh7gtJiI",
 						"type": "default"
 					}
 				],
@@ -565,12 +581,12 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0NDA0Mjc2LCJleHAiOjE2ODQ0MDc4NzZ9.hcJC8EoOfq3mLSNx6jcHdx31Y-ksJkbYUee5yS-jcfE",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0OTUyMDUyLCJleHAiOjE2ODQ5NTU2NTJ9.9EG9X46KDvBeGUrLiWNyeJFLZWIn1VyZKX7Bh7gtJiI",
 						"type": "default"
 					}
 				],
 				"url": {
-					"raw": "localhost:8080/api/v1/user/store-product-prices/comparison-all/1",
+					"raw": "localhost:8080/api/v1/user/store-product-prices/comparison-all/1?page=0&size=3",
 					"host": [
 						"localhost"
 					],
@@ -582,6 +598,16 @@
 						"store-product-prices",
 						"comparison-all",
 						"1"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "3"
+						}
 					]
 				}
 			},
@@ -594,12 +620,12 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjgzODk4NzQ1LCJleHAiOjE2ODM5MDIzNDV9.x1IfIBx58Pepm8_odgwJl2mByZmCNjFfIof1-F5emcI",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0OTUyMDUyLCJleHAiOjE2ODQ5NTU2NTJ9.9EG9X46KDvBeGUrLiWNyeJFLZWIn1VyZKX7Bh7gtJiI",
 						"type": "default"
 					}
 				],
 				"url": {
-					"raw": "localhost:8080/api/v1/user/store-product-prices/dynamics-all/1?offset=0&page-size=5",
+					"raw": "localhost:8080/api/v1/user/store-product-prices/dynamics-all/1?page=0&size=9",
 					"host": [
 						"localhost"
 					],
@@ -614,12 +640,12 @@
 					],
 					"query": [
 						{
-							"key": "offset",
+							"key": "page",
 							"value": "0"
 						},
 						{
-							"key": "page-size",
-							"value": "5"
+							"key": "size",
+							"value": "9"
 						}
 					]
 				}
@@ -633,12 +659,12 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0MTUyNTQxLCJleHAiOjE2ODQxNTYxNDF9.wkfwEA3bJXPv9ewl-A0ipqA_JrxemoN6IgSQTykb0Lo",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0OTUyMDUyLCJleHAiOjE2ODQ5NTU2NTJ9.9EG9X46KDvBeGUrLiWNyeJFLZWIn1VyZKX7Bh7gtJiI",
 						"type": "default"
 					}
 				],
 				"url": {
-					"raw": "localhost:8080/api/v1/user/store-product-prices/dynamics/1?store-id=2&offset=0&page-size=6",
+					"raw": "localhost:8080/api/v1/user/store-product-prices/dynamics/1?store-id=2&page=0&size=3",
 					"host": [
 						"localhost"
 					],
@@ -657,12 +683,12 @@
 							"value": "2"
 						},
 						{
-							"key": "offset",
+							"key": "page",
 							"value": "0"
 						},
 						{
-							"key": "page-size",
-							"value": "6"
+							"key": "size",
+							"value": "3"
 						}
 					]
 				}

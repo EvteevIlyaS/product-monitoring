@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +38,8 @@ class StoreProductPriceRestControllerTest {
     @WithMockUser(roles = "USER")
     void getPricesDynamicsTest() throws Exception {
         List<StoreProductPrice> storeProductPrices = List.of(new StoreProductPrice());
-        when(storeProductPriceService.getProductPricesForPeriod(anyLong(), any(), any())).thenReturn(storeProductPrices);
+        Page<StoreProductPrice> page = new PageImpl<>(storeProductPrices);
+        when(storeProductPriceService.getProductPricesForPeriod(anyLong(), any(), any(), any())).thenReturn(page);
 
         mockMvc.perform(get(END_POINT_PATH + "/1")
                         .queryParam("date-start", "2023-01-01")
@@ -46,9 +50,10 @@ class StoreProductPriceRestControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     void getStoreProductPricesComparisonTest() throws Exception {
-        List<Map<String, String>> storeIdPrices = Arrays.asList(
+        Map<String, Map<String, String>> storeIdPrices = Map.of("firstStore",
                 Map.of("store", "mall",
                         "price", "100"),
+                "secondStore",
                 Map.of("store", "supermarket",
                         "price", "200")
         );
@@ -69,7 +74,8 @@ class StoreProductPriceRestControllerTest {
                 Map.of("store", "supermarket",
                         "price", "200")
         );
-        when(storeProductPriceService.getAllStoresProductPrices(anyLong())).thenReturn(allStoresProductPrices);
+        Page<Map<String, String>> page = new PageImpl<>(allStoresProductPrices);
+        when(storeProductPriceService.getAllStoresProductPrices(anyLong(), any())).thenReturn(page);
 
         mockMvc.perform(get(END_POINT_PATH + "/comparison-all/1"))
                 .andExpect(status().isOk());
@@ -78,19 +84,25 @@ class StoreProductPriceRestControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     void provideProductPricesTest() throws Exception {
+        List<Map<String, String>> allStoresProductPrices = new ArrayList<>();
+        Page<Map<String, String>> page = new PageImpl<>(allStoresProductPrices);
+        when(storeProductPriceService.getProductPricesOneStore(anyLong(), anyLong(), any())).thenReturn(page);
         mockMvc.perform(get(END_POINT_PATH + "/dynamics/1")
                         .queryParam("store-id", "1")
-                        .queryParam("offset", "0")
-                        .queryParam("page-size", "1"))
+                        .queryParam("page", "0")
+                        .queryParam("size", "1"))
                 .andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(roles = "USER")
     void provideProductPricesOneStoreTest() throws Exception {
+        List<Map<String, String>> allStoresProductPrices = new ArrayList<>();
+        Page<Map<String, String>> page = new PageImpl<>(allStoresProductPrices);
+        when(storeProductPriceService.getProductPrices(anyLong(), any())).thenReturn(page);
         mockMvc.perform(get(END_POINT_PATH + "/dynamics-all/1")
-                        .queryParam("offset", "0")
-                        .queryParam("page-size", "1"))
+                        .queryParam("page", "0")
+                        .queryParam("size", "1"))
                 .andExpect(status().isOk());
     }
 }

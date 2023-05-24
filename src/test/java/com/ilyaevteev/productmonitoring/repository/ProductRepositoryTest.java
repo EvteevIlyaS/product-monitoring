@@ -5,8 +5,9 @@ import com.ilyaevteev.productmonitoring.model.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -20,9 +21,10 @@ class ProductRepositoryTest {
 
     @Test
     void getProductsByCategoryName_checkReturnedValue() {
-        List<Product> products = productRepository.getProductsByCategoryName("fruits");
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<Product> products = productRepository.getProductsByCategoryName("fruits", pageable);
 
-        assertThat(products.size()).isEqualTo(2);
+        assertThat(products.getContent().size()).isEqualTo(2);
 
     }
 

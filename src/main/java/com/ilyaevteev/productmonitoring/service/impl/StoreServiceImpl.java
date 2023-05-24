@@ -6,7 +6,7 @@ import com.ilyaevteev.productmonitoring.repository.StoreRepository;
 import com.ilyaevteev.productmonitoring.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +19,8 @@ public class StoreServiceImpl implements StoreService {
     private final StoreRepository storeRepository;
 
     @Override
-    public List<Store> getStoresDirectory(int offset, int pageSize) {
-        Pageable page = PageRequest.of(offset, pageSize);
-        return storeRepository.findAll(page).getContent();
+    public Page<Store> getStoresDirectory(Pageable pageable) {
+        return storeRepository.findAll(pageable);
     }
 
     @Override

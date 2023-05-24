@@ -1,11 +1,11 @@
 package com.ilyaevteev.productmonitoring.service;
 
 import com.ilyaevteev.productmonitoring.model.Category;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface CategoryService {
-    List<Category> getCategoriesDirectory(int offset, int pageSize);
+    Page<Category> getCategoriesDirectory(Pageable pageable);
 
     Category getCategoryById(Long id);
 }

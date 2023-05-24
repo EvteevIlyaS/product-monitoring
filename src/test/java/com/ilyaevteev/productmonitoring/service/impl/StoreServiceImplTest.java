@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Arrays;
@@ -29,14 +30,13 @@ class StoreServiceImplTest {
     @Test
     void getStoresDirectory_checkReturnedValue() {
         List<Store> stores = Arrays.asList(new Store(), new Store());
-        int offset = 0;
-        int pageSize = 2;
         Page<Store> page = new PageImpl<>(stores);
+        Pageable pageable = PageRequest.of(0, 2);
         when(storeRepository.findAll((Pageable) any())).thenReturn(page);
 
-        List<Store> storesRes = storeService.getStoresDirectory(offset, pageSize);
+        Page<Store> storesRes = storeService.getStoresDirectory(pageable);
 
-        assertThat(storesRes).isEqualTo(page.getContent());
+        assertThat(storesRes).isEqualTo(page);
     }
 
     @Test

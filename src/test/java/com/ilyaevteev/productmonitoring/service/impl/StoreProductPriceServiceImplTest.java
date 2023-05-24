@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
@@ -79,11 +80,12 @@ class StoreProductPriceServiceImplTest {
         Long id = 1L;
         String dateStart = "2023-01-01";
         String dateEnd = "2023-01-02";
+        Pageable pageable = PageRequest.of(0, 3);
 
-        storeProductPriceService.getProductPricesForPeriod(id, dateStart, dateEnd);
+        storeProductPriceService.getProductPricesForPeriod(id, dateStart, dateEnd, pageable);
 
         verify(storeProductPricesRepository, times(1))
-                .findAllByProductIdAndDateBetweenOrderByDate(anyLong(), any(), any());
+                .findAllByProductIdAndDateBetweenOrderByDate(anyLong(), any(), any(), any());
     }
 
     @Test
@@ -91,16 +93,17 @@ class StoreProductPriceServiceImplTest {
         Long id = 1L;
         String dateStart = "2023-01-01";
         String dateEnd = "2023-01-02";
-        when(storeProductPricesRepository.findAllByProductIdAndDateBetweenOrderByDate(anyLong(), any(), any()))
+        Pageable pageable = PageRequest.of(0, 3);
+        when(storeProductPricesRepository.findAllByProductIdAndDateBetweenOrderByDate(anyLong(), any(), any(), any()))
                 .thenThrow(new RuntimeException());
 
-        assertThatThrownBy(() -> storeProductPriceService.getProductPricesForPeriod(id, dateStart, dateEnd))
+        assertThatThrownBy(() -> storeProductPriceService.getProductPricesForPeriod(id, dateStart, dateEnd, pageable))
                 .hasMessage("Wrong store product price");
     }
 
     @Test
     void getCurrentStoreProductPrices_checkReturnedValue() {
-        List<Map<String, String>> storeProductPrices;
+        Map<String, Map<String, String>> storeProductPrices;
         Long productId = 1L;
         Long firstStoreId = 1L;
         Long secondStoreId = 2L;
@@ -112,14 +115,14 @@ class StoreProductPriceServiceImplTest {
         secondStore.setName(secondStoreName);
         StoreProductPrice storeProductPrice = new StoreProductPrice();
         storeProductPrice.setPrice(100L);
-        storeProductPrices = Arrays.asList(Map.of("store", firstStoreName, "price", "100"),
-                Map.of( "store", secondStoreName, "price", "100"));
+        storeProductPrices = Map.of("firstStore", Map.of("store", firstStoreName, "price", "100"),
+                "secondStore", Map.of( "store", secondStoreName, "price", "100"));
         when(storeService.getStoreById(firstStoreId)).thenReturn(firstStore);
         when(storeService.getStoreById(secondStoreId)).thenReturn(secondStore);
         when(storeProductPricesRepository.getFirstByProductIdAndStoreIdOrderByDateDesc(anyLong(), anyLong()))
                 .thenReturn(storeProductPrice);
 
-        List<Map<String, String>> storeProductPriceRes = storeProductPriceService
+        Map<String, Map<String, String>> storeProductPriceRes = storeProductPriceService
                 .getCurrentStoreProductPrices(productId, firstStoreId, secondStoreId);
 
         assertThat(storeProductPriceRes).isEqualTo(storeProductPrices);
@@ -150,15 +153,16 @@ class StoreProductPriceServiceImplTest {
         storeProductPrice.setPrice(100L);
         List<Long> storeIds = List.of(storeId);
         storeProductPrices = List.of(Map.of("store", storeName, "price", "100"));
+        Pageable pageable = PageRequest.of(0, 1);
         when(storeService.getAllStoreIds()).thenReturn(storeIds);
         when(storeService.getStoreById(anyLong())).thenReturn(store);
         when(storeProductPricesRepository.getFirstByProductIdAndStoreIdOrderByDateDesc(anyLong(), anyLong()))
                 .thenReturn(storeProductPrice);
 
-        List<Map<String, String>> storeProductPriceRes = storeProductPriceService
-                .getAllStoresProductPrices(productId);
+        Page<Map<String, String>> storeProductPriceRes = storeProductPriceService
+                .getAllStoresProductPrices(productId, pageable);
 
-        assertThat(storeProductPriceRes).isEqualTo(storeProductPrices);
+        assertThat(storeProductPriceRes.getContent()).isEqualTo(storeProductPrices);
     }
 
     @Test
@@ -167,18 +171,18 @@ class StoreProductPriceServiceImplTest {
         Long id = 1L;
         int offset = 0;
         int pageSize = 2;
-        Pageable page = PageRequest.of(offset, pageSize);
+        Pageable pageable = PageRequest.of(offset, pageSize);
         StoreProductPrice storeProductPrice = new StoreProductPrice();
         storeProductPrice.setDate(new Date());
         storeProductPrice.setPrice(100L);
         List<StoreProductPrice> storeProductPrices = List.of(storeProductPrice);
         productPrices = List.of(Map.of("date", storeProductPrice.getDate().toString(),
                 "price", storeProductPrice.getPrice().toString()));
-        when(storeProductPricesRepository.findAllByProductIdOrderByDate(id, page)).thenReturn(storeProductPrices);
+        when(storeProductPricesRepository.findAllByProductIdOrderByDate(id, pageable)).thenReturn(storeProductPrices);
 
-        List<Map<String, String>> productPricesRes = storeProductPriceService.getProductPrices(id, offset, pageSize);
+        Page<Map<String, String>> productPricesRes = storeProductPriceService.getProductPrices(id, pageable);
 
-        assertThat(productPricesRes).isEqualTo(productPrices);
+        assertThat(productPricesRes.getContent()).isEqualTo(productPrices);
     }
 
     @Test
@@ -187,19 +191,19 @@ class StoreProductPriceServiceImplTest {
         Long productId = 1L;
         Long storeId = 1L;
         int offset = 0;
-        int pageSize = 2;
-        Pageable page = PageRequest.of(offset, pageSize);
+        int pageSize = 1;
+        Pageable pageable = PageRequest.of(offset, pageSize);
         StoreProductPrice storeProductPrice = new StoreProductPrice();
         storeProductPrice.setDate(new Date());
         storeProductPrice.setPrice(100L);
         List<StoreProductPrice> storeProductPrices = List.of(storeProductPrice);
         productPrices = List.of(Map.of("date", storeProductPrice.getDate().toString(),
                 "price", storeProductPrice.getPrice().toString()));
-        when(storeProductPricesRepository.findAllByProductIdAndStoreIdOrderByDate(productId, storeId, page)).thenReturn(storeProductPrices);
+        when(storeProductPricesRepository.findAllByProductIdAndStoreIdOrderByDate(productId, storeId, pageable)).thenReturn(storeProductPrices);
 
-        List<Map<String, String>> productPricesRes = storeProductPriceService.getProductPricesOneStore(productId, storeId, offset, pageSize);
+        Page<Map<String, String>> productPricesRes = storeProductPriceService.getProductPricesOneStore(productId, storeId, pageable);
 
-        assertThat(productPricesRes).isEqualTo(productPrices);
+        assertThat(productPricesRes.getContent()).isEqualTo(productPrices);
     }
 
     @Test

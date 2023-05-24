@@ -14,7 +14,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -58,10 +59,10 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
     }
 
     @Override
-    public List<StoreProductPrice> getProductPricesForPeriod(Long id, String dateStart, String dateEnd) {
+    public Page<StoreProductPrice> getProductPricesForPeriod(Long id, String dateStart, String dateEnd, Pageable pageable) {
         try {
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-            return storeProductPricesRepository.findAllByProductIdAndDateBetweenOrderByDate(id, format.parse(dateStart), format.parse(dateEnd));
+            return storeProductPricesRepository.findAllByProductIdAndDateBetweenOrderByDate(id, format.parse(dateStart), format.parse(dateEnd), pageable);
         } catch (Exception e) {
             String message = "Wrong store product price";
             log.error(message);
@@ -72,8 +73,8 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
 
     @Override
     @Transactional
-    public List<Map<String, String>> getCurrentStoreProductPrices(Long productId, Long firstStoreId, Long secondStoreId) {
-        List<Map<String, String>> storeProductPrice;
+    public Map<String, Map<String, String>> getCurrentStoreProductPrices(Long productId, Long firstStoreId, Long secondStoreId) {
+        Map<String, Map<String, String>> storeProductPrice;
 
         StoreProductPrice currentFirstStoreProductPrice = storeProductPricesRepository.getFirstByProductIdAndStoreIdOrderByDateDesc(productId, firstStoreId);
         StoreProductPrice currentSecondStoreProductPrice = storeProductPricesRepository.getFirstByProductIdAndStoreIdOrderByDateDesc(productId, secondStoreId);
@@ -84,9 +85,10 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
             throw new BadRequestException(message);
         }
 
-        storeProductPrice = Arrays.asList(
+        storeProductPrice = Map.of("firstStore",
                 Map.of("store", storeService.getStoreById(firstStoreId).getName(),
                         "price", currentFirstStoreProductPrice.getPrice().toString()),
+                "secondStore",
                 Map.of("store", storeService.getStoreById(secondStoreId).getName(),
                         "price", currentSecondStoreProductPrice.getPrice().toString())
         );
@@ -96,7 +98,7 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
 
     @Override
     @Transactional
-    public List<Map<String, String>> getAllStoresProductPrices(Long productId) {
+    public Page<Map<String, String>> getAllStoresProductPrices(Long productId, Pageable pageable) {
         List<Map<String, String>> storeProductPrice = new ArrayList<>();
         List<Long> storeIds = storeService.getAllStoreIds();
 
@@ -107,33 +109,34 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
             }
         });
 
-        return storeProductPrice;
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), storeProductPrice.size());
+
+        return new PageImpl<>(storeProductPrice.subList(start, end), pageable, storeProductPrice.size());
     }
 
     @Override
-    public List<Map<String, String>> getProductPrices(Long id, int offset, int pageSize) {
-        Pageable page = PageRequest.of(offset, pageSize);
+    public Page<Map<String, String>> getProductPrices(Long id, Pageable pageable) {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         List<Map<String, String>> productPrices = new ArrayList<>();
 
-        List<StoreProductPrice> storeProductPrices = StreamEx.of(storeProductPricesRepository.findAllByProductIdOrderByDate(id, page))
+        List<StoreProductPrice> storeProductPrices = StreamEx.of(storeProductPricesRepository.findAllByProductIdOrderByDate(id, pageable))
                 .distinct(el -> format.format(el.getDate())).toList();
         storeProductPrices.forEach(el -> productPrices.add(Map.of("date", el.getDate().toString(), "price", el.getPrice().toString())));
 
-        return productPrices;
+        return new PageImpl<>(productPrices, pageable, productPrices.size());
     }
 
     @Override
-    public List<Map<String, String>> getProductPricesOneStore(Long productId, Long storeId, int offset, int pageSize) {
-        Pageable page = PageRequest.of(offset, pageSize);
+    public Page<Map<String, String>> getProductPricesOneStore(Long productId, Long storeId, Pageable pageable) {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         List<Map<String, String>> productPricesOneStore = new ArrayList<>();
 
-        List<StoreProductPrice> storeProductPrices = StreamEx.of(storeProductPricesRepository.findAllByProductIdAndStoreIdOrderByDate(productId, storeId, page))
+        List<StoreProductPrice> storeProductPrices = StreamEx.of(storeProductPricesRepository.findAllByProductIdAndStoreIdOrderByDate(productId, storeId, pageable))
                 .distinct(el -> format.format(el.getDate())).toList();
         storeProductPrices.forEach(el -> productPricesOneStore.add(Map.of("date", el.getDate().toString(), "price", el.getPrice().toString())));
 
-        return productPricesOneStore;
+        return new PageImpl<>(productPricesOneStore, pageable, productPricesOneStore.size());
     }
 
     @Override

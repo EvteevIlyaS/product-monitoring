@@ -12,6 +12,8 @@ import com.ilyaevteev.productmonitoring.util.ExcelHelper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,8 +31,8 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryService categoryService;
 
     @Override
-    public List<Product> getProductsByCategory(String name) {
-        return productRepository.getProductsByCategoryName(name);
+    public Page<Product> getProductsByCategory(String name, Pageable pageable) {
+        return productRepository.getProductsByCategoryName(name, pageable);
     }
 
     @Override
