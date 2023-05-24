@@ -31,7 +31,7 @@ public class UserRestController {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @PostMapping("/register")
+    @PostMapping
     @Operation(summary = "Выполнить процедуру регистрации пользователя")
     public ResponseEntity<RegistrationResponseDto> register(@RequestBody @Valid RegistrationRequestDto requestDto, BindingResult bindingResult) {
         RegistrationResponseDto user = objectMapper.convertValue(userService.register(entityDtoMapper.toEntity(requestDto, User.class),
@@ -40,7 +40,7 @@ public class UserRestController {
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
-    @GetMapping("/login")
+    @GetMapping
     @Operation(summary = "Выполнить процедуру авторизации пользователя")
     public ResponseEntity<TokenDto> login(@RequestBody AuthenticationDto authenticationDto) {
         TokenDto token = objectMapper.convertValue(userService.login(authenticationDto.getUsername(), authenticationDto.getPassword(),

@@ -1,4 +1,4 @@
-package com.ilyaevteev.productmonitoring.rest;
+package com.ilyaevteev.productmonitoring.rest.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -17,14 +17,17 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class AuthenticationRestControllerTest {
-    private final String END_POINT_PATH = "/api/v1/auth/";
+class UserRestControllerTest {
+    private final String END_POINT_PATH = "/api/v1/auth";
     private final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(), StandardCharsets.UTF_8);
     private final ObjectWriter ow;
@@ -35,7 +38,7 @@ class AuthenticationRestControllerTest {
     @MockBean
     private UserService userService;
 
-    AuthenticationRestControllerTest() {
+    UserRestControllerTest() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         this.ow = mapper.writer().withDefaultPrettyPrinter();
@@ -47,7 +50,7 @@ class AuthenticationRestControllerTest {
         String requestJson = ow.writeValueAsString(registrationRequestDto);
         when(userService.register(any(), any(), anyString(), any())).thenReturn(new HashMap<>());
 
-        mockMvc.perform(post(END_POINT_PATH + "register")
+        mockMvc.perform(post(END_POINT_PATH)
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isCreated());
@@ -59,7 +62,7 @@ class AuthenticationRestControllerTest {
         String requestJson = ow.writeValueAsString(authenticationDto);
         when(userService.login(anyString(), anyString(), any(), any())).thenReturn(new HashMap<>());
 
-        mockMvc.perform(get(END_POINT_PATH + "login")
+        mockMvc.perform(get(END_POINT_PATH)
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isOk());

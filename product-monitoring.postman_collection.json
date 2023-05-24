@@ -23,7 +23,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/auth/login",
+					"raw": "http://localhost:8080/api/v1/auth",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -32,8 +32,7 @@
 					"path": [
 						"api",
 						"v1",
-						"auth",
-						"login"
+						"auth"
 					]
 				}
 			},
@@ -57,7 +56,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/auth/login",
+					"raw": "http://localhost:8080/api/v1/auth",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -66,8 +65,7 @@
 					"path": [
 						"api",
 						"v1",
-						"auth",
-						"login"
+						"auth"
 					]
 				}
 			},
@@ -80,7 +78,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0NDAzMjIwLCJleHAiOjE2ODQ0MDY4MjB9.Ur1Gdc2D182wEYFMfuXpO3i5srYh3hcUQI5ydxIbkvs",
+						"value": "Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjg0OTE5NzgzLCJleHAiOjE2ODQ5MjMzODN9.b9b0EzhNBGoU5yeUMK8e-qQPQrL3L6cyjq7rhfUaEfI",
 						"type": "default"
 					}
 				],
@@ -94,7 +92,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/admin/add-admin",
+					"raw": "http://localhost:8080/api/v1/admin",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -103,8 +101,7 @@
 					"path": [
 						"api",
 						"v1",
-						"admin",
-						"add-admin"
+						"admin"
 					]
 				}
 			},
@@ -125,7 +122,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/auth/register",
+					"raw": "http://localhost:8080/api/v1/auth",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -134,8 +131,7 @@
 					"path": [
 						"api",
 						"v1",
-						"auth",
-						"register"
+						"auth"
 					]
 				}
 			},

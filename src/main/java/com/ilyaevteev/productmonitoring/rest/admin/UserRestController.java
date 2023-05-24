@@ -28,12 +28,13 @@ public class UserRestController {
     private final EntityDtoMapper entityDtoMapper;
     private final ObjectMapper objectMapper;
 
-    @PostMapping("/add-admin")
+    @PostMapping
     @Operation(summary = "Выполнить процедуру регистрации администратора")
-    public ResponseEntity<RegistrationResponseDto> register(@RequestBody @Valid RegistrationRequestDto requestDto, BindingResult bindingResult) {
+    public ResponseEntity<RegistrationResponseDto> addAdmin(@RequestBody @Valid RegistrationRequestDto requestDto, BindingResult bindingResult) {
         RegistrationResponseDto user = objectMapper.convertValue(userService.register(entityDtoMapper.toEntity(requestDto, User.class),
                 passwordEncoder, "ROLE_ADMIN", bindingResult), RegistrationResponseDto.class);
 
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 }
+
