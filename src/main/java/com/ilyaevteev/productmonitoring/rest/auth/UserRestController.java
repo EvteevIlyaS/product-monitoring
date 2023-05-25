@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
@@ -32,12 +31,11 @@ public class UserRestController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Выполнить процедуру регистрации пользователя")
-    public ResponseEntity<RegistrationResponseDto> register(@RequestBody @Valid RegistrationRequestDto requestDto, BindingResult bindingResult) {
-        RegistrationResponseDto user = objectMapper.convertValue(userService.register(entityDtoMapper.toEntity(requestDto, User.class),
+    public RegistrationResponseDto register(@RequestBody @Valid RegistrationRequestDto requestDto, BindingResult bindingResult) {
+        return objectMapper.convertValue(userService.register(entityDtoMapper.toEntity(requestDto, User.class),
                 passwordEncoder, "ROLE_USER", bindingResult), RegistrationResponseDto.class);
-
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     @GetMapping

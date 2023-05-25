@@ -12,7 +12,6 @@ import com.ilyaevteev.productmonitoring.util.EntityDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,12 +25,11 @@ public class ProductRestController {
     private final ObjectMapper objectMapper;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Добавить товар")
-    public ResponseEntity<ProductFormattingDto> createProduct(@RequestBody ProductRequestDto productRequestDto) {
-        ProductFormattingDto product = objectMapper.convertValue(productService.addProduct(entityDtoMapper.toEntity(productRequestDto, Product.class)),
+    public ProductFormattingDto createProduct(@RequestBody ProductRequestDto productRequestDto) {
+        return objectMapper.convertValue(productService.addProduct(entityDtoMapper.toEntity(productRequestDto, Product.class)),
                 ProductFormattingDto.class);
-
-        return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
 
     @PutMapping
@@ -49,10 +47,9 @@ public class ProductRestController {
     }
 
     @PostMapping(value = "/upload")
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Выгрузить информации о продуктах в формате csv/xlsx")
-    public ResponseEntity<UploadDataDto> uploadProducts(@RequestBody MultipartFile file) {
-        UploadDataDto uploadData = objectMapper.convertValue(productService.uploadFileProduct(file), UploadDataDto.class);
-
-        return new ResponseEntity<>(uploadData, HttpStatus.CREATED);
+    public UploadDataDto uploadProducts(@RequestBody MultipartFile file) {
+        return objectMapper.convertValue(productService.uploadFileProduct(file), UploadDataDto.class);
     }
 }
