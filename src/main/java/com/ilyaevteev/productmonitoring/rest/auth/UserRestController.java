@@ -42,10 +42,8 @@ public class UserRestController {
 
     @GetMapping
     @Operation(summary = "Выполнить процедуру авторизации пользователя")
-    public ResponseEntity<TokenDto> login(@RequestBody AuthenticationDto authenticationDto) {
-        TokenDto token = objectMapper.convertValue(userService.login(authenticationDto.getUsername(), authenticationDto.getPassword(),
+    public TokenDto login(@RequestBody AuthenticationDto authenticationDto) {
+        return objectMapper.convertValue(userService.login(authenticationDto.getUsername(), authenticationDto.getPassword(),
                 authenticationManager, jwtTokenProvider), TokenDto.class);
-
-        return new ResponseEntity<>(token, HttpStatus.OK);
     }
 }

@@ -7,8 +7,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,10 +21,8 @@ public class StoreRestController {
 
     @GetMapping
     @Operation(summary = "Показать справочник торговых точек")
-    public ResponseEntity<Page<StoreDto>> getStoresDirectory(Pageable pageable) {
-        Page<StoreDto> storesDirectory = storeService.getStoresDirectory(pageable)
+    public Page<StoreDto> getStoresDirectory(Pageable pageable) {
+        return storeService.getStoresDirectory(pageable)
                 .map(el -> entityDtoMapper.toDto(el, StoreDto.class));
-
-        return new ResponseEntity<>(storesDirectory, HttpStatus.OK);
     }
 }

@@ -36,20 +36,16 @@ public class ProductRestController {
 
     @PutMapping
     @Operation(summary = "Редактировать товар")
-    public ResponseEntity<ProductFormattingDto> updateProduct(@RequestBody EditionProductDto editionProductDto) {
-        ProductFormattingDto product = objectMapper.convertValue(productService.updateProduct(entityDtoMapper.toEntity(editionProductDto, Product.class)),
+    public ProductFormattingDto updateProduct(@RequestBody EditionProductDto editionProductDto) {
+        return objectMapper.convertValue(productService.updateProduct(entityDtoMapper.toEntity(editionProductDto, Product.class)),
                 ProductFormattingDto.class);
-
-        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")
     @Operation(summary = "Удалить товар")
-    public ResponseEntity<ProductDeletionDto> deleteProduct(@PathVariable Long id) {
-        ProductDeletionDto product = objectMapper.convertValue(productService.deleteProduct(id),
+    public ProductDeletionDto deleteProduct(@PathVariable Long id) {
+        return objectMapper.convertValue(productService.deleteProduct(id),
                 ProductDeletionDto.class);
-
-        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @PostMapping(value = "/upload")

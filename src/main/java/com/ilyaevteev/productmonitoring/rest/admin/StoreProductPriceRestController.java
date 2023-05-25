@@ -32,11 +32,9 @@ public class StoreProductPriceRestController {
 
     @DeleteMapping(value = "/{id}")
     @Operation(summary = "Удалить цену к товару в конкретном магазине")
-    public ResponseEntity<DeletionStoreProductPriceResponseDto> deleteStoreProductPrice(@PathVariable Long id) {
-        DeletionStoreProductPriceResponseDto storeProductPrice = objectMapper.convertValue(storeProductPriceService.deleteProductPriceStore(id),
+    public DeletionStoreProductPriceResponseDto deleteStoreProductPrice(@PathVariable Long id) {
+        return objectMapper.convertValue(storeProductPriceService.deleteProductPriceStore(id),
                 DeletionStoreProductPriceResponseDto.class);
-
-        return new ResponseEntity<>(storeProductPrice, HttpStatus.OK);
     }
 
     @PostMapping(value = "/upload")
