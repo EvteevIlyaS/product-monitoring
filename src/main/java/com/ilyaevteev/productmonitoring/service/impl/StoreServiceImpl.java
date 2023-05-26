@@ -1,6 +1,6 @@
 package com.ilyaevteev.productmonitoring.service.impl;
 
-import com.ilyaevteev.productmonitoring.exception.exceptionlist.BadRequestException;
+import com.ilyaevteev.productmonitoring.exception.exceptionlist.NotFoundException;
 import com.ilyaevteev.productmonitoring.model.Store;
 import com.ilyaevteev.productmonitoring.repository.StoreRepository;
 import com.ilyaevteev.productmonitoring.service.StoreService;
@@ -26,9 +26,9 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public Store getStoreById(Long id) {
         return storeRepository.findById(id).orElseGet(() -> {
-            String message = "No stores found by id: " + id;
+            String message = "No stores found";
             log.error(message);
-            throw new BadRequestException(message);
+            throw new NotFoundException(message);
         });
     }
 

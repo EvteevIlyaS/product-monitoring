@@ -52,7 +52,7 @@ class UserServiceImplTest {
         when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userService.findByUsername(username))
-                .hasMessage("No users found by name: " + username);
+                .hasMessage("No users found");
     }
 
     @Test
@@ -158,7 +158,7 @@ class UserServiceImplTest {
         when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userService.login(username, password, authenticationManager, jwtTokenProvider))
-                .hasMessage("No users found by name: " + username);
+                .hasMessage("No users found");
     }
 
     @Test

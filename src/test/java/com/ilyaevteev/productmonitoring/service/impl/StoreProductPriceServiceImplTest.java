@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
@@ -55,11 +56,21 @@ class StoreProductPriceServiceImplTest {
     }
 
     @Test
-    void addStoreProductPrice_checkThrowException() {
+    void addStoreProductPrice_checkFirstThrowException() {
         Long price = 100L;
         Long productId = 1L;
         Long storeId = 1L;
+        when(storeService.getStoreById(storeId)).thenThrow(new RuntimeException("No stores found"));
 
+        assertThatThrownBy(() -> storeProductPriceService.addStoreProductPrice(price, storeId, productId))
+                .hasMessage("Wrong store product price");
+    }
+
+    @Test
+    void addStoreProductPrice_checkSecondThrowException() {
+        Long price = 100L;
+        Long productId = 1L;
+        Long storeId = 1L;
         when(storeProductPricesRepository.save(any())).thenThrow(new RuntimeException());
 
         assertThatThrownBy(() -> storeProductPriceService.addStoreProductPrice(price, storeId, productId))
@@ -69,10 +80,20 @@ class StoreProductPriceServiceImplTest {
     @Test
     void deleteProductPriceStore_checkMethodInvocation() {
         Long id = 1L;
+        when(storeProductPricesRepository.deleteById(anyString())).thenReturn(1);
 
         storeProductPriceService.deleteProductPriceStore(id);
 
-        verify(storeProductPricesRepository, times(1)).deleteById(id);
+        verify(storeProductPricesRepository, times(1)).deleteById(id.toString());
+    }
+
+    @Test
+    void deleteProductPriceStore_checkThrowException() {
+        Long id = 1L;
+        when(storeProductPricesRepository.deleteById(anyString())).thenReturn(0);
+
+        assertThatThrownBy(() -> storeProductPriceService.deleteProductPriceStore(id))
+                .hasMessage("No prices found");
     }
 
     @Test
@@ -81,6 +102,9 @@ class StoreProductPriceServiceImplTest {
         String dateStart = "2023-01-01";
         String dateEnd = "2023-01-02";
         Pageable pageable = PageRequest.of(0, 3);
+        Page<StoreProductPrice> productPrices = new PageImpl<>(List.of(new StoreProductPrice()));
+        when(storeProductPricesRepository.findAllByProductIdAndDateBetweenOrderByDate(anyLong(), any(), any(), any()))
+                .thenReturn(productPrices);
 
         storeProductPriceService.getProductPricesForPeriod(id, dateStart, dateEnd, pageable);
 
@@ -94,11 +118,12 @@ class StoreProductPriceServiceImplTest {
         String dateStart = "2023-01-01";
         String dateEnd = "2023-01-02";
         Pageable pageable = PageRequest.of(0, 3);
+        Page<StoreProductPrice> productPrices = new PageImpl<>(new ArrayList<>());
         when(storeProductPricesRepository.findAllByProductIdAndDateBetweenOrderByDate(anyLong(), any(), any(), any()))
-                .thenThrow(new RuntimeException());
+                .thenReturn(productPrices);
 
         assertThatThrownBy(() -> storeProductPriceService.getProductPricesForPeriod(id, dateStart, dateEnd, pageable))
-                .hasMessage("Wrong store product price");
+                .hasMessage("No prices found");
     }
 
     @Test
@@ -133,12 +158,11 @@ class StoreProductPriceServiceImplTest {
         Long productId = 1L;
         Long firstStoreId = 1L;
         Long secondStoreId = 2L;
-
         when(storeProductPricesRepository.getFirstByProductIdAndStoreIdOrderByDateDesc(anyLong(), anyLong()))
                 .thenReturn(null);
 
         assertThatThrownBy(() -> storeProductPriceService.getCurrentStoreProductPrices(productId, firstStoreId, secondStoreId))
-                .hasMessage("Products not found");
+                .hasMessage("No prices found");
     }
 
     @Test
@@ -166,6 +190,17 @@ class StoreProductPriceServiceImplTest {
     }
 
     @Test
+    void getAllStoresProductPrices_checkThrowException() {
+        Long productId = 1L;
+        List<Long> storeIds = new ArrayList<>();
+        Pageable pageable = PageRequest.of(0, 1);
+        when(storeService.getAllStoreIds()).thenReturn(storeIds);
+
+        assertThatThrownBy(() -> storeProductPriceService.getAllStoresProductPrices(productId, pageable))
+                .hasMessage("No prices found");
+    }
+
+    @Test
     void getProductPrices_checkReturnedValue() {
         List<Map<String, String>> productPrices;
         Long id = 1L;
@@ -183,6 +218,17 @@ class StoreProductPriceServiceImplTest {
         Page<Map<String, String>> productPricesRes = storeProductPriceService.getProductPrices(id, pageable);
 
         assertThat(productPricesRes.getContent()).isEqualTo(productPrices);
+    }
+
+    @Test
+    void getProductPrices_checkThrowException() {
+        Long productId = 1L;
+        List<StoreProductPrice> productPrices = new ArrayList<>();
+        Pageable pageable = PageRequest.of(0, 1);
+        when(storeProductPricesRepository.findAllByProductIdOrderByDate(productId, pageable)).thenReturn(productPrices);
+
+        assertThatThrownBy(() -> storeProductPriceService.getProductPrices(productId, pageable))
+                .hasMessage("No prices found");
     }
 
     @Test
@@ -204,6 +250,18 @@ class StoreProductPriceServiceImplTest {
         Page<Map<String, String>> productPricesRes = storeProductPriceService.getProductPricesOneStore(productId, storeId, pageable);
 
         assertThat(productPricesRes.getContent()).isEqualTo(productPrices);
+    }
+
+    @Test
+    void getProductPricesOneStore_checkThrowException() {
+        Long productId = 1L;
+        Long storeId = 1L;
+        List<StoreProductPrice> productPrices = new ArrayList<>();
+        Pageable pageable = PageRequest.of(0, 1);
+        when(storeProductPricesRepository.findAllByProductIdAndStoreIdOrderByDate(productId, storeId, pageable)).thenReturn(productPrices);
+
+        assertThatThrownBy(() -> storeProductPriceService.getProductPricesOneStore(productId, storeId, pageable))
+                .hasMessage("No prices found");
     }
 
     @Test
@@ -258,7 +316,7 @@ class StoreProductPriceServiceImplTest {
                 "prices-data.csv",
                 "text/csv",
                 new ClassPathResource("upload-data/prices-data.csv").getInputStream());
-        when(storeService.getStoreById(anyLong())).thenThrow(new RuntimeException("No products found by id"));
+        when(storeService.getStoreById(anyLong())).thenThrow(new RuntimeException("No products found"));
 
         assertThatThrownBy(() -> storeProductPriceService.uploadFilePrices(multipartFile))
                 .hasMessage("Fail to store data");

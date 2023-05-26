@@ -58,4 +58,13 @@ class StoreProductPricesRepositoryTest {
 
         assertThat(storeProductPrices.size()).isEqualTo(2);
     }
+
+    @Test
+    void deleteById_checkReturnedValue() {
+        String id = "1";
+
+        int rowsNumber = storeProductPricesRepository.deleteById(id);
+
+        assertThat(rowsNumber).isEqualTo(1);
+    }
 }

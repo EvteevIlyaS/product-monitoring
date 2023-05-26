@@ -17,4 +17,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Query("update Product product set product.name = :name, product.category = :category where product.id = :id")
     void updateProductNameAndCategory(@Param("name") String name, @Param("category") Category category, @Param("id") Long id);
+
+    @Modifying
+    @Query("delete from Product product where product.id = :id")
+    int deleteById(@Param("id") String id);
 }

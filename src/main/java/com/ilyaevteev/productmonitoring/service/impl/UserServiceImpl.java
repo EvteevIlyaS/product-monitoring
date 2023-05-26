@@ -2,6 +2,7 @@ package com.ilyaevteev.productmonitoring.service.impl;
 
 import com.ilyaevteev.productmonitoring.exception.exceptionlist.BadRequestException;
 import com.ilyaevteev.productmonitoring.exception.exceptionlist.FailedDependencyException;
+import com.ilyaevteev.productmonitoring.exception.exceptionlist.NotFoundException;
 import com.ilyaevteev.productmonitoring.model.auth.Role;
 import com.ilyaevteev.productmonitoring.model.auth.User;
 import com.ilyaevteev.productmonitoring.repository.auth.RoleRepository;
@@ -32,9 +33,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElseGet(() -> {
-            String message = "No users found by name: " + username;
+            String message = "No users found";
             log.error(message);
-            throw new BadRequestException(message);
+            throw new NotFoundException(message);
         });
     }
 
@@ -81,9 +82,9 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = userRepository.findByUsername(username).orElseGet(() -> {
-            String message = "No users found by name: " + username;
+            String message = "No users found";
             log.error(message);
-            throw new BadRequestException(message);
+            throw new NotFoundException(message);
         });
 
         return Map.of("username", username, "token", jwtTokenProvider.createToken(username, user.getRoles()));

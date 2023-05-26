@@ -1,6 +1,6 @@
 package com.ilyaevteev.productmonitoring.service.impl;
 
-import com.ilyaevteev.productmonitoring.exception.exceptionlist.BadRequestException;
+import com.ilyaevteev.productmonitoring.exception.exceptionlist.NotFoundException;
 import com.ilyaevteev.productmonitoring.model.Category;
 import com.ilyaevteev.productmonitoring.repository.CategoryRepository;
 import com.ilyaevteev.productmonitoring.service.CategoryService;
@@ -24,9 +24,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category getCategoryById(Long id) {
         return categoryRepository.findById(id).orElseGet(() -> {
-            String message = "No categories found by id: " + id;
+            String message = "No categories found";
             log.error(message);
-            throw new BadRequestException(message);
+            throw new NotFoundException(message);
         });
     }
 }

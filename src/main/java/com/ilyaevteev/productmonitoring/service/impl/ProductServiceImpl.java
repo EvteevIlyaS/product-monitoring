@@ -2,6 +2,7 @@ package com.ilyaevteev.productmonitoring.service.impl;
 
 import com.ilyaevteev.productmonitoring.exception.exceptionlist.BadRequestException;
 import com.ilyaevteev.productmonitoring.exception.exceptionlist.FailedDependencyException;
+import com.ilyaevteev.productmonitoring.exception.exceptionlist.NotFoundException;
 import com.ilyaevteev.productmonitoring.exception.exceptionlist.UnsupportedMediaTypeException;
 import com.ilyaevteev.productmonitoring.util.CSVHelper;
 import com.ilyaevteev.productmonitoring.model.Product;
@@ -32,7 +33,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<Product> getProductsByCategory(String name, Pageable pageable) {
-        return productRepository.getProductsByCategoryName(name, pageable);
+        Page<Product> products = productRepository.getProductsByCategoryName(name, pageable);
+        if (products.getContent().size() == 0) {
+            String message = "No products found";
+            log.error(message);
+            throw new NotFoundException(message);
+        }
+        return products;
     }
 
     @Override
@@ -74,17 +81,23 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Map<String, String> deleteProduct(Long id) {
-        productRepository.deleteById(id);
+        int rowsNumber = productRepository.deleteById(id.toString());
+        if (rowsNumber == 0) {
+            String message = "No products found";
+            log.error(message);
+            throw new NotFoundException(message);
+        }
         return Map.of("id", id.toString());
     }
 
     @Override
     public Product getProductById(Long id) {
         return productRepository.findById(id).orElseGet(() -> {
-            String message = "No products found by id: " + id;
+            String message = "No products found";
             log.error(message);
-            throw new BadRequestException(message);
+            throw new NotFoundException(message);
         });
     }
 
@@ -113,7 +126,7 @@ public class ProductServiceImpl implements ProductService {
             } catch (Exception e) {
                 String message = "Fail to store data";
                 log.error(message);
-                if (e.getMessage().contains("No categories found by id")) {
+                if (e.getMessage() != null && e.getMessage().equals("No categories found")) {
                     throw new FailedDependencyException(message);
                 }
                 throw new BadRequestException(message);

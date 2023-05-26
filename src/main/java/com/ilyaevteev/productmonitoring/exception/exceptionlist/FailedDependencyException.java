@@ -4,5 +4,4 @@ public class FailedDependencyException extends RuntimeException{
     public FailedDependencyException(String msg) {
         super(msg);
     }
-
 }

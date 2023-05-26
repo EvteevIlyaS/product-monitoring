@@ -58,6 +58,6 @@ class CategoryServiceImplTest {
         when(categoryRepository.findById(id)).thenReturn(optionalCategory);
 
         assertThatThrownBy(() -> categoryService.getCategoryById(id))
-                .hasMessage("No categories found by id: " + id);
+                .hasMessage("No categories found");
     }
 }

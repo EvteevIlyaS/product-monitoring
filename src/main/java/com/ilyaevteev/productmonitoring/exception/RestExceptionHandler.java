@@ -2,6 +2,7 @@ package com.ilyaevteev.productmonitoring.exception;
 
 import com.ilyaevteev.productmonitoring.exception.exceptionlist.BadRequestException;
 import com.ilyaevteev.productmonitoring.exception.exceptionlist.FailedDependencyException;
+import com.ilyaevteev.productmonitoring.exception.exceptionlist.NotFoundException;
 import com.ilyaevteev.productmonitoring.exception.exceptionlist.UnsupportedMediaTypeException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,6 +19,16 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     protected ErrorResponse errorHandlerBadRequest(BadRequestException exception) {
         return new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
+                exception.getMessage(),
+                new Date()
+        );
+    }
+
+    @ExceptionHandler(value = {NotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    protected ErrorResponse errorHandlerNotFound(NotFoundException exception) {
+        return new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
                 exception.getMessage(),
                 new Date()
         );

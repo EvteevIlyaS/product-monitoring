@@ -58,7 +58,7 @@ class StoreServiceImplTest {
         when(storeRepository.findById(id)).thenReturn(optionalStore);
 
         assertThatThrownBy(() -> storeService.getStoreById(id))
-                .hasMessage("No stores found by id: " + id);
+                .hasMessage("No stores found");
     }
 
     @Test

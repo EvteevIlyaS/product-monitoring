@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -45,6 +46,18 @@ class ProductServiceImplTest {
         Page<Product> productsRes = productService.getProductsByCategory(category, pageable);
 
         assertThat(productsRes).isEqualTo(page);
+    }
+
+    @Test
+    void getProductsByCategory_checkThrowException() {
+        String category = "fruits";
+        List<Product> products = new ArrayList<>();
+        Page<Product> page = new PageImpl<>(products);
+        Pageable pageable = PageRequest.of(0, 2);
+        when(productRepository.getProductsByCategoryName(category, pageable)).thenReturn(page);
+
+        assertThatThrownBy(() -> productService.getProductsByCategory(category, pageable))
+                .hasMessage("No products found");
     }
 
     @Test
@@ -121,10 +134,20 @@ class ProductServiceImplTest {
     @Test
     void deleteProduct_checkMethodInvocation() {
         Long id = 1L;
+        when(productRepository.deleteById(anyString())).thenReturn(1);
 
         productService.deleteProduct(id);
 
-        verify(productRepository, times(1)).deleteById(id);
+        verify(productRepository, times(1)).deleteById(id.toString());
+    }
+
+    @Test
+    void deleteProduct_checkThrowException() {
+        Long id = 1L;
+        when(productRepository.deleteById(anyString())).thenReturn(0);
+
+        assertThatThrownBy(() -> productService.deleteProduct(id))
+                .hasMessage("No products found");
     }
 
     @Test
@@ -146,7 +169,7 @@ class ProductServiceImplTest {
         when(productRepository.findById(id)).thenReturn(optionalProduct);
 
         assertThatThrownBy(() -> productService.getProductById(id))
-                .hasMessage("No products found by id: " + id);
+                .hasMessage("No products found");
     }
 
     @Test
@@ -202,7 +225,7 @@ class ProductServiceImplTest {
                 "products-data.csv",
                 "text/csv",
                 new ClassPathResource("upload-data/products-data.csv").getInputStream());
-        when(categoryService.getCategoryById(anyLong())).thenThrow(new RuntimeException("No categories found by id"));
+        when(categoryService.getCategoryById(anyLong())).thenThrow(new RuntimeException("No categories found"));
 
         assertThatThrownBy(() -> productService.uploadFileProduct(multipartFile))
                 .hasMessage("Fail to store data");

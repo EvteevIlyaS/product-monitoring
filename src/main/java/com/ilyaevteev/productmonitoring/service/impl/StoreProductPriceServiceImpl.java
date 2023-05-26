@@ -2,6 +2,7 @@ package com.ilyaevteev.productmonitoring.service.impl;
 
 import com.ilyaevteev.productmonitoring.exception.exceptionlist.BadRequestException;
 import com.ilyaevteev.productmonitoring.exception.exceptionlist.FailedDependencyException;
+import com.ilyaevteev.productmonitoring.exception.exceptionlist.NotFoundException;
 import com.ilyaevteev.productmonitoring.exception.exceptionlist.UnsupportedMediaTypeException;
 import com.ilyaevteev.productmonitoring.util.CSVHelper;
 import com.ilyaevteev.productmonitoring.model.StoreProductPrice;
@@ -48,13 +49,22 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
         } catch (Exception e) {
             String message = "Wrong store product price";
             log.error(message);
+            if (e.getMessage() != null && (e.getMessage().equals("No products found") | e.getMessage().equals("No stores found"))) {
+                throw new FailedDependencyException(message);
+            }
             throw new BadRequestException(message);
         }
     }
 
     @Override
+    @Transactional
     public Map<String, String> deleteProductPriceStore(Long id) {
-        storeProductPricesRepository.deleteById(id);
+        int rowsNumber = storeProductPricesRepository.deleteById(id.toString());
+        if (rowsNumber == 0) {
+            String message = "No prices found";
+            log.error(message);
+            throw new NotFoundException(message);
+        }
         return Map.of("id", id.toString());
     }
 
@@ -62,11 +72,16 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
     public Page<StoreProductPrice> getProductPricesForPeriod(Long id, String dateStart, String dateEnd, Pageable pageable) {
         try {
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-            return storeProductPricesRepository.findAllByProductIdAndDateBetweenOrderByDate(id, format.parse(dateStart), format.parse(dateEnd), pageable);
+            Page<StoreProductPrice> productPrices = storeProductPricesRepository.findAllByProductIdAndDateBetweenOrderByDate(
+                    id, format.parse(dateStart), format.parse(dateEnd), pageable);
+            if (productPrices.getContent().size() == 0) {
+                throw new RuntimeException();
+            }
+            return productPrices;
         } catch (Exception e) {
-            String message = "Wrong store product price";
+            String message = "No prices found";
             log.error(message);
-            throw new BadRequestException(message);
+            throw new NotFoundException(message);
         }
 
     }
@@ -80,9 +95,9 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
         StoreProductPrice currentSecondStoreProductPrice = storeProductPricesRepository.getFirstByProductIdAndStoreIdOrderByDateDesc(productId, secondStoreId);
 
         if (currentFirstStoreProductPrice == null | currentSecondStoreProductPrice == null) {
-            String message = "Products not found";
+            String message = "No prices found";
             log.error(message);
-            throw new BadRequestException(message);
+            throw new NotFoundException(message);
         }
 
         storeProductPrice = Map.of("firstStore",
@@ -109,6 +124,12 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
             }
         });
 
+        if (storeProductPrice.size() == 0) {
+            String message = "No prices found";
+            log.error(message);
+            throw new NotFoundException(message);
+        }
+
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), storeProductPrice.size());
 
@@ -124,6 +145,12 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
                 .distinct(el -> format.format(el.getDate())).toList();
         storeProductPrices.forEach(el -> productPrices.add(Map.of("date", el.getDate().toString(), "price", el.getPrice().toString())));
 
+        if (productPrices.size() == 0) {
+            String message = "No prices found";
+            log.error(message);
+            throw new NotFoundException(message);
+        }
+
         return new PageImpl<>(productPrices, pageable, productPrices.size());
     }
 
@@ -135,6 +162,12 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
         List<StoreProductPrice> storeProductPrices = StreamEx.of(storeProductPricesRepository.findAllByProductIdAndStoreIdOrderByDate(productId, storeId, pageable))
                 .distinct(el -> format.format(el.getDate())).toList();
         storeProductPrices.forEach(el -> productPricesOneStore.add(Map.of("date", el.getDate().toString(), "price", el.getPrice().toString())));
+
+        if (productPricesOneStore.size() == 0) {
+            String message = "No prices found";
+            log.error(message);
+            throw new NotFoundException(message);
+        }
 
         return new PageImpl<>(productPricesOneStore, pageable, productPricesOneStore.size());
     }
@@ -166,7 +199,7 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
             } catch (Exception e) {
                 String message = "Fail to store data";
                 log.error(message);
-                if (e.getMessage().contains("No products found by id") | e.getMessage().contains("No stores found by id")) {
+                if (e.getMessage() != null && (e.getMessage().equals("No products found") | e.getMessage().equals("No stores found"))) {
                     throw new FailedDependencyException(message);
                 }
                 throw new BadRequestException(message);

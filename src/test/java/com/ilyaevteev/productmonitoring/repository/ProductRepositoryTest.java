@@ -22,6 +22,7 @@ class ProductRepositoryTest {
     @Test
     void getProductsByCategoryName_checkReturnedValue() {
         Pageable pageable = PageRequest.of(0, 2);
+
         Page<Product> products = productRepository.getProductsByCategoryName("fruits", pageable);
 
         assertThat(products.getContent().size()).isEqualTo(2);
@@ -39,5 +40,14 @@ class ProductRepositoryTest {
 
         assertThat(product.getCategory()).isEqualTo(category);
         assertThat(product.getName()).isEqualTo(name);
+    }
+
+    @Test
+    void deleteById_checkReturnedValue() {
+        String id = "1";
+
+        int rowsNumber = productRepository.deleteById(id);
+
+        assertThat(rowsNumber).isEqualTo(1);
     }
 }
