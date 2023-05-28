@@ -45,6 +45,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Map<String, String> addProduct(Product product) {
         try {
+            product.setId(null);
             Product savedProduct = productRepository.save(product);
             return Map.of("id", savedProduct.getId().toString(),
                     "name", savedProduct.getName());

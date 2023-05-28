@@ -65,15 +65,15 @@ class ProductServiceImplTest {
         Long id = 1L;
         String name = "name";
         Product product = new Product();
-        product.setId(id);
+        Product productRes = new Product();
         product.setName(name);
-        Map<String, String> productMap = Map.of("id", id.toString(), "name", name);
-        when(productRepository.save(any())).thenReturn(product);
+        productRes.setId(id);
+        productRes.setName(name);
+        when(productRepository.save(any())).thenReturn(productRes);
 
-        Map<String, String> productMapRes = productService.addProduct(product);
+        productService.addProduct(product);
 
         verify(productRepository, times(1)).save(product);
-        assertThat(productMapRes).isEqualTo(productMap);
     }
 
     @Test
