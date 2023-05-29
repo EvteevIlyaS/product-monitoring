@@ -72,16 +72,11 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
     public Page<StoreProductPrice> getProductPricesForPeriod(Long id, String dateStart, String dateEnd, Pageable pageable) {
         try {
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-            Page<StoreProductPrice> productPrices = storeProductPricesRepository.findAllByProductIdAndDateBetweenOrderByDate(
-                    id, format.parse(dateStart), format.parse(dateEnd), pageable);
-            if (productPrices.getContent().size() == 0) {
-                throw new RuntimeException();
-            }
-            return productPrices;
+            return storeProductPricesRepository.findAllByProductIdAndDateBetweenOrderByDate(id, format.parse(dateStart), format.parse(dateEnd), pageable);
         } catch (Exception e) {
-            String message = "No prices found";
+            String message = "Wrong store product price";
             log.error(message);
-            throw new NotFoundException(message);
+            throw new BadRequestException(message);
         }
 
     }
@@ -124,12 +119,6 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
             }
         });
 
-        if (storeProductPrice.size() == 0) {
-            String message = "No prices found";
-            log.error(message);
-            throw new NotFoundException(message);
-        }
-
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), storeProductPrice.size());
 
@@ -145,12 +134,6 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
                 .distinct(el -> format.format(el.getDate())).toList();
         storeProductPrices.forEach(el -> productPrices.add(Map.of("date", el.getDate().toString(), "price", el.getPrice().toString())));
 
-        if (productPrices.size() == 0) {
-            String message = "No prices found";
-            log.error(message);
-            throw new NotFoundException(message);
-        }
-
         return new PageImpl<>(productPrices, pageable, productPrices.size());
     }
 
@@ -162,12 +145,6 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
         List<StoreProductPrice> storeProductPrices = StreamEx.of(storeProductPricesRepository.findAllByProductIdAndStoreIdOrderByDate(productId, storeId, pageable))
                 .distinct(el -> format.format(el.getDate())).toList();
         storeProductPrices.forEach(el -> productPricesOneStore.add(Map.of("date", el.getDate().toString(), "price", el.getPrice().toString())));
-
-        if (productPricesOneStore.size() == 0) {
-            String message = "No prices found";
-            log.error(message);
-            throw new NotFoundException(message);
-        }
 
         return new PageImpl<>(productPricesOneStore, pageable, productPricesOneStore.size());
     }

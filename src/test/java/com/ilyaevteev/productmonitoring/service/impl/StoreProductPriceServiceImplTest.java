@@ -118,12 +118,11 @@ class StoreProductPriceServiceImplTest {
         String dateStart = "2023-01-01";
         String dateEnd = "2023-01-02";
         Pageable pageable = PageRequest.of(0, 3);
-        Page<StoreProductPrice> productPrices = new PageImpl<>(new ArrayList<>());
         when(storeProductPricesRepository.findAllByProductIdAndDateBetweenOrderByDate(anyLong(), any(), any(), any()))
-                .thenReturn(productPrices);
+                .thenThrow(new RuntimeException());
 
         assertThatThrownBy(() -> storeProductPriceService.getProductPricesForPeriod(id, dateStart, dateEnd, pageable))
-                .hasMessage("No prices found");
+                .hasMessage("Wrong store product price");
     }
 
     @Test
@@ -190,17 +189,6 @@ class StoreProductPriceServiceImplTest {
     }
 
     @Test
-    void getAllStoresProductPrices_checkThrowException() {
-        Long productId = 1L;
-        List<Long> storeIds = new ArrayList<>();
-        Pageable pageable = PageRequest.of(0, 1);
-        when(storeService.getAllStoreIds()).thenReturn(storeIds);
-
-        assertThatThrownBy(() -> storeProductPriceService.getAllStoresProductPrices(productId, pageable))
-                .hasMessage("No prices found");
-    }
-
-    @Test
     void getProductPrices_checkReturnedValue() {
         List<Map<String, String>> productPrices;
         Long id = 1L;
@@ -218,17 +206,6 @@ class StoreProductPriceServiceImplTest {
         Page<Map<String, String>> productPricesRes = storeProductPriceService.getProductPrices(id, pageable);
 
         assertThat(productPricesRes.getContent()).isEqualTo(productPrices);
-    }
-
-    @Test
-    void getProductPrices_checkThrowException() {
-        Long productId = 1L;
-        List<StoreProductPrice> productPrices = new ArrayList<>();
-        Pageable pageable = PageRequest.of(0, 1);
-        when(storeProductPricesRepository.findAllByProductIdOrderByDate(productId, pageable)).thenReturn(productPrices);
-
-        assertThatThrownBy(() -> storeProductPriceService.getProductPrices(productId, pageable))
-                .hasMessage("No prices found");
     }
 
     @Test
@@ -250,18 +227,6 @@ class StoreProductPriceServiceImplTest {
         Page<Map<String, String>> productPricesRes = storeProductPriceService.getProductPricesOneStore(productId, storeId, pageable);
 
         assertThat(productPricesRes.getContent()).isEqualTo(productPrices);
-    }
-
-    @Test
-    void getProductPricesOneStore_checkThrowException() {
-        Long productId = 1L;
-        Long storeId = 1L;
-        List<StoreProductPrice> productPrices = new ArrayList<>();
-        Pageable pageable = PageRequest.of(0, 1);
-        when(storeProductPricesRepository.findAllByProductIdAndStoreIdOrderByDate(productId, storeId, pageable)).thenReturn(productPrices);
-
-        assertThatThrownBy(() -> storeProductPriceService.getProductPricesOneStore(productId, storeId, pageable))
-                .hasMessage("No prices found");
     }
 
     @Test
