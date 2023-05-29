@@ -41,22 +41,18 @@ class StoreProductPricesRepositoryTest {
 
     @Test
     void findAllByProductIdOrderByDate_checkReturnedValue() {
-        Pageable page = PageRequest.of(0, 5);
-
         List<StoreProductPrice> storeProductPrices = storeProductPricesRepository
-                .findAllByProductIdOrderByDate(1L, page);
+                .findAllByProductIdOrderByDate(1L);
 
-        assertThat(storeProductPrices.size()).isEqualTo(5);
+        assertThat(storeProductPrices.size()).isEqualTo(8);
     }
 
     @Test
     void findAllByProductIdAndStoreIdOrderByDate_checkReturnedValue() {
-        Pageable page = PageRequest.of(0, 6);
-
         List<StoreProductPrice> storeProductPrices = storeProductPricesRepository
-                .findAllByProductIdAndStoreIdOrderByDate(1L, 2L, page);
+                .findAllByProductIdAndStoreIdOrderByDate(1L, 2L);
 
-        assertThat(storeProductPrices.size()).isEqualTo(2);
+        assertThat(storeProductPrices.size()).isEqualTo(5);
     }
 
     @Test

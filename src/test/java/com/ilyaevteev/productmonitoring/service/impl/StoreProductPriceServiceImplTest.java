@@ -18,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.mockito.Mockito.*;
@@ -190,6 +192,7 @@ class StoreProductPriceServiceImplTest {
 
     @Test
     void getProductPrices_checkReturnedValue() {
+        DateFormat format = new SimpleDateFormat("yyyy-MM", Locale.ENGLISH);
         List<Map<String, String>> productPrices;
         Long id = 1L;
         int offset = 0;
@@ -199,9 +202,9 @@ class StoreProductPriceServiceImplTest {
         storeProductPrice.setDate(new Date());
         storeProductPrice.setPrice(100L);
         List<StoreProductPrice> storeProductPrices = List.of(storeProductPrice);
-        productPrices = List.of(Map.of("date", storeProductPrice.getDate().toString(),
+        productPrices = List.of(Map.of("date", format.format(storeProductPrice.getDate()),
                 "price", storeProductPrice.getPrice().toString()));
-        when(storeProductPricesRepository.findAllByProductIdOrderByDate(id, pageable)).thenReturn(storeProductPrices);
+        when(storeProductPricesRepository.findAllByProductIdOrderByDate(id)).thenReturn(storeProductPrices);
 
         Page<Map<String, String>> productPricesRes = storeProductPriceService.getProductPrices(id, pageable);
 
@@ -210,6 +213,7 @@ class StoreProductPriceServiceImplTest {
 
     @Test
     void getProductPricesOneStore_checkReturnedValue() {
+        DateFormat format = new SimpleDateFormat("yyyy-MM", Locale.ENGLISH);
         List<Map<String, String>> productPrices;
         Long productId = 1L;
         Long storeId = 1L;
@@ -220,9 +224,9 @@ class StoreProductPriceServiceImplTest {
         storeProductPrice.setDate(new Date());
         storeProductPrice.setPrice(100L);
         List<StoreProductPrice> storeProductPrices = List.of(storeProductPrice);
-        productPrices = List.of(Map.of("date", storeProductPrice.getDate().toString(),
+        productPrices = List.of(Map.of("date", format.format(storeProductPrice.getDate()),
                 "price", storeProductPrice.getPrice().toString()));
-        when(storeProductPricesRepository.findAllByProductIdAndStoreIdOrderByDate(productId, storeId, pageable)).thenReturn(storeProductPrices);
+        when(storeProductPricesRepository.findAllByProductIdAndStoreIdOrderByDate(productId, storeId)).thenReturn(storeProductPrices);
 
         Page<Map<String, String>> productPricesRes = storeProductPriceService.getProductPricesOneStore(productId, storeId, pageable);
 

@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 public class DynamicsPriceDto {
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM")
     private Date date;
 
     private Long price;

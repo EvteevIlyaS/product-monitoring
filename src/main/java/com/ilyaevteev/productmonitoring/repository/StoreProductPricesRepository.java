@@ -18,9 +18,9 @@ public interface StoreProductPricesRepository extends JpaRepository<StoreProduct
 
     StoreProductPrice getFirstByProductIdAndStoreIdOrderByDateDesc(Long productId, Long storeId);
 
-    List<StoreProductPrice> findAllByProductIdOrderByDate(Long id, Pageable page);
+    List<StoreProductPrice> findAllByProductIdOrderByDate(Long id);
 
-    List<StoreProductPrice> findAllByProductIdAndStoreIdOrderByDate(Long productId, Long storeId, Pageable page);
+    List<StoreProductPrice> findAllByProductIdAndStoreIdOrderByDate(Long productId, Long storeId);
 
     @Modifying
     @Query("delete from StoreProductPrice storeProductPrice where storeProductPrice.id = :id")

@@ -337,6 +337,27 @@
             <column name="price" value="110"/>
             <column name="date" value="2023-05-04"/>
         </insert>
+
+        <insert tableName="store_product_prices">
+            <column name="store_id" value="2"/>
+            <column name="product_id" value="1"/>
+            <column name="price" value="120"/>
+            <column name="date" value="2023-06-01"/>
+        </insert>
+
+        <insert tableName="store_product_prices">
+            <column name="store_id" value="2"/>
+            <column name="product_id" value="1"/>
+            <column name="price" value="140"/>
+            <column name="date" value="2023-05-03"/>
+        </insert>
+
+        <insert tableName="store_product_prices">
+            <column name="store_id" value="2"/>
+            <column name="product_id" value="1"/>
+            <column name="price" value="170"/>
+            <column name="date" value="2023-09-03"/>
+        </insert>
     </changeSet>
 
 </databaseChangeLog>

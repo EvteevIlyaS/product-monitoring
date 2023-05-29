@@ -10,11 +10,11 @@ import com.ilyaevteev.productmonitoring.repository.StoreProductPricesRepository;
 import com.ilyaevteev.productmonitoring.service.ProductService;
 import com.ilyaevteev.productmonitoring.service.StoreProductPriceService;
 import com.ilyaevteev.productmonitoring.service.StoreService;
+import com.ilyaevteev.productmonitoring.util.DateIntervalPriceHandler;
 import com.ilyaevteev.productmonitoring.util.ExcelHelper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import one.util.streamex.StreamEx;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -127,26 +128,40 @@ public class StoreProductPriceServiceImpl implements StoreProductPriceService {
 
     @Override
     public Page<Map<String, String>> getProductPrices(Long id, Pageable pageable) {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        DateFormat format = new SimpleDateFormat("yyyy-MM", Locale.ENGLISH);
         List<Map<String, String>> productPrices = new ArrayList<>();
 
-        List<StoreProductPrice> storeProductPrices = StreamEx.of(storeProductPricesRepository.findAllByProductIdOrderByDate(id, pageable))
-                .distinct(el -> format.format(el.getDate())).toList();
-        storeProductPrices.forEach(el -> productPrices.add(Map.of("date", el.getDate().toString(), "price", el.getPrice().toString())));
-
-        return new PageImpl<>(productPrices, pageable, productPrices.size());
+        List<StoreProductPrice> storeProductPrices = storeProductPricesRepository.findAllByProductIdOrderByDate(id);
+        return getMaps(pageable, format, productPrices, storeProductPrices);
     }
 
     @Override
     public Page<Map<String, String>> getProductPricesOneStore(Long productId, Long storeId, Pageable pageable) {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        DateFormat format = new SimpleDateFormat("yyyy-MM", Locale.ENGLISH);
         List<Map<String, String>> productPricesOneStore = new ArrayList<>();
 
-        List<StoreProductPrice> storeProductPrices = StreamEx.of(storeProductPricesRepository.findAllByProductIdAndStoreIdOrderByDate(productId, storeId, pageable))
-                .distinct(el -> format.format(el.getDate())).toList();
-        storeProductPrices.forEach(el -> productPricesOneStore.add(Map.of("date", el.getDate().toString(), "price", el.getPrice().toString())));
+        List<StoreProductPrice> storeProductPrices = storeProductPricesRepository.findAllByProductIdAndStoreIdOrderByDate(productId, storeId);
+        return getMaps(pageable, format, productPricesOneStore, storeProductPrices);
+    }
 
-        return new PageImpl<>(productPricesOneStore, pageable, productPricesOneStore.size());
+    private Page<Map<String, String>> getMaps(Pageable pageable, DateFormat format, List<Map<String, String>> productPricesOneStore, List<StoreProductPrice> storeProductPrices) {
+        if (storeProductPrices.size() != 0) {
+            List<Date> pricesDates = storeProductPrices.stream().map(StoreProductPrice::getDate).toList();
+            Map<String, List<Long>> groupedStoreProductPrices = storeProductPrices.stream()
+                    .collect(
+                            Collectors.groupingBy(
+                                    el -> format.format(el.getDate()),
+                                    Collectors.mapping(StoreProductPrice::getPrice, Collectors.toList()))
+                    );
+
+            productPricesOneStore = DateIntervalPriceHandler.getIntervalPrices(groupedStoreProductPrices,
+                    pricesDates.stream().min(Date::compareTo).get(), pricesDates.stream().max(Date::compareTo).get());
+        }
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), productPricesOneStore.size());
+
+        return new PageImpl<>(productPricesOneStore.subList(start, end), pageable, productPricesOneStore.size());
     }
 
     @Override
