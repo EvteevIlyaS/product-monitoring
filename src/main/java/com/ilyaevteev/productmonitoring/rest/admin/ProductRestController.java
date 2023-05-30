@@ -12,6 +12,7 @@ import com.ilyaevteev.productmonitoring.util.EntityDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,7 +47,7 @@ public class ProductRestController {
                 ProductDeletionDto.class);
     }
 
-    @PostMapping(value = "/upload")
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Выгрузить информации о продуктах в формате csv/xlsx")
     public UploadDataDto uploadProducts(@RequestBody MultipartFile file) {
