@@ -7,8 +7,6 @@ import com.ilyaevteev.productmonitoring.dto.response.StoreProductPriceResponseDt
 import com.ilyaevteev.productmonitoring.dto.response.UploadDataDto;
 import com.ilyaevteev.productmonitoring.service.StoreProductPriceService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
