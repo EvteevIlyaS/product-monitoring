@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +22,7 @@ public class CategoryRestController {
 
     @GetMapping
     @Operation(summary = "Показать справочник категорий товаров")
-    public Page<CategoryDto> getCategoriesDirectory(Pageable pageable) {
+    public Page<CategoryDto> getCategoriesDirectory(@PageableDefault(size = 20) Pageable pageable) {
         return categoryService.getCategoriesDirectory(pageable)
                 .map(el -> entityDtoMapper.toDto(el, CategoryDto.class));
     }

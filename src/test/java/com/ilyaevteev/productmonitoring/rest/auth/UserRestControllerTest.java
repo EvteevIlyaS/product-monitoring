@@ -20,7 +20,6 @@ import java.util.HashMap;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -50,7 +49,7 @@ class UserRestControllerTest {
         String requestJson = ow.writeValueAsString(registrationRequestDto);
         when(userService.register(any(), any(), anyString(), any())).thenReturn(new HashMap<>());
 
-        mockMvc.perform(post(END_POINT_PATH)
+        mockMvc.perform(post(END_POINT_PATH + "/register")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isCreated());
@@ -62,7 +61,7 @@ class UserRestControllerTest {
         String requestJson = ow.writeValueAsString(authenticationDto);
         when(userService.login(anyString(), anyString(), any(), any())).thenReturn(new HashMap<>());
 
-        mockMvc.perform(get(END_POINT_PATH)
+        mockMvc.perform(post(END_POINT_PATH + "/login")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isOk());
