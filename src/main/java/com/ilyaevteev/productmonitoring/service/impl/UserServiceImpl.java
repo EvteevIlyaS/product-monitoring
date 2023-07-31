@@ -8,6 +8,7 @@ import com.ilyaevteev.productmonitoring.model.auth.User;
 import com.ilyaevteev.productmonitoring.repository.auth.RoleRepository;
 import com.ilyaevteev.productmonitoring.repository.auth.UserRepository;
 import com.ilyaevteev.productmonitoring.security.jwt.JwtTokenProvider;
+import com.ilyaevteev.productmonitoring.service.EmailService;
 import com.ilyaevteev.productmonitoring.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,8 @@ import java.util.Map;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+
+    private final EmailService emailService;
 
     @Override
     public User findByUsername(String username) {
@@ -61,6 +64,7 @@ public class UserServiceImpl implements UserService {
 
         try {
             User registeredUser = userRepository.save(user);
+            emailService.sendEmail(user);
             return Map.of("username", registeredUser.getUsername());
 
         } catch (Exception e) {
