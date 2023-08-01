@@ -6,6 +6,7 @@ import com.ilyaevteev.productmonitoring.repository.auth.RoleRepository;
 import com.ilyaevteev.productmonitoring.repository.auth.UserRepository;
 import com.ilyaevteev.productmonitoring.exception.exceptionlist.PasswordAuthenticationException;
 import com.ilyaevteev.productmonitoring.security.jwt.JwtTokenProvider;
+import com.ilyaevteev.productmonitoring.service.EmailService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,6 +30,9 @@ class UserServiceImplTest {
 
     @Mock
     private RoleRepository roleRepository;
+
+    @Mock
+    private EmailService emailService;
 
     @InjectMocks
     private UserServiceImpl userService;

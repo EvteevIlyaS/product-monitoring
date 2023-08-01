@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.context.Context;
 
 @Service
@@ -19,7 +19,7 @@ import org.thymeleaf.context.Context;
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
     private final JavaMailSender javaMailSender;
-    private final TemplateEngine templateEngine;
+    private final ITemplateEngine templateEngine;
 
     @Value("${spring.mail.sender.email}")
     private String senderEmail;
@@ -42,7 +42,7 @@ public class EmailServiceImpl implements EmailService {
             javaMailSender.send(mimeMessage);
 
         } catch (Exception e) {
-            String message = "Wrong email data";
+            String message = "Sending email was interrupted";
             log.error(message);
             throw new BadRequestException(message);
         }
