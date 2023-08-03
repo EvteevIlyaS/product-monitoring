@@ -34,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Page<Product> getProductsByCategory(String name, Pageable pageable) {
         Page<Product> products = productRepository.getProductsByCategoryName(name, pageable);
-        if (products.getContent().size() == 0) {
+        if (products.getContent().isEmpty()) {
             String message = "No products found";
             log.error(message);
             throw new NotFoundException(message);

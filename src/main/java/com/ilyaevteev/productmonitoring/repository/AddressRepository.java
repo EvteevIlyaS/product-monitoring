@@ -1,9 +1,12 @@
 package com.ilyaevteev.productmonitoring.repository;
 
-import com.ilyaevteev.productmonitoring.model.Category;
+import com.ilyaevteev.productmonitoring.model.Address;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
-public interface AddressRepository extends JpaRepository<Category, Long> {
+public interface AddressRepository extends JpaRepository<Address, Long> {
+    Optional<Address> findByCityAndStreetAndHouse(String city, String street, String house);
 }

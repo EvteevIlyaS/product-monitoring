@@ -3,7 +3,7 @@ package com.ilyaevteev.productmonitoring.dto.response;
 import lombok.Data;
 
 @Data
-public class StoreDto {
+public class StoreDtoResponse {
     private Long id;
 
     private String name;

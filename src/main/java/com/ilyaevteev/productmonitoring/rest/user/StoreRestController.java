@@ -1,6 +1,6 @@
 package com.ilyaevteev.productmonitoring.rest.user;
 
-import com.ilyaevteev.productmonitoring.dto.response.StoreDto;
+import com.ilyaevteev.productmonitoring.dto.response.StoreDtoResponse;
 import com.ilyaevteev.productmonitoring.service.*;
 import com.ilyaevteev.productmonitoring.util.EntityDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,8 +22,8 @@ public class StoreRestController {
 
     @GetMapping
     @Operation(summary = "Показать справочник торговых точек")
-    public Page<StoreDto> getStoresDirectory(@PageableDefault(size = 20) Pageable pageable) {
+    public Page<StoreDtoResponse> getStoresDirectory(@PageableDefault(size = 20) Pageable pageable) {
         return storeService.getStoresDirectory(pageable)
-                .map(el -> entityDtoMapper.toDto(el, StoreDto.class));
+                .map(el -> entityDtoMapper.toDto(el, StoreDtoResponse.class));
     }
 }
