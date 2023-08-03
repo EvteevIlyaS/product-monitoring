@@ -20,4 +20,8 @@ public class Store {
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private List<StoreProductPrice> storeProductPrices;
+
+    @ManyToOne
+    @JoinColumn(name = "address_id")
+    private Address address;
 }
